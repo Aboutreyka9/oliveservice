@@ -1878,6 +1878,7 @@ function openModalAddInscription() {
     $('#btn_inscription_addModal').click(function (e) {
         e.preventDefault();
 
+ 
         $.ajax({
             method: "POST",
             url: URL_AJAX,

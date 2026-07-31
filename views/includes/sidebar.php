@@ -135,7 +135,7 @@
                 <li class="nav-item">
                     <a data-toggle="collapse" href="#etudiants">
                         <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Étudiants</p>
+                        <p class="text-upper">Clients</p>
                         <span class="caret"></span>
                     </a>
                     <div class="collapse" id="etudiants">

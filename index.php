@@ -20,6 +20,7 @@ include __DIR__ . '/app/Core/security.php';
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\ClientController;
 use App\Controllers\Controller;
 use App\Controllers\ControllerException;
 use App\Controllers\DashboardController;
@@ -160,7 +161,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
         // <!-- ETUDIANT -->
-        $router->get('inscriptions', [EtudiantController::class, 'inscription']);
+        $router->get('inscriptions', [ClientController::class, 'inscription']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
         // 

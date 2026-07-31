@@ -24,34 +24,26 @@ class TABLES
     public const ACCESSOIRES = 'accessoires';
     public const ACCESSOIRE_INSCRIPTION = 'accessoire_inscription';
     public const ANNEES = 'annees';
-    public const CLASSES = 'classes';
-    public const CYCLES = 'cycles';
+    public const ARTICLES = 'articles';
+    public const CAUTISATION_CLIENTS = 'cautisation_clients';
+    public const CLIENTS = 'clients';
+    public const COMMERCIALS = 'commercials';
     public const DEPENSES = 'depenses';
-    public const DOCUMENTS = 'documents';
-    public const DOSSIER_ETUDIANT = 'dossier_etudiant';
-    public const EMPLOIS_TEMPS = 'emplois_temps';
-    public const ENSEIGNANTS = 'enseignants';
-    public const ENSEIGNANT_MATIERE = 'enseignant_matiere';
+    public const DISTRIBUTIONS = 'distributions';
     public const ETABLISSEMENTS = 'etablissements';
-    public const ETUDIANTS = 'etudiants';
-    public const EVENEMENTS = 'evenements';
-    public const FILIERES = 'filieres';
     public const FONCTIONS = 'fonctions';
     public const INSCRIPTIONS = 'inscriptions';
-    public const MATIERES = 'matieres';
-    public const MESSAGES = 'messages';
-    public const NIVEAUX = 'niveaux';
-    public const NOTES = 'notes';
-    public const PAIEMENTS = 'paiements';
-    public const PARENTS = 'parents';
+    public const PACKS = 'packs';
+    public const RECONDUCTIONS = 'reconductions';
     public const ROLES = 'roles';
-    public const SALLES = 'salles';
-    public const SCOLARITES = 'scolarites';
+    public const SESSIONS = 'sessions';
     public const SEMESTRES = 'semestres';
     public const SERVICES = 'services';
     public const USERS = 'users';
     public const USER_ROLES = 'user_roles';
     public const TYPE_DEPENSES = 'type_depenses';
+    public const VERSEMENTS = 'versements';
+    public const ZONES = 'zones';
 }
 
 class Permissionsss

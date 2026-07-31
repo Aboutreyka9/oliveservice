@@ -10,6 +10,7 @@ session_start();
 include __DIR__ . '/../../app/Core/security.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\ClientController;
 use App\Controllers\SettingController;
 use App\Controllers\UserController;
 
@@ -226,33 +227,33 @@ switch ($action) {
     
     //end Actions pour les inscription
 
-    // Debut Actions pour les etudiants 
+    // Debut Actions pour les clients 
     case 'charger_data_inscriptions':
-        $ajx = new EtudiantController();
+        $ajx = new ClientController();
         $ajx->GetListeInscription();
         break;
     case 'charger_data_etudiants':
-        $ajx = new EtudiantController();
+        $ajx = new ClientController();
         $ajx->GetListeDepense();
         break;
     case 'change_statut_etudiants':
-        $ajx = new EtudiantController();
+        $ajx = new ClientController();
         $ajx->changeStatutDepense();
         break;
-    case 'btn_showmodal_etudiant_add':
-        $ajx = new EtudiantController();
+    case 'btn_showmodal_inscription_add':
+        $ajx = new ClientController();
         $ajx->modalAddDepense();
         break;
-    case 'btn_showmodal_etudiant_update':
-        $ajx = new EtudiantController();
+    case 'btn_showmodal_inscription_update':
+        $ajx = new ClientController();
         $ajx->modalUpdatedDepense();
         break;
     case 'btn_add_etudiant':
-        $ajx = new EtudiantController();
+        $ajx = new ClientController();
         $ajx->addDepense();
         break;
     case 'btn_update_etudiant':
-        $ajx = new EtudiantController();
+        $ajx = new ClientController();
         $ajx->updateDepense();
         break;
 
