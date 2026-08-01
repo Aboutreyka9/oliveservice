@@ -1677,6 +1677,193 @@ function changeStatutSemestre(code, statut) {
 /** FIN SECTION SEMESTRES */
 
 
+/** DEBUT SECTION ZONE */
+
+loadDataTable('data-table-zone', '#data-table-zone', 'charger_data_zones');
+
+openModalAddZone();
+function openModalAddZone() {
+    $('#btn_zone_addModal').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: URL_AJAX,
+            data: {
+                action: 'btn_showmodal_zone_add'
+            },
+            dataType: "JSON",
+            beforeSend: function () {
+                $(".loader_backdrop2").css('display', "block");
+                // btnReq("#ClientAddModal", "Traitement...");
+
+            },
+            success: function (data) {
+                console.log(data);
+
+                // btnRes("#ClientAddModal", 'Ajouter un client', 'fa-plus');
+                // ;
+
+                $(".loader_backdrop2").css('display', "none");
+                if (data.success) {
+                    var output = data.data;
+                    $(".data-zone-modal").html(output.data);
+                    $("#zone-modal").modal("show");
+
+
+                } else {
+                    $.notify(data.message);
+
+                }
+
+            }
+        })
+    });
+}
+
+ajouterZone();
+function ajouterZone() {
+    $("body").on("submit", "#frmAddZone", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+        $.ajax({
+            method: "POST",
+            url: URL_AJAX,
+            data: data,
+            // dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormZone", "Enregistrement...");
+            },
+            success: function (data) {
+                console.log(data);
+                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                // $(".loader_backdrop2").css('display', "none");
+
+                if (data.success) {
+                    tables['data-table-zone'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#zone-modal").modal("hide");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+
+function modalUpdatedZone(code) {
+    // let btn = btn_action.id;
+
+    $.ajax({
+        method: "POST",
+        url: URL_AJAX,
+        data: {
+            action: 'btn_showmodal_session_update',
+            codesession: code
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $(".loader_backdrop2").css('display', "block");
+            // btnReq(".modal_footer", "Traitement...");
+        },
+        success: function (data) {
+
+            $(".loader_backdrop2").css('display', "none");
+
+            if (data.success) {
+                $(".data-zone-modal").html(data.data);
+                $("#zone-modal").modal("show");
+
+            } else {
+                $.notify(data.message);
+
+            }
+        }
+    });
+}
+
+updatedZone();
+function updatedZone() {
+    $("body").on("submit", "#frmUpdateZone", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+
+        $.ajax({
+            method: "POST",
+            url: URL_AJAX,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormZone", "Mise à jour en cours...");
+            },
+            success: function (data) {
+                // $(".loader_backdrop2").css('display', "none");
+                console.log(data);
+
+                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                return
+                if (data.success) {
+                    tables['data-table-zone'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#zone-modal").modal("hide");
+
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+function changeStatutSemestre(code, statut) {
+    swal({
+        title: "Notification",
+        text: "Voulez-vous vraiment modifier le statut de cette session?",
+        icon: "warning",
+        dangerMode: true,
+        closeOnClickOutside: false,
+        buttons: {
+            cancel: true,
+            confirm: "Confirmer",
+        },
+    })
+        .then(willDelete => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: URL_AJAX,
+                    method: 'POST',
+                    data: {
+                        action: 'change_statut_sessions',
+                        code_session: code,
+                        statut_session: statut
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $(".loader_backdrop2").css('display', "block");
+                    },
+                    success: function (data) {
+                        $(".loader_backdrop2").css('display', "none");
+
+                        if (data.success) {
+                            $.notify(data.message, "success");
+                            tables['data-table-zone'].ajax.reload(null, false);
+                        } else {
+                            $.notify(data.message);
+                        }
+                    }
+                });;
+            }
+        });
+}
+/** FIN SECTION ZONE */
 
 /** DEBUT SECTION DEPENSE */
 

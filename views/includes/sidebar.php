@@ -60,7 +60,7 @@
                 <li class="nav-item">
                     <a data-toggle="collapse" href="#académique">
                         <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Gestion académique</p>
+                        <p class="text-upper">Activités</p>
                         <span class="caret"></span>
                     </a>
                     <div class="collapse" id="académique">
@@ -69,19 +69,19 @@
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
                             ?>
                             <li>
-                                <a class="item-link" href="<?= url('filieres') ?>">
-                                    <span class="sub-item">Filières</span>
+                                <a class="item-link" href="<?= url('zones') ?>">
+                                    <span class="sub-item">Zones</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('niveaux') ?>">
-                                    <span class="sub-item">Niveaux</span>
+                                <a class="item-link" href="<?= url('packs') ?>">
+                                    <span class="sub-item">Packs</span>
                                 </a>
                             </li>
 
                             <li>
-                                <a class="item-link" href="<?= url('matières') ?>">
-                                    <span class="sub-item">Matières</span>
+                                <a class="item-link" href="<?= url('articles') ?>">
+                                    <span class="sub-item">Article</span>
                                 </a>
                             </li>
                             <li>
@@ -177,56 +177,7 @@
                 <?php //endif; 
                 ?>
 
-                <!-- Groupes::Examens  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
-
-                <li class="nav-item">
-                    <a data-toggle="collapse" href="#examens">
-                        <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Examens</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="examens">
-                        <ul class="nav nav-collapse">
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('programmation') ?>">
-                                    <span class="sub-item"> Programmation</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('Saisie-des-notes') ?>">
-                                    <span class="sub-item"> Saisie des notes</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('delibérations') ?>">
-                                    <span class="sub-item">Délibérations</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('bulletins') ?>">
-                                    <span class="sub-item">Bulletins</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('releves-de-notes') ?>">
-                                    <span class="sub-item">Relevés de notes</span>
-                                </a>
-                            </li>
-                            <?php //endif; 
-                            ?>
-
-                        </ul>
-                    </div>
-                </li>
-                <?php //endif; 
-                ?>
-
+        
                 <!-- Groupes::Finance  => -->
 
                 <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 

@@ -9,11 +9,11 @@ use TABLES;
 class ClientService
 {
 
-    public static ClientModel $clientModel;
+    public ClientModel $clientModel;
 
     public function __construct()
     {
-        self::$clientModel = new ClientModel();
+        $this->clientModel = new ClientModel();
     }
 
     /**
@@ -27,15 +27,15 @@ class ClientService
 
     // SEXION SEMESTRES
 
-    public static function saveDepenseData(array $post)
+    public function saveDepenseData(array $post)
     {
         extract($post);
 
-        // if (!empty(self::$etudiantModel->getFieldsForParams(TABLES::DEPENSES, ['libelle_depense' => $libelle_depense, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        // if (!empty($this->etudiantModel->getFieldsForParams(TABLES::DEPENSES, ['libelle_depense' => $libelle_depense, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
         //     return ['success' => false, 'message' => "Desolé! Ce depense existe déjà."];
         // }
 
-        $code = self::$clientModel->generatorCode(TABLES::DEPENSES, 'code_depense');
+        $code = $this->clientModel->generatorCode(TABLES::DEPENSES, 'code_depense');
         $date = date('Y-m-d H:i:s');
 
         $data_depense = [
@@ -57,7 +57,7 @@ class ClientService
             $data_depense['statut_depense'] = STATUT_ACTIF;
         }
 
-        if (!self::$clientModel->create(TABLES::DEPENSES, $data_depense)) {
+        if (!$this->clientModel->create(TABLES::DEPENSES, $data_depense)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -68,7 +68,7 @@ class ClientService
     }
 
 
-    public static function updateDepenseData($post)
+    public function updateDepenseData($post)
     {
         extract($post);
 
@@ -89,7 +89,7 @@ class ClientService
             $data_depense['statut_depense'] = STATUT_ACTIF;
         }
 
-        if (!self::$clientModel->update(TABLES::DEPENSES, 'code_depense', $code_depense, $data_depense)) {
+        if (!$this->clientModel->update(TABLES::DEPENSES, 'code_depense', $code_depense, $data_depense)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -111,7 +111,7 @@ class ClientService
 
     // SEXION CLIENT
 
-     public static function packsSessionData($sessions,)
+     public function packsSessionData($sessions,)
     {
         $output = '';
         foreach ($sessions as $data) {
@@ -185,7 +185,7 @@ class ClientService
         return $output;
     }
 
-    public static function inscriptionAddModalService(array $typeDepenses = [])
+    public function inscriptionAddModalService(array $typeDepenses = [])
     {
 
         $output = "";
@@ -253,7 +253,7 @@ class ClientService
     }
 
 
-    public static function depenseUpdateModalService(array $depense, $typeDepenses)
+    public function depenseUpdateModalService(array $depense, $typeDepenses)
     {
         $output = "";
         $output .= '
@@ -318,7 +318,7 @@ class ClientService
         return $output;
     }
 
-    public static function depenseDataService($depenses)
+    public function depenseDataService($depenses)
     {
 
         $i = 0;
