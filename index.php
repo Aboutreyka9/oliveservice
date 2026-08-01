@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ActiviteController;
 use App\Controllers\EtudiantController;
 // if (session_status() === PHP_SESSION_NONE) {
 session_name("APP545645465654_SESSION");
@@ -160,11 +161,14 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('depenses', [FinanceController::class, 'depense']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
-        // <!-- ETUDIANT -->
+        // <!-- Client -->
         $router->get('inscriptions', [ClientController::class, 'inscription']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
-        // 
+        // <!-- Activity -->
+        $router->get('zones', [ActiviteController::class, 'zone']);
+        // $router->get('annees-semestres', [SettingController::class, 'annee']);
+
     });
 
 
