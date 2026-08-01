@@ -242,7 +242,7 @@ switch ($action) {
         break;
     case 'btn_showmodal_inscription_add':
         $ajx = new ClientController();
-        $ajx->modalAddDepense();
+        $ajx->modalAddInscription();
         break;
     case 'btn_showmodal_inscription_update':
         $ajx = new ClientController();

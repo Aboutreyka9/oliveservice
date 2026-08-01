@@ -22,9 +22,8 @@ class TABLES
 {
     // Gestion académique
     public const ACCESSOIRES = 'accessoires';
-    public const ACCESSOIRE_INSCRIPTION = 'accessoire_inscription';
+    public const PACK_ACCESSOIRES = 'pack_accessoires';
     public const ANNEES = 'annees';
-    public const ARTICLES = 'articles';
     public const CAUTISATION_CLIENTS = 'cautisation_clients';
     public const CLIENTS = 'clients';
     public const COMMERCIALS = 'commercials';
@@ -34,10 +33,10 @@ class TABLES
     public const FONCTIONS = 'fonctions';
     public const INSCRIPTIONS = 'inscriptions';
     public const PACKS = 'packs';
+    public const PACK_INSCRIPTIONS = 'pack_inscriptions';
     public const RECONDUCTIONS = 'reconductions';
     public const ROLES = 'roles';
     public const SESSIONS = 'sessions';
-    public const SEMESTRES = 'semestres';
     public const SERVICES = 'services';
     public const USERS = 'users';
     public const USER_ROLES = 'user_roles';

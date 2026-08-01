@@ -1,4 +1,4 @@
-<div class="row semestre-annee">
+<div class="row session-annee">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
@@ -16,7 +16,7 @@
                         <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
                             aria-controls="pills-profile" aria-selected="false"> &nbsp; &nbsp;
                             <i class="fa fa-home"></i> &nbsp;
-                            SEMESTRES
+                            SESSIONS
                             &nbsp; &nbsp;
                         </a>
                     </li>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="tab-pane fade " id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <div class="row pb-4">
-                            <div class="col-md-9 d-flex gap-5 check-semestre-search ">
+                            <div class="col-md-9 d-flex gap-5 check-session-search ">
                                 <div class="form-inlign">
                                     <label for="">Annee</label>
                                     <input type="text" class="form-control">
@@ -73,15 +73,15 @@
                             </div>
                             <div class="col-md-3 d-flex justify-content-end">
                                 <div class="form-inlign">
-                                    <button type="button" id="btn_semestre_addModal"
-                                        class="btn btn-primary  text-uppercase" title="Ajouter semestre"
+                                    <button type="button" id="btn_session_addModal"
+                                        class="btn btn-primary  text-uppercase" title="Ajouter session"
                                         aria-label="Close"> <i class="fa fa-plus-circle"></i> &nbsp;
                                         Créer</button>
                                 </div>
                             </div>
                             <div class="table-responsive">
                                 <!-- .table -->
-                                <table id="data-table-semestre" class="table table-striped table-hover bg-light">
+                                <table id="data-table-session" class="table table-striped table-hover bg-light">
                                     <!-- thead -->
                                     <thead class="bg-light">
                                         <tr>
@@ -138,20 +138,20 @@
 </div>
 
 
-<!-- Modal semestre-->
-<div class="modal fade" data-backdrop="static" id="semestre-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="semestreModalLabel" aria-hidden="true">
+<!-- Modal session-->
+<div class="modal fade" data-backdrop="static" id="session-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="sessionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="semestreModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
+                <h5 class="modal-title text-dark" id="sessionModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
                         class="text-uppercase">Formulaire d'enregistrement</span> </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="data-semestre-modal">
+                <div class="data-session-modal">
 
                 </div>
             </div>

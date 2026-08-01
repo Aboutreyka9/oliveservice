@@ -215,61 +215,61 @@ class SettingService
         ];
     }
 
-    // SEXION SEMESTRES
+    // SEXION SESSIONS
 
-    public static function saveSemestreData(array $post)
+    public static function saveSessionData(array $post)
     {
         extract($post);
 
-        if (!empty(self::$settingModel->getFieldsForParams(TABLES::SEMESTRES, ['libelle_semestre' => $libelle_semestre, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
-            return ['success' => false, 'message' => "Desolé! Ce semestre existe déjà."];
+        if (!empty(self::$settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => "Desolé! Ce session existe déjà."];
         }
 
-        $code = self::$settingModel->generatorCode(TABLES::SEMESTRES, 'code_semestre');
+        $code = self::$settingModel->generatorCode(TABLES::SESSIONS, 'code_session');
 
-        $data_semestre = [
-            'libelle_semestre' => $libelle_semestre,
-            'code_semestre' => $code,
-            'date_fin_semestre' => $fin_semestre,
-            'date_debut_semestre' => $debut_semestre,
-            'statut_semestre' => STATUT_ACTIF,
+        $data_session = [
+            'libelle_session' => $libelle_session,
+            'code_session' => $code,
+            'date_fin_session' => $fin_session,
+            'date_debut_session' => $debut_session,
+            'statut_session' => STATUT_ACTIF,
             'annee_code' => $libelle_annee,
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
-            'created_at_semestre' => date('Y-m-d H:i:s'),
+            'created_at_session' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->create(TABLES::SEMESTRES, $data_semestre)) {
+        if (!self::$settingModel->create(TABLES::SESSIONS, $data_session)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
         return [
             'success' => true,
-            'message' => 'Semestre enregistrée avec succès.',
+            'message' => 'Session enregistrée avec succès.',
         ];
     }
 
 
-    public static function updateSemestreData($post)
+    public static function updateSessionData($post)
     {
         extract($post);
 
 
-        $libelle = self::$settingModel->getFieldsForParams(TABLES::SEMESTRES, ['libelle_semestre' => $libelle_semestre, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
-        if (!empty($libelle) && $libelle['code_semestre'] != $code_semestre) {
-            return ['success' => false, 'message' => "Desolé! ce semestre existe déjà."];
+        $libelle = self::$settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
+        if (!empty($libelle) && $libelle['code_session'] != $code_session) {
+            return ['success' => false, 'message' => "Desolé! ce session existe déjà."];
         }
 
 
-        $data_semestre = [
+        $data_session = [
             'annee_code' => $libelle_annee,
-            'libelle_semestre' => $libelle_semestre,
-            'date_fin_semestre' => $fin_semestre,
-            'date_debut_semestre' => $debut_semestre,
-            'updated_at_semestre' => date('Y-m-d H:i:s')
+            'libelle_session' => $libelle_session,
+            'date_fin_session' => $fin_session,
+            'date_debut_session' => $debut_session,
+            'updated_at_session' => date('Y-m-d H:i:s')
         ];
 
-        if (!self::$settingModel->update(TABLES::SEMESTRES, 'code_semestre', $code_semestre, $data_semestre)) {
+        if (!self::$settingModel->update(TABLES::SESSIONS, 'code_session', $code_session, $data_session)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -650,17 +650,17 @@ class SettingService
         return $data;
     }
 
-    // SEXION SEMESTRES
+    // SEXION SESSIONS
 
-    public static function semestreAddModalService(array $annees)
+    public static function sessionAddModalService(array $annees)
     {
 
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmAddSemestre">
+            <form action="#" method="post" id="frmAddSession">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
-                        <input type="hidden" value="btn_add_semestre" name="action">
+                        <input type="hidden" value="btn_add_session" name="action">
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
                         <label for="libelle_annee" class="form-label">Année academique <strong class="text-danger">*</strong></label>
                         <select class="form-control" id="libelle_annee"  name="libelle_annee" required>
@@ -678,8 +678,8 @@ class SettingService
                     </div>
                      <div class="col-md-12 mb-3">
                         
-                        <label for="libelle_semestre" class="form-label">Libelle semestre <strong class="text-danger">*</strong></label>
-                        <select class="form-control" id="libelle_semestre"  name="libelle_semestre" required>
+                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
+                        <select class="form-control" id="libelle_session"  name="libelle_session" required>
                         <option value="">--- CHOISIR ---</option>';
 
         foreach (SEMESTRE_DATA as $se) {
@@ -691,20 +691,20 @@ class SettingService
                     </div>
                     <div class="col-md-6 mb-3">
                         
-                        <label for="debut_semestre" class="form-label">Date debut <strong class="text-danger">*</strong></label>
-                        <input type="date" class="form-control" id="debut_semestre" name="debut_semestre" required>
+                        <label for="debut_session" class="form-label">Date debut <strong class="text-danger">*</strong></label>
+                        <input type="date" class="form-control" id="debut_session" name="debut_session" required>
                     </div>
                       <div class="col-md-6 mb-3">
                         
-                        <label for="fin_semestre" class="form-label">Date fin <strong class="text-danger">*</strong></label>
-                        <input type="date" class="form-control" id="fin_semestre" name="fin_semestre" required>
+                        <label for="fin_session" class="form-label">Date fin <strong class="text-danger">*</strong></label>
+                        <input type="date" class="form-control" id="fin_session" name="fin_session" required>
                     </div>
 
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-12 modal_footer">
-                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormSemestre"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormSession"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 
                     </div>
@@ -716,15 +716,15 @@ class SettingService
     }
 
 
-    public static function semestreUpdateModalService(array $semestre, $annees)
+    public static function sessionUpdateModalService(array $session, $annees)
     {
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmUpdateSemestre">
+            <form action="#" method="post" id="frmUpdateSession">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
-                        <input type="hidden" value="btn_update_semestre" name="action">
-                        <input type="hidden" value="' . $semestre['code_semestre'] . '" name="code_semestre">
+                        <input type="hidden" value="btn_update_session" name="action">
+                        <input type="hidden" value="' . $session['code_session'] . '" name="code_session">
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
                         <label for="libelle_annee" class="form-label">Année academique <strong class="text-danger">*</strong></label>
                         <select class="form-control" id="libelle_annee"  name="libelle_annee" required>
@@ -733,7 +733,7 @@ class SettingService
                         ';
 
         foreach ($annees as $annee) {
-            $output .= '<option ' . selected($annee['code_annee'], $semestre['annee_code']) . ' value="' . $annee['code_annee'] . '">' . $annee['libelle_annee'] . '</option>';
+            $output .= '<option ' . selected($annee['code_annee'], $session['annee_code']) . ' value="' . $annee['code_annee'] . '">' . $annee['libelle_annee'] . '</option>';
         }
 
         $output .= '
@@ -742,12 +742,12 @@ class SettingService
                     </div>
 
                     <div class="col-md-12 mb-3">
-                       <label for="libelle_semestre" class="form-label">Libelle semestre <strong class="text-danger">*</strong></label>
-                        <select class="form-control" id="libelle_semestre"  name="libelle_semestre" required>
+                       <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
+                        <select class="form-control" id="libelle_session"  name="libelle_session" required>
                         <option value="">--- CHOISIR ---</option>';
 
         foreach (SEMESTRE_DATA as $se) {
-            $output .= '<option ' . selected($se, $semestre['libelle_semestre']) . '  value="' . $se . '">' . $se . '</option>';
+            $output .= '<option ' . selected($se, $session['libelle_session']) . '  value="' . $se . '">' . $se . '</option>';
         }
 
         $output .= '
@@ -755,19 +755,19 @@ class SettingService
                     </div>
 
                      <div class="col-md-6 mb-3">
-                        <label for="debut_semestre" class="form-label">Date debut <strong class="text-danger">*</strong></label>
-                        <input type="date" class="form-control" id="debut_semestre" name="debut_semestre" value="' . $semestre['date_debut_semestre'] . '" required>
+                        <label for="debut_session" class="form-label">Date debut <strong class="text-danger">*</strong></label>
+                        <input type="date" class="form-control" id="debut_session" name="debut_session" value="' . $session['date_debut_session'] . '" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="fin_semestre" class="form-label">Date fin <strong class="text-danger">*</strong></label>
-                        <input type="date" class="form-control" id="fin_semestre" name="fin_semestre" value="' . $semestre['date_fin_semestre'] . '" required>
+                        <label for="fin_session" class="form-label">Date fin <strong class="text-danger">*</strong></label>
+                        <input type="date" class="form-control" id="fin_session" name="fin_session" value="' . $session['date_fin_session'] . '" required>
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-12 modal_footer">
-                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormSemestre"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormSession"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 
                     </div>
@@ -778,16 +778,16 @@ class SettingService
         return $output;
     }
 
-    public static function semestreDataService($semestres)
+    public static function sessionDataService($sessions)
     {
 
         $i = 0;
         $data = [];
 
-        foreach ($semestres as $semestre) {
+        foreach ($sessions as $session) {
             $i++;
 
-            $etat = checkEtatData($semestre['statut_semestre']);
+            $etat = checkEtatData($session['statut_session']);
 
             $actions = '
             <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -795,21 +795,21 @@ class SettingService
             </button>
             <div class="dropdown-menu">
 
-        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedSemestre(\'' . $semestre['code_semestre'] . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Modifier semestre">
-        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier semestre </button>
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedSession(\'' . $session['code_session'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier session">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier session </button>
         ';
-            if ($semestre['statut_semestre'] == STATUT_ACTIF) {
+            if ($session['statut_session'] == STATUT_ACTIF) {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutSemestre(\'' . $semestre['code_semestre'] . '\',\'' . STATUT_INACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Désactiver semestre ">
-            <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver semestre </button>
+        <button class="dropdown-item " id="" onclick="changeStatutSession(\'' . $session['code_session'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Désactiver session ">
+            <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver session </button>
         ';
             } else {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutSemestre(\'' . $semestre['code_semestre'] . '\',\'' . STATUT_ACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Activer semestre ">
-            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer semestre </button>
+        <button class="dropdown-item " id="" onclick="changeStatutSession(\'' . $session['code_session'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Activer session ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer session </button>
         ';
             }
             $actions .= ' </div>
@@ -818,11 +818,11 @@ class SettingService
             $data[] = [
                 $i,
                 $etat,
-                $semestre['libelle_semestre'],
-                $semestre['libelle_annee'],
-                date_formater($semestre['date_debut_semestre']),
-                date_formater($semestre['date_fin_semestre']),
-                date_formater($semestre['created_at_semestre']),
+                $session['libelle_session'],
+                $session['libelle_annee'],
+                date_formater($session['date_debut_session']),
+                date_formater($session['date_fin_session']),
+                date_formater($session['created_at_session']),
                 $actions
             ];
         }

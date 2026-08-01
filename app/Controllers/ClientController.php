@@ -133,10 +133,11 @@ class ClientController extends MainController
 
     public function modalAddInscription()
     {
-        $typeDepenses = $this->clientModel->getFieldsForParams(TABLES::);
-        if (empty($typeDepenses)) Response::error('Désolé, aucune année enregistrée!');
+        // $typeDepenses = $this->clientModel->getFieldsForParams(TABLES::);
+        // if (empty($typeDepenses)) Response::error('Désolé, aucune année enregistrée!');
 
-        $output = $this->clientService->depenseAddModalService($typeDepenses);
+        // $output = $this->clientService->depenseAddModalService($typeDepenses);
+        $output = $this->clientService->inscriptionAddModalService();
         Response::success('', ['data' => $output]);
     }
 
