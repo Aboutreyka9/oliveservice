@@ -1302,7 +1302,7 @@ function changeStatutService(code, statut) {
 
 
 /** DEBUT SECTION ANNEE */
-loadDataTableMany('data-table-annee', '.semestre-annee', '#data-table-annee', 'charger_data_annees');
+loadDataTableMany('data-table-annee', '.session-annee', '#data-table-annee', 'charger_data_annees');
 
 openModalAddAnnee();
 function openModalAddAnnee() {
@@ -1490,18 +1490,18 @@ function changeStatutAnnee(code, statut) {
 
 /** DEBUT SECTION SEMESTRES */
 
-loadDataTableMany('data-table-semestre', '.semestre-annee', '#data-table-semestre', 'charger_data_semestres');
+loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
 
 openModalAddSemestre();
 function openModalAddSemestre() {
-    $('#btn_semestre_addModal').click(function (e) {
+    $('#btn_session_addModal').click(function (e) {
         e.preventDefault();
 
         $.ajax({
             method: "POST",
             url: URL_AJAX,
             data: {
-                action: 'btn_showmodal_semestre_add'
+                action: 'btn_showmodal_session_add'
             },
             dataType: "JSON",
             beforeSend: function () {
@@ -1518,8 +1518,8 @@ function openModalAddSemestre() {
                 $(".loader_backdrop2").css('display', "none");
                 if (data.success) {
                     var output = data.data;
-                    $(".data-semestre-modal").html(output.data);
-                    $("#semestre-modal").modal("show");
+                    $(".data-session-modal").html(output.data);
+                    $("#session-modal").modal("show");
 
 
                 } else {
@@ -1554,9 +1554,9 @@ function ajouterSemestre() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-semestre'].ajax.reload(null, false);
+                    tables['data-table-session'].ajax.reload(null, false);
                     $.notify(data.message, "success");
-                    $("#semestre-modal").modal("hide");
+                    $("#session-modal").modal("hide");
                 } else {
                     $.notify(data.message);
                 }
@@ -1573,8 +1573,8 @@ function modalUpdatedSemestre(code) {
         method: "POST",
         url: URL_AJAX,
         data: {
-            action: 'btn_showmodal_semestre_update',
-            codesemestre: code
+            action: 'btn_showmodal_session_update',
+            codesession: code
         },
         dataType: 'JSON',
         beforeSend: function () {
@@ -1586,8 +1586,8 @@ function modalUpdatedSemestre(code) {
             $(".loader_backdrop2").css('display', "none");
 
             if (data.success) {
-                $(".data-semestre-modal").html(data.data);
-                $("#semestre-modal").modal("show");
+                $(".data-session-modal").html(data.data);
+                $("#session-modal").modal("show");
 
             } else {
                 $.notify(data.message);
@@ -1621,9 +1621,9 @@ function updatedSemestre() {
                 btnRes("#btnSubmitFormSemestre", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    tables['data-table-semestre'].ajax.reload(null, false);
+                    tables['data-table-session'].ajax.reload(null, false);
                     $.notify(data.message, "success");
-                    $("#semestre-modal").modal("hide");
+                    $("#session-modal").modal("hide");
 
                 } else {
                     $.notify(data.message);
@@ -1636,7 +1636,7 @@ function updatedSemestre() {
 function changeStatutSemestre(code, statut) {
     swal({
         title: "Notification",
-        text: "Voulez-vous vraiment modifier le statut de cette semestre?",
+        text: "Voulez-vous vraiment modifier le statut de cette session?",
         icon: "warning",
         dangerMode: true,
         closeOnClickOutside: false,
@@ -1652,9 +1652,9 @@ function changeStatutSemestre(code, statut) {
                     url: URL_AJAX,
                     method: 'POST',
                     data: {
-                        action: 'change_statut_semestres',
-                        code_semestre: code,
-                        statut_semestre: statut
+                        action: 'change_statut_sessions',
+                        code_session: code,
+                        statut_session: statut
                     },
                     dataType: 'JSON',
                     beforeSend: function () {
@@ -1665,7 +1665,7 @@ function changeStatutSemestre(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-semestre'].ajax.reload(null, false);
+                            tables['data-table-session'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1900,8 +1900,8 @@ function openModalAddInscription() {
                 $(".loader_backdrop2").css('display', "none");
                 if (data.success) {
                     var output = data.data;
-                    $(".data-inscription-modal").html(output.data);
-                    $("#inscription-modal").modal("show");
+                    $(".data-inscription-client-modal").html(output.data);
+                    $("#inscription-client-modal").modal("show");
 
 
                 } else {

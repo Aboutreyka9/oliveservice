@@ -375,13 +375,13 @@ class SettingModel extends Model
 
     // END SEXION ANNEES
 
-    // SEXION SEMESTRE
+    // SEXION SESSION
 
-    public function getSingleSemestreByCode(string $code): array
+    public function getSingleSessionByCode(string $code): array
     {
         $data = [];
         try {
-            $sql = "SELECT * FROM " . TABLES::SEMESTRES . " AS se WHERE se.code_semestre = :code LIMIT 1";
+            $sql = "SELECT * FROM " . TABLES::SESSIONS . " AS se WHERE se.code_session = :code LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['code' => $code]);
             $data = $stmt->fetch();
@@ -391,12 +391,12 @@ class SettingModel extends Model
         return $data;
     }
 
-    // get all semestre
-    public function getAllSemestres($etablissement_code): array
+    // get all session
+    public function getAllSessions($etablissement_code): array
     {
         $data = [];
         try {
-            $sql = "SELECT * FROM " . TABLES::SEMESTRES . " AS se WHERE se.etablissement_code = :etablissement_code AND statut_semestre = :statut ORDER BY libelle_semestre";
+            $sql = "SELECT * FROM " . TABLES::SESSIONS . " AS se WHERE se.etablissement_code = :etablissement_code AND statut_session = :statut ORDER BY libelle_session";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
             $data = $stmt->fetchAll();
@@ -406,7 +406,7 @@ class SettingModel extends Model
         return $data;
     }
 
-    public function dataTbleCountTotalSemestresRow(array $whereParams, $likeParams = [])
+    public function dataTbleCountTotalSessionsRow(array $whereParams, $likeParams = [])
     {
         // if (!empty($whereParams)) {
         //     $where = 'WHERE ';
@@ -440,7 +440,7 @@ class SettingModel extends Model
         // }
 
 
-        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::SEMESTRES . " se $where";
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::SESSIONS . " se $where";
 
         $stmt = $this->db->prepare($sql);
 
@@ -451,7 +451,7 @@ class SettingModel extends Model
     }
 
 
-    public function DataTableFetchSemestresListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    public function DataTableFetchSessionsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
 
 
@@ -468,7 +468,7 @@ class SettingModel extends Model
 
 
 
-        $sql = "SELECT se.*, an.libelle_annee FROM " . TABLES::SEMESTRES . " se 
+        $sql = "SELECT se.*, an.libelle_annee FROM " . TABLES::SESSIONS . " se 
         JOIN ". TABLES::ANNEES ."  an ON an.code_annee = se.annee_code 
         $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
@@ -494,5 +494,5 @@ class SettingModel extends Model
         return $stmt->fetchAll();
     }
 
-    // END SEXION SEMESTRE
+    // END SEXION SESSION
 }

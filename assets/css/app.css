@@ -455,6 +455,80 @@ input::-o-outer-spin-button {
 
 
 
+
+/* SEXION SESSION PACK */
+
+.session-container {
+    /* position: relative; */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    min-height: 50px !important;
+    /* padding: 10px 10px 10px 28px; */
+    padding: 0px;
+    /* padding: 15px; */
+    /* margin-bottom: 10px; */
+    margin: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.session-header {
+    height: 50px !important;
+    padding: 0px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 15px;
+
+    /* position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 2; */
+    /* display: flex; */
+
+}
+
+.packs {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    /* z-index: 9 !important; */
+}
+
+
+.session-title {
+    font-weight: bold;
+    /* color: #e91616; */
+    font-size: 14px;
+}
+
+.flex-sb {
+    justify-content: space-between !important;
+}
+
+.session-container:hover {
+    border: 1px solid #3eb8d6;
+    border-radius: 10px;
+    /* padding: 10px 10px 10px 28px; */
+    margin: 10px;
+    background: #fcfffd;
+}
+
+.packs:hover {
+    background: #fff;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+/* END SEXION SESSION PACK */
+
+
+
 /** background color for modal body */
 .modal-body {
     background-color: #f9fbfd !important;

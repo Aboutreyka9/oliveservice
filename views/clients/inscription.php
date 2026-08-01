@@ -10,15 +10,15 @@ $end_last = (new DateTime('last day of last month'))->format('Y-m-d');
 $dateD = (new DateTime('first day of this month'))->format('d-m-Y');
 $dateF = (new DateTime('today'))->format('d-m-Y');
 
-$etudiant_annule = 0;
-$etudiant_en_attente = 0;
-$etudiant_approuve = 0;
+$client_annule = 0;
+$client_en_attente = 0;
+$client_approuve = 0;
 // Récupérer les achats du mois courant
 // $totaux = Soutra::getTotauxDepenseByMouth($start, $end); // méthode adaptée que l'on a créée
 
-// $etudiant_annule = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[2]); // méthode adaptée que l'on a créée
-// $etudiant_en_attente = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[0]); // méthode adaptée que l'on a créée
-// $etudiant_approuve = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[1]); // méthode adaptée que l'on a créée
+// $client_annule = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[2]); // méthode adaptée que l'on a créée
+// $client_en_attente = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[0]); // méthode adaptée que l'on a créée
+// $client_approuve = Soutra::getTotalDepenseAny($start, $end, STATUT_DEPENSE[1]); // méthode adaptée que l'on a créée
 
 
 ?>
@@ -54,11 +54,11 @@ $etudiant_approuve = 0;
                         <i class="far fa-times-circle"></i>
                     </div>
                     <h6 class="montan-title"><span class="text-muted text-uppercase">Dépenses annulee </span>(<span
-                            id="nombre_etudiant_annule"> <?= $etudiant_annule ?>
+                            id="nombre_client_annule"> <?= $client_annule ?>
                         </span>)</h6>
                 </div>
                 <h5 class="montan-value"><span
-                        id="monant_etudiant_annule"><?= number_format($etudiant_annule, 0, ',', ' ') ?>
+                        id="monant_client_annule"><?= number_format($client_annule, 0, ',', ' ') ?>
                     </span> FCFA</h5>
             </div>
         </div>
@@ -72,11 +72,11 @@ $etudiant_approuve = 0;
                         <i class="fas fa-clock"></i>
                     </div>
                     <h6 class="montan-title"><span class="text-muted text-uppercase">Dépenses en attentes</span> (<span
-                            id="nombre_etudiant_en_attente"> <?= $etudiant_en_attente ?>
+                            id="nombre_client_en_attente"> <?= $client_en_attente ?>
                         </span>)</h6>
                 </div>
                 <h5 class="montan-value"><span
-                        id="montant_etudiant_en_attente"><?= number_format($etudiant_en_attente, 0, ',', ' ') ?>
+                        id="montant_client_en_attente"><?= number_format($client_en_attente, 0, ',', ' ') ?>
                     </span> FCFA</h5>
             </div>
         </div>
@@ -90,11 +90,11 @@ $etudiant_approuve = 0;
                         <i class="fa fa-check-circle"></i>
                     </div>
                     <h6 class="montan-title"><span class="text-muted text-uppercase">Dépenses approuvees</span> (<span
-                            id="nombre_etudiant_approuve"> <?= $etudiant_approuve ?>
+                            id="nombre_client_approuve"> <?= $client_approuve ?>
                         </span>)</h6>
                 </div>
                 <h5 class="montan-value"><span class="tester"
-                        id="montant_etudiant_approuve"><?= number_format($etudiant_approuve, 0, ',', ' ') ?>
+                        id="montant_client_approuve"><?= number_format($client_approuve, 0, ',', ' ') ?>
                     </span> FCFA</h5>
             </div>
         </div>
@@ -114,7 +114,7 @@ $etudiant_approuve = 0;
 
         <div class="table-responsive bg-light py-3 px-2 border rounded">
             <!-- .table -->
-            <table id="data-table-etudiant" class="table table-hover my-table">
+            <table id="data-table-client" class="table table-hover my-table">
                 <!-- thead -->
                 <thead class="thead-light">
                     <tr>
@@ -135,20 +135,20 @@ $etudiant_approuve = 0;
 
 
 
-<!-- Modal etudiant-->
-<div class="modal fade" data-backdrop="static" id="etudiant-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="etudiantModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- Modal client-->
+<div class="modal fade" data-backdrop="static" id="inscription-client-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="clientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="etudiantModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
-                        class="text-uppercase">Formulaire d'enregistrement</span> </h5>
+                <h5 class="modal-title text-dark" id="clientModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
+                        class="text-uppercase">Inscription du client</span> </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="data-etudiant-modal">
+                <div class="data-inscription-client-modal">
 
                 </div>
             </div>

@@ -154,7 +154,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
         // <!-- parametrage -->
         $router->get('services-fonctions', [SettingController::class, 'fonction']);
-        $router->get('annees-semestres', [SettingController::class, 'annee']);
+        $router->get('annees-sessions', [SettingController::class, 'annee']);
 
         // <!-- FINNCES -->
         $router->get('depenses', [FinanceController::class, 'depense']);

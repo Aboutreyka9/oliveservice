@@ -49,7 +49,7 @@ class SettingController extends MainController
 
     public function annee()
     {
-        $this->view('admins/annee', ['title' => "Années et semestres"]);
+        $this->view('admins/annee', ['title' => "Années et sessions"]);
     }
 
 
@@ -497,10 +497,10 @@ class SettingController extends MainController
         Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
     }
 
-    // SEXION SEMESTRE
+    // SEXION SESSIONS
 
 
-    public function GetListeSemestre()
+    public function GetListeSession()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -518,15 +518,15 @@ class SettingController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
         // $search = $_POST['search'] ?? '';
         $columns = [
-            0 => 'libelle_semestre',
-            1 => 'statut_semestre',
-            2 => 'libelle_semestre',
-            3 => 'date_debut_semestre',
-            3 => 'date_fin_semestre',
-            4 => 'created_at_semestre',
+            0 => 'libelle_session',
+            1 => 'statut_session',
+            2 => 'libelle_session',
+            3 => 'date_debut_session',
+            3 => 'date_fin_session',
+            4 => 'created_at_session',
         ];
 
-        $orderBy = $columns[$orderColumn] ?? 'libelle_semestre';
+        $orderBy = $columns[$orderColumn] ?? 'libelle_session';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
 
@@ -535,59 +535,59 @@ class SettingController extends MainController
         if (!empty($search)) {
             // $likeParams = ['nom_user' => $search,'prenom_user' => $search,'email_user' => $search,'telephone_user' => $search,'matricule_user' => $search,'sexe_user' => $search];
 
-            $likeParams = ['libelle_semestre' => $search, 'date_debut_semestre' => $search, 'date_fin_semestre' => $search, 'created_at_semestre' => $search];
+            $likeParams = ['libelle_session' => $search, 'date_debut_session' => $search, 'date_fin_session' => $search, 'created_at_session' => $search];
         }
 
         // 🔢 Total
-        $total = $f->dataTbleCountTotalSemestresRow($whereParams);
+        $total = $f->dataTbleCountTotalSessionsRow($whereParams);
         // 🔢 Total filtré
 
-        $totalFiltered = $f->dataTbleCountTotalSemestresRow($whereParams, $likeParams);
+        $totalFiltered = $f->dataTbleCountTotalSessionsRow($whereParams, $likeParams);
         // 📄 Données
 
-        $semestreList = $f->DataTableFetchSemestresListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $sessionList = $f->DataTableFetchSessionsListe($likeParams, $orderBy, $orderDir, $start, $limit);
         $data = [];
 
 
-        $data = $this->settingService->semestreDataService($semestreList);
+        $data = $this->settingService->sessionDataService($sessionList);
         // Response::success('operation reussie',);
         echo json_encode([
             "draw"            => intval($_POST['draw']),
             "recordsTotal"    => $total,
             "recordsFiltered" => $totalFiltered,
             "data"            => $data
-            // "data"            => $semestreList
+            // "data"            => $sessionList
         ]);
         // // echo json_encode(['data' => $total, 'code' => 200]);
         return;
     }
 
-    public function modalAddSemestre()
+    public function modalAddSession()
     {
         $annees = $this->settingModel->getAllAnnees(Auth::user('etablissement_code'));
         if (empty($annees)) Response::error('Désolé, aucune année enregistrée!');
 
-        $output = $this->settingService->semestreAddModalService($annees);
+        $output = $this->settingService->sessionAddModalService($annees);
         Response::success('', ['data' => $output]);
     }
 
-    public function modalUpdatedSemestre()
+    public function modalUpdatedSession()
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
         // $users = getAllusers();
-        $semestre = $this->settingModel->getSingleSemestreByCode($codesemestre);
+        $session = $this->settingModel->getSingleSessionByCode($codesession);
 
         $annees = $this->settingModel->getAllAnnees(Auth::user('etablissement_code'));
 
-        if (empty($semestre) || empty($annees)) Response::error('Désolé, une erreur est survenue lors du traitement!');
+        if (empty($session) || empty($annees)) Response::error('Désolé, une erreur est survenue lors du traitement!');
 
-        $output = $this->settingService->semestreUpdateModalService($semestre, $annees);
+        $output = $this->settingService->sessionUpdateModalService($session, $annees);
         echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
     }
 
-    public function addSemestre()
+    public function addSession()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -595,14 +595,14 @@ class SettingController extends MainController
 
         $v = new Validator();
 
-        $v->required('libelle_semestre', $libelle_semestre, 'libelle année')
-            ->required('debut_semestre', $debut_semestre, 'Date debut')->inferieur('debut_semestre', $debut_semestre, 'Date debut', $fin_semestre, 'Date fin')
-            ->required('fin_semestre', $fin_semestre, 'Date fin')->superieur('fin_semestre', $fin_semestre, 'Date fin', $debut_semestre, 'Date debut');
+        $v->required('libelle_session', $libelle_session, 'libelle année')
+            ->required('debut_session', $debut_session, 'Date debut')->inferieur('debut_session', $debut_session, 'Date debut', $fin_session, 'Date fin')
+            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut');
 
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->settingService->saveSemestreData($_POST);
+        $result = $this->settingService->saveSessionData($_POST);
 
 
         if (!$result['success']) {
@@ -612,20 +612,20 @@ class SettingController extends MainController
         Response::success($result['message'], []);
     }
 
-    public function updateSemestre()
+    public function updateSession()
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
         $v = new Validator();
 
         $v->required('libelle_annee', $libelle_annee, 'Libellé année')
-            ->required('libelle_semestre', $libelle_semestre, 'libelle semestre')
-            ->required('debut_semestre', $debut_semestre, 'Date debut')->inferieur('debut_semestre', $debut_semestre, 'Date debut', $fin_semestre, 'Date fin')
-            ->required('fin_semestre', $fin_semestre, 'Date fin')->superieur('fin_semestre', $fin_semestre, 'Date fin', $debut_semestre, 'Date debut');
+            ->required('libelle_session', $libelle_session, 'libelle session')
+            ->required('debut_session', $debut_session, 'Date debut')->inferieur('debut_session', $debut_session, 'Date debut', $fin_session, 'Date fin')
+            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut');
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->settingService->updateSemestreData($_POST);
+        $result = $this->settingService->updateSessionData($_POST);
 
 
         if (!$result['success']) {
@@ -635,7 +635,7 @@ class SettingController extends MainController
         Response::success($result['message'], []);
     }
 
-    public function changeStatutSemestre()
+    public function changeStatutSession()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -644,7 +644,7 @@ class SettingController extends MainController
         // $statut_user = (isset($statut_utilisateur) && $statut_utilisateur != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
 
 
-        if ($this->settingModel->update(TABLES::SEMESTRES, 'code_semestre', $code_semestre, ['statut_semestre' => $statut_semestre])) Response::success('Statut modifié avec succès', []);
+        if ($this->settingModel->update(TABLES::SESSIONS, 'code_session', $code_session, ['statut_session' => $statut_session])) Response::success('Statut modifié avec succès', []);
 
         Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
     }

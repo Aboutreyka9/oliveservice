@@ -389,8 +389,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('annees-semestres') ?>">
-                                    <span class="sub-item"> Années & Semestres</span>
+                                <a class="item-link" href="<?= url('annees-sessions') ?>">
+                                    <span class="sub-item"> Années & Sessions</span>
                                 </a>
                             </li>
 
