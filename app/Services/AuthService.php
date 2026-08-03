@@ -60,12 +60,12 @@ class AuthService
 
 
         // Démarrer la session si pas encore démarrée
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        // if (session_status() === PHP_SESSION_NONE) {
+        //     session_start();
+        // }
 
         // Régénérer l'ID de session pour éviter la fixation de session
-        session_regenerate_id(true);
+        // session_regenerate_id(true);
         Auth::AuthLogin($user, $groupes, $roles);
 
         return [

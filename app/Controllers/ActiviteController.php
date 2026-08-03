@@ -8,6 +8,7 @@ use App\Helpers\HttpStatusCode;
 use App\Helpers\Response;
 use App\Helpers\Validator;
 use App\Models\ActiviteModel;
+use App\Models\SettingModel;
 use App\Services\ActiviteService;
 use TABLES;
 
@@ -16,6 +17,7 @@ class ActiviteController extends MainController
 
     // MODELS
     private ActiviteModel $activiteModel;
+    private SettingModel $settingModel;
 
     //   SERVICES
     private ActiviteService $activiteService;
@@ -25,6 +27,7 @@ class ActiviteController extends MainController
         parent::__construct();
         //  MODELS
         $this->activiteModel = new ActiviteModel();
+        $this->settingModel = new SettingModel();
 
         // SERVICES
         $this->activiteService = new ActiviteService();
@@ -149,14 +152,14 @@ class ActiviteController extends MainController
         extract($_POST);
 
         // $users = getAllusers();
-        $depense = $this->activiteModel->getSingledepenseByCode($codedepense);
+        $depense = $this->activiteModel->getSingleZoneByCode($codedepense);
 
-        $typeDepenses = $this->activiteModel->getAllTypeDepenses(Auth::user('etablissement_code'));
+        $typeDepenses = $this->activiteModel->getAllTypeZones(Auth::user('etablissement_code'));
 
 
         if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
 
-        $output = $this->activiteService->depenseUpdateModalService($depense, $typeDepenses);
+        $output = $this->activiteService->zoneUpdateModalService($depense, $typeDepenses);
         echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
     }
 
@@ -197,7 +200,7 @@ class ActiviteController extends MainController
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->activiteService->updateDepenseData($_POST);
+        $result = $this->activiteService->updateZoneData($_POST);
 
 
         if (!$result['success']) {
@@ -223,7 +226,7 @@ class ActiviteController extends MainController
 
     // END SEXION ZONE
 
-      // SEXION PACK
+    // SEXION PACK
 
 
     public function GetListePack()
@@ -298,7 +301,10 @@ class ActiviteController extends MainController
     {
 
 
-        $output = $this->activiteService->zoneAddModalService();
+        $sessions = $this->settingModel->getAllSessions(Auth::user('etablissement_code'));
+        if (empty($sessions)) Response::error('Désolé, aucune session enregistrée!');
+
+        $output = $this->activiteService->packAddModalService($sessions);
         Response::success('', ['data' => $output]);
     }
 

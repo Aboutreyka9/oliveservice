@@ -103,9 +103,9 @@ class UserModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT fn.libelle_fonction,COALESCE(en.id_enseignant,null) AS enseignant, COALESCE(an.code_annee,null) AS annee_code , u.* FROM " . TABLES::USERS . " AS u 
+            $sql = "SELECT fn.libelle_fonction,COALESCE(co.id_commercial,null) AS commercial, COALESCE(an.code_annee,null) AS annee_code , u.* FROM " . TABLES::USERS . " AS u 
             LEFT JOIN " . TABLES::FONCTIONS . " AS fn ON fn.code_fonction = u.fonction_code
-            LEFT JOIN " . TABLES::ENSEIGNANTS . " AS en ON en.user_code = u.code_user AND en.statut_enseignant = :statut
+            LEFT JOIN " . TABLES::COMMERCIALS . " AS co ON co.user_code = u.code_user AND co.statut_commercial = :statut
             LEFT JOIN " . TABLES::ANNEES . " AS an ON an.etablissement_code = u.etablissement_code AND an.statut_annee = :statut_annee
          WHERE {$email} = :email AND statut_user = :statut  LIMIT 1
 

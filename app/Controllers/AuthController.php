@@ -76,7 +76,7 @@ class AuthController extends MainController
             ->required('password', $password, 'Mot de passe');
 
 
-        if ($v->fails()) Response::error('Données invalides.', HttpStatusCode::BAD_REQUEST, $v->errors());
+        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::BAD_REQUEST);
 
         $result = $this->authService->login($email, $password);
 

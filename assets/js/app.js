@@ -1,20 +1,22 @@
-const ORIGIN = window.location.origin;
-/** obtenir cette structure http://localhost/hotel/ */
-// const ORIGIN = (window.location.protocol + '//' + window.location.host);
-const URL_HOME = ORIGIN + "/oliveservice/";
-const URL_AJAX = URL_HOME + "app/controllers/ajx.php";
-let tables = {};
-let formChanged = false;
+
+const APP = {
+    origin: window.location.origin,
+    home: window.location.origin + "/oliveservice/",
+    ajax: window.location.origin + "/oliveservice/app/Controllers/ajx.php",
+    tables: {},
+    formChanged: false,
+    rolesPermissions: [],
+    articleSelected: [],
+    dataCheck: [],
+    userCode: null,
+    date_start_picker:moment().startOf('month'), // 1er du mois
+    date_end_picker:moment() // aujourd’hui
+};
+
+
 const $form = $('form');
 let initialData = $form.serialize(); // capture les valeurs initiales
 let formBtn = '';
-let rolesPermissions = [];
-let dataCheck = [];
-let userCode = null;
-
-let date_start_picker = moment().startOf('month'); // 1er du mois
-let date_end_picker = moment(); // aujourd’hui
-
 $.ajaxSetup({
 
     beforeSend: function (xhr, settings) {
@@ -54,14 +56,14 @@ function detectChangeForms() {
 
 
         if ($form.serialize() !== initialData) {
-            formChanged = true;
+            APP.formChanged = true;
             if (formBtn !== '') {
                 $(formBtn).prop('disabled', false);
             } else {
                 $form.find('button[type="submit"], input[type="submit"]').prop('disabled', false);
             }
         } else {
-            formChanged = false;
+            APP.formChanged = false;
             if (formBtn !== '') {
                 $(formBtn).prop('disabled', true);
             } else {
@@ -137,7 +139,7 @@ function testDatable(action, selector, search = "") {
     // var se = $(selector).DataTable().search().value;
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: action,
             length: 20,
@@ -199,14 +201,14 @@ function ajaxTable(tableId, selector, action) {
         $(selector).empty(); // vide le tbody généré
     }
 
-    tables[tableId] = $(selector).DataTable({
+    APP.tables[tableId] = $(selector).DataTable({
         processing: true,
         serverSide: true,
         destroy: true,
         autoWidth: false,
 
         ajax: {
-            url: URL_AJAX,
+            url: APP.ajax,
             type: "POST",
             data: {
                 action: action
@@ -214,7 +216,7 @@ function ajaxTable(tableId, selector, action) {
         }
     });
 
-    tables[tableId].columns.adjust();
+    APP.tables[tableId].columns.adjust();
 }
 
 menuNav();
@@ -400,7 +402,7 @@ function deconnecter() {
     $('.btn_deconnect').click(function (e) {
         e.preventDefault();
         $.ajax({
-            url: URL_AJAX,
+            url: APP.ajax,
             method: 'POST',
             dataType: "JSON",
             data: {
@@ -435,7 +437,7 @@ function openModalAddUtilisateur() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_utilisateur_add'
             },
@@ -475,7 +477,7 @@ function ajouterUtilisateur() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -488,7 +490,7 @@ function ajouterUtilisateur() {
 
                 btnRes("#btnSubmitForm", "Enregistrer", "fa-save");
                 if (data.success) {
-                    tables['data-table-utilisateur'].ajax.reload(null, false);
+                    APP.tables['data-table-utilisateur'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#user-modal").modal("hide");
                 } else {
@@ -504,7 +506,7 @@ function modalUpdatedUtilisateurr(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_utilisateur_update',
             codeUtilisateur: code
@@ -539,7 +541,7 @@ function updatedUtilisateur() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "json",
             beforeSend: function () {
@@ -552,7 +554,7 @@ function updatedUtilisateur() {
 
                 btnRes("#btnSubmitForm", "Enregistrer", "fa-save");
                 if (data.success) {
-                    tables['data-table-utilisateur'].ajax.reload(null, false);
+                    APP.tables['data-table-utilisateur'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#user-modal").modal("hide");
 
@@ -581,7 +583,7 @@ function changeStatutUser(code, statut) {
 
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_utilisateurs',
@@ -597,7 +599,7 @@ function changeStatutUser(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-utilisateur'].ajax.reload(null, false);
+                            APP.tables['data-table-utilisateur'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -611,12 +613,12 @@ function changeStatutUser(code, statut) {
 function ModalAddrolePermissionUser(code) {
     // let btn = btn_action.id;
 
-    userCode = code;
+    APP.userCode = code;
 
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_role_permission_utilisateur',
             codeUtilisateur: code
@@ -649,7 +651,7 @@ function btnCloseModalPermission() {
     $("body").on("click", "#btn-close-modal", function (e) {
         // e.preventDefault();  
 
-        dataCheck = [];
+        APP.dataCheck = [];
 
     });
 }
@@ -674,8 +676,8 @@ function menuRole() {
 
             checked = false;
             $(this).data("checked", true);
-            if (!dataCheck.includes(groupe)) {
-                loadDataRole(userCode, groupe, code, permissionsDiv); // Rendre visible
+            if (!APP.dataCheck.includes(groupe)) {
+                loadDataRole(APP.userCode, groupe, code, permissionsDiv); // Rendre visible
             } else {
 
                 permissionsDiv.style.maxHeight = permissionsDiv.scrollHeight + 'px'; // Permet de déployer
@@ -698,7 +700,7 @@ function menuRole() {
 function loadDataRole(user, groupe, code, permissionsDiv) {
 
     $.ajax({
-        url: URL_AJAX,
+        url: APP.ajax,
         method: 'POST',
         data: {
             action: 'btn_load_data_role',
@@ -711,7 +713,7 @@ function loadDataRole(user, groupe, code, permissionsDiv) {
 
             if (data.success) {
                 $("#sexion-r" + code).html(data.data);
-                dataCheck.push(groupe);
+                APP.dataCheck.push(groupe);
                 permissionsDiv.style.maxHeight = permissionsDiv.scrollHeight + 'px'; // Permet de déployer
                 permissionsDiv.style.opacity = 1;
 
@@ -743,12 +745,12 @@ function checkPermissionOld() {
         let deleted = $("#delete" + coderoleId).is(":checked") ? 1 : 0;
 
 
-        let existe = rolesPermissions.some(r => r.role === coderoleId);
+        let existe = APP.rolesPermissions.some(r => r.role === coderoleId);
 
         if (!existe) {
-            let roleId = rolesPermissions.length + 1;
+            let roleId = APP.rolesPermissions.length + 1;
 
-            rolesPermissions.push({
+            APP.rolesPermissions.push({
                 id: roleId,
                 role: coderoleId,
                 create: create,
@@ -759,7 +761,7 @@ function checkPermissionOld() {
         }
 
 
-        rolesPermissions = rolesPermissions.map(role => {
+        APP.rolesPermissions = APP.rolesPermissions.map(role => {
 
             if (role.role === coderoleId) {
                 role["create"] = create;
@@ -774,7 +776,7 @@ function checkPermissionOld() {
 }
 
 function getRolePermission(role) {
-    return rolesPermissions.find(r => r.role === role);
+    return APP.rolesPermissions.find(r => r.role === role);
 }
 
 function putRolePermissionData(roleCode, permissions) {
@@ -783,8 +785,8 @@ function putRolePermissionData(roleCode, permissions) {
 
     if (!role) {
 
-        rolesPermissions.push({
-            id: rolesPermissions.length + 1,
+        APP.rolesPermissions.push({
+            id: APP.rolesPermissions.length + 1,
             role: roleCode,
             ...permissions
         });
@@ -827,7 +829,7 @@ function checkPermission() {
         putRolePermissionData(roleCode, permissions);
         refreshRoleCheckbox(row);
 
-        console.log(rolesPermissions);
+        console.log(APP.rolesPermissions);
 
     });
 
@@ -868,21 +870,21 @@ savePermission();
 function savePermission() {
     $("body").on("click", "#btnSavePermissions", function (e) {
         e.preventDefault();
-        if (rolesPermissions.length === 0) {
+        if (APP.rolesPermissions.length === 0) {
             $.notify('Aucune autoristion accordée')
             return;
-        } else if (userCode == "") {
+        } else if (APP.userCode == "") {
             $.notify("Veuillez reprendre le processus")
         }
 
         $.ajax({
-            url: URL_AJAX,
+            url: APP.ajax,
             method: 'POST',
             dataType: 'JSON',
             data: {
                 action: 'btn_add_permission',
-                codeUtilisateur: userCode,
-                roles: JSON.stringify(rolesPermissions)
+                codeUtilisateur: APP.userCode,
+                roles: JSON.stringify(APP.rolesPermissions)
             },
             beforeSend: function () {
                 // $("#spinner").addClass("show");
@@ -902,9 +904,9 @@ function savePermission() {
                 // $("#btn_modifier_user").attr("disabled", false);
 
                 if (data.success) {
-                    userCode = "";
-                    rolesPermissions = [];
-                    dataCheck = [];
+                    APP.userCode = "";
+                    APP.rolesPermissions = [];
+                    APP.dataCheck = [];
 
                     $.notify(data.message, "success");
                     $("#role-permission-modal").modal("hide");
@@ -935,7 +937,7 @@ function openModalAddFonction() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_fonction_add'
             },
@@ -974,7 +976,7 @@ function ajouterFonction() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -988,7 +990,7 @@ function ajouterFonction() {
 
                 btnRes("#btnSubmitFormFonction", "Enregistrer", "fa-save");
                 if (data.success) {
-                    tables['data-table-fonction'].ajax.reload(null, false);
+                    APP.tables['data-table-fonction'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#fonction-modal").modal("hide");
                 } else {
@@ -1005,7 +1007,7 @@ function modalUpdatedFonction(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_fonction_update',
             codeFonction: code
@@ -1040,7 +1042,7 @@ function updatedFonction() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1055,7 +1057,7 @@ function updatedFonction() {
                 btnRes("#btnSubmitFormFonction", "Enregistrer", "fa-save");
 
                 if (data.success) {
-                    tables['data-table-fonction'].ajax.reload(null, false);
+                    APP.tables['data-table-fonction'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#fonction-modal").modal("hide");
 
@@ -1084,7 +1086,7 @@ function changeStatutFonction(code, statut) {
 
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_fonctions',
@@ -1100,7 +1102,7 @@ function changeStatutFonction(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-fonction'].ajax.reload(null, false);
+                            APP.tables['data-table-fonction'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1123,7 +1125,7 @@ function openModalAddService() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_service_add'
             },
@@ -1162,7 +1164,7 @@ function ajouterService() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1177,7 +1179,7 @@ function ajouterService() {
                 btnRes("#btnSubmitFormService", "Enregistrer", "fa-save");
                 if (data.success) {
                     $.notify(data.message, "success");
-                    tables['data-table-service'].ajax.reload(null, false);
+                    APP.tables['data-table-service'].ajax.reload(null, false);
 
                     $("#service-modal").modal("hide");
                 } else {
@@ -1194,7 +1196,7 @@ function modalUpdatedService(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_service_update',
             codeService: code
@@ -1229,7 +1231,7 @@ function updatedService() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1244,7 +1246,7 @@ function updatedService() {
                 btnRes("#btnSubmitFormService", "Enregistrer", "fa-save");
 
                 if (data.success) {
-                    tables['data-table-service'].ajax.reload(null, false);
+                    APP.tables['data-table-service'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#service-modal").modal("hide");
 
@@ -1273,7 +1275,7 @@ function changeStatutService(code, statut) {
 
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_services',
@@ -1289,7 +1291,7 @@ function changeStatutService(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-service'].ajax.reload(null, false);
+                            APP.tables['data-table-service'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1311,7 +1313,7 @@ function openModalAddAnnee() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_annee_add'
             },
@@ -1350,7 +1352,7 @@ function ajouterAnnee() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1364,7 +1366,7 @@ function ajouterAnnee() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-annee'].ajax.reload(null, false);
+                    APP.tables['data-table-annee'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#annee-modal").modal("hide");
                 } else {
@@ -1381,7 +1383,7 @@ function modalUpdatedAnnee(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_annee_update',
             codeAnnee: code
@@ -1416,7 +1418,7 @@ function updatedAnnee() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1430,7 +1432,7 @@ function updatedAnnee() {
 
                 btnRes("#btnSubmitFormAnnee", "Enregistrer", "fa-save");
                 if (data.success) {
-                    tables['data-table-annee'].ajax.reload(null, false);
+                    APP.tables['data-table-annee'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#annee-modal").modal("hide");
 
@@ -1459,7 +1461,7 @@ function changeStatutAnnee(code, statut) {
 
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_annees',
@@ -1475,7 +1477,7 @@ function changeStatutAnnee(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-annee'].ajax.reload(null, false);
+                            APP.tables['data-table-annee'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1499,7 +1501,7 @@ function openModalAddSemestre() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_session_add'
             },
@@ -1540,7 +1542,7 @@ function ajouterSemestre() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1554,7 +1556,7 @@ function ajouterSemestre() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-session'].ajax.reload(null, false);
+                    APP.tables['data-table-session'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#session-modal").modal("hide");
                 } else {
@@ -1571,7 +1573,7 @@ function modalUpdatedSemestre(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_session_update',
             codesession: code
@@ -1606,7 +1608,7 @@ function updatedSemestre() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1621,7 +1623,7 @@ function updatedSemestre() {
                 btnRes("#btnSubmitFormSemestre", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    tables['data-table-session'].ajax.reload(null, false);
+                    APP.tables['data-table-session'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#session-modal").modal("hide");
 
@@ -1649,7 +1651,7 @@ function changeStatutSemestre(code, statut) {
             if (willDelete) {
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_sessions',
@@ -1665,7 +1667,7 @@ function changeStatutSemestre(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-session'].ajax.reload(null, false);
+                            APP.tables['data-table-session'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1688,7 +1690,7 @@ function openModalAddZone() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_zone_add'
             },
@@ -1729,7 +1731,7 @@ function ajouterZone() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             // dataType: "JSON",
             beforeSend: function () {
@@ -1743,7 +1745,7 @@ function ajouterZone() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-zone'].ajax.reload(null, false);
+                    APP.tables['data-table-zone'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#zone-modal").modal("hide");
                 } else {
@@ -1760,7 +1762,7 @@ function modalUpdatedZone(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_session_update',
             codesession: code
@@ -1795,7 +1797,7 @@ function updatedZone() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1810,7 +1812,7 @@ function updatedZone() {
                 btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    tables['data-table-zone'].ajax.reload(null, false);
+                    APP.tables['data-table-zone'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#zone-modal").modal("hide");
 
@@ -1838,7 +1840,7 @@ function changeStatutSemestre(code, statut) {
             if (willDelete) {
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_sessions',
@@ -1854,7 +1856,7 @@ function changeStatutSemestre(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-zone'].ajax.reload(null, false);
+                            APP.tables['data-table-zone'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -1864,6 +1866,292 @@ function changeStatutSemestre(code, statut) {
         });
 }
 /** FIN SECTION ZONE */
+
+
+/** DEBUT SECTION PACKS */
+
+loadDataTable('data-table-pack', '#data-table-pack', 'charger_data_packs');
+
+function AddNewRowTable(article) {
+    let html = '';
+    let index = 0;
+
+    if (APP.articleSelected.includes(article[0])) return $.notify('Désolé,cet article existe déjà dans la liste');
+
+    // let index = $('.table_commande tbody tr').length + 1;
+    APP.articleSelected.push(article[0]);
+    index = APP.articleSelected.length;
+    
+    html = dataRow(article);
+
+    $('.table_add_pack tbody').append(html);
+    $('#countArticle').text(index);
+}
+
+function dataRow(article) {
+    html = `
+        <tr data-code="${article[0]}">
+            <td>${article[1]}</td>
+            <td class="text-dark text-center qte" contenteditable="true">1</td>
+            
+            <td> 
+                <button data-id="${article[0]}" title="Retirer l\'article de la liste" class="btn btn-danger btn-sm btn_remove_data_article">
+                    <i class="fa fa-trash"></i> 
+                </button>
+            </td>
+        </tr>`;
+    return html;
+}
+
+addDataPack();
+function addDataPack() {
+    $("body").on("click", "#btnAddDataPack", function (e) {
+        // e.preventDefault();
+        var data = $('#dataPack').val();
+                    
+        if(data == "") return $.notify('Désolé,aucun article selectionner.');
+        let article = data.split('&');
+        // let code = val[0];
+        // let libelle = val[1];
+        // console.log(libelle,code);
+        AddNewRowTable(article);
+        
+    });
+}
+
+function pushData(selector) {
+    let dataselector = [];
+    $('.table_add_pack tbody tr').each(function () {
+        var code = $(this).data('code');
+        var el = $(this).find('.' + selector).text();
+        
+        dataselector.push({code:code,qte:Number(el)});
+        // dataselector.push(el);
+    });
+    return dataselector
+}
+
+   btn_suprimer_data_pack();
+    function btn_suprimer_data_pack() {
+        $('body').on('click','.btn_remove_data_article', function (e) {
+            e.preventDefault();
+            var element = $(this);
+            var code_article = $(this).data('id');
+
+            // console.log(id_vente,id_article);
+            // return:
+            
+
+          swal({
+                title: "Etes vous sure",
+                text: "de vouloir retirer cet article ?",
+                icon: "warning",
+                buttons: ['Non', 'Oui'],
+                dangerMode: true,
+            }).then((a) => {
+                if (a) {
+                    element.closest('tr').remove();
+                    APP.articleSelected = APP.articleSelected.filter(a => a != code_article);
+                    index = APP.articleSelected.length;
+                    $('#countArticle').text(index);
+
+
+                    $.notify("Article retiré avec succès", "success");
+                }
+            })
+        });
+    }
+
+openModalAddPack();
+
+
+function openModalAddPack() {
+    $('#btn_pack_addModal').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'btn_showmodal_pack_add'
+            },
+            dataType: "JSON",
+            beforeSend: function () {
+                $(".loader_backdrop2").css('display', "block");
+                // btnReq("#ClientAddModal", "Traitement...");
+
+            },
+            success: function (data) {
+                console.log(data);
+
+                // btnRes("#ClientAddModal", 'Ajouter un client', 'fa-plus');
+                // ;
+
+                $(".loader_backdrop2").css('display', "none");
+                if (data.success) {
+                    var output = data.data;
+                    APP.articleSelected = [];
+                    $(".data-pack-modal").html(output.data);
+                    $("#pack-modal").modal("show");
+
+
+                } else {
+                    $.notify(data.message);
+
+                }
+
+            }
+        })
+    });
+}
+
+
+ajouterPack();
+function ajouterPack() {
+    $("body").on("submit", "#frmAddPack", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+        var packArticles = pushData('qte');
+        console.log(packArticles);
+        return;
+        
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            // dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                // btnReq("#btnSubmitFormPack", "Enregistrement...");
+            },
+            success: function (data) {
+                console.log(data);
+                // btnRes("#btnSubmitFormPack", "Enregistrer", "fa-save");
+                // $(".loader_backdrop2").css('display', "none");
+
+                if (data.success) {
+                    APP.tables['data-table-pack'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#pack-modal").modal("hide");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+
+function modalUpdatedPack(code) {
+    // let btn = btn_action.id;
+
+    $.ajax({
+        method: "POST",
+        url: APP.ajax,
+        data: {
+            action: 'btn_showmodal_session_update',
+            codesession: code
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $(".loader_backdrop2").css('display', "block");
+            // btnReq(".modal_footer", "Traitement...");
+        },
+        success: function (data) {
+
+            $(".loader_backdrop2").css('display', "none");
+
+            if (data.success) {
+                $(".data-pack-modal").html(data.data);
+                $("#pack-modal").modal("show");
+
+            } else {
+                $.notify(data.message);
+
+            }
+        }
+    });
+}
+
+updatedPack();
+function updatedPack() {
+    $("body").on("submit", "#frmUpdateZone", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormZone", "Mise à jour en cours...");
+            },
+            success: function (data) {
+                // $(".loader_backdrop2").css('display', "none");
+                console.log(data);
+
+                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                return
+                if (data.success) {
+                    APP.tables['data-table-pack'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#pack-modal").modal("hide");
+
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+function changeStatutPack(code, statut) {
+    swal({
+        title: "Notification",
+        text: "Voulez-vous vraiment modifier le statut de ce pack?",
+        icon: "warning",
+        dangerMode: true,
+        closeOnClickOutside: false,
+        buttons: {
+            cancel: true,
+            confirm: "Confirmer",
+        },
+    })
+        .then(willDelete => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: APP.ajax,
+                    method: 'POST',
+                    data: {
+                        action: 'change_statut_sessions',
+                        code_session: code,
+                        statut_session: statut
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $(".loader_backdrop2").css('display', "block");
+                    },
+                    success: function (data) {
+                        $(".loader_backdrop2").css('display', "none");
+
+                        if (data.success) {
+                            $.notify(data.message, "success");
+                            APP.tables['data-table-pack'].ajax.reload(null, false);
+                        } else {
+                            $.notify(data.message);
+                        }
+                    }
+                });;
+            }
+        });
+}
+/** FIN SECTION PACKS */
 
 /** DEBUT SECTION DEPENSE */
 
@@ -1876,7 +2164,7 @@ function openModalAddDepense() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_depense_add'
             },
@@ -1917,7 +2205,7 @@ function ajouterDepense() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -1931,7 +2219,7 @@ function ajouterDepense() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-depense'].ajax.reload(null, false);
+                    APP.tables['data-table-depense'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#depense-modal").modal("hide");
                 } else {
@@ -1948,7 +2236,7 @@ function modalUpdatedDepense(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_depense_update',
             codedepense: code
@@ -1984,7 +2272,7 @@ function updatedDepense() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             // dataType: "JSON",
             beforeSend: function () {
@@ -1999,7 +2287,7 @@ function updatedDepense() {
                 btnRes("#btnSubmitFormDepense", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    tables['data-table-depense'].ajax.reload(null, false);
+                    APP.tables['data-table-depense'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#depense-modal").modal("hide");
 
@@ -2027,7 +2315,7 @@ function changeStatutDepense(code, statut) {
             if (willDelete) {
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_depenses',
@@ -2043,7 +2331,7 @@ function changeStatutDepense(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-depense'].ajax.reload(null, false);
+                            APP.tables['data-table-depense'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -2068,7 +2356,7 @@ function openModalAddInscription() {
  
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: {
                 action: 'btn_showmodal_inscription_add'
             },
@@ -2109,7 +2397,7 @@ function ajouterinscription() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             dataType: "JSON",
             beforeSend: function () {
@@ -2123,7 +2411,7 @@ function ajouterinscription() {
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    tables['data-table-inscription'].ajax.reload(null, false);
+                    APP.tables['data-table-inscription'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#inscription-modal").modal("hide");
                 } else {
@@ -2140,7 +2428,7 @@ function modalUpdatedInscription(code) {
 
     $.ajax({
         method: "POST",
-        url: URL_AJAX,
+        url: APP.ajax,
         data: {
             action: 'btn_showmodal_depense_update',
             codedepense: code
@@ -2176,7 +2464,7 @@ function updatedinscription() {
 
         $.ajax({
             method: "POST",
-            url: URL_AJAX,
+            url: APP.ajax,
             data: data,
             // dataType: "JSON",
             beforeSend: function () {
@@ -2191,7 +2479,7 @@ function updatedinscription() {
                 btnRes("#btnSubmitFormInscription", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    tables['data-table-depense'].ajax.reload(null, false);
+                    APP.tables['data-table-depense'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#depense-modal").modal("hide");
 
@@ -2219,7 +2507,7 @@ function changeStatutinscription(code, statut) {
             if (willDelete) {
 
                 $.ajax({
-                    url: URL_AJAX,
+                    url: APP.ajax,
                     method: 'POST',
                     data: {
                         action: 'change_statut_depenses',
@@ -2235,7 +2523,7 @@ function changeStatutinscription(code, statut) {
 
                         if (data.success) {
                             $.notify(data.message, "success");
-                            tables['data-table-depense'].ajax.reload(null, false);
+                            APP.tables['data-table-depense'].ajax.reload(null, false);
                         } else {
                             $.notify(data.message);
                         }
@@ -2251,7 +2539,7 @@ function changeStatutinscription(code, statut) {
 
 // SEXION FILTER DATA
 
-initDateRangeFilterDepense(date_start_picker, date_end_picker);
+initDateRangeFilterDepense(APP.date_start_picker, APP.date_end_picker);
 
 function initDateRangeFilterDepense(startDate, endDate) {
 

@@ -79,44 +79,7 @@
                                 </a>
                             </li>
 
-                            <li>
-                                <a class="item-link" href="<?= url('articles') ?>">
-                                    <span class="sub-item">Article</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('Niveaux') ?>">
-                                    <span class="sub-item">Niveaux</span>
-                                </a>
-                            </li>
-                            <?php //endif; 
-                            ?>
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('emplois-du-temps') ?>">
-                                    <span class="sub-item">Emplois du temps</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('Planification des cours') ?>">
-                                    <span class="sub-item">Planification des cours</span>
-                                </a>
-                            </li>
-                            <?php //endif; 
-                            ?>
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('semestres') ?>">
-                                    <span class="sub-item">Semestres</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('annees') ?>">
-                                    <span class="sub-item">Années</span>
-                                </a>
-                            </li>
+                           
                             <?php //endif; 
                             ?>
 
@@ -153,21 +116,7 @@
                                     <span class="sub-item">Réinscriptions</span>
                                 </a>
                             </li>
-                            <li>
-                                <a class="item-link" href="<?= url('dossiers-etudiants') ?>">
-                                    <span class="sub-item">Dossiers étudiants</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('cartes-etudiantes') ?>">
-                                    <span class="sub-item">Cartes étudiantes</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('historique-scolaire') ?>">
-                                    <span class="sub-item">Historique scolaire</span>
-                                </a>
-                            </li>
+                           
                             <?php //endif; 
                             ?>
 
@@ -275,8 +224,8 @@
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
                             ?>
                             <li>
-                                <a class="item-link" href="<?= url('personnel-enseignants') ?>">
-                                    <span class="sub-item"> Personnel Enseignants</span>
+                                <a class="item-link" href="<?= url('personnel-comercials') ?>">
+                                    <span class="sub-item"> Commercials</span>
                                 </a>
                             </li>
 

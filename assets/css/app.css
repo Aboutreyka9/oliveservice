@@ -525,6 +525,38 @@ input::-o-outer-spin-button {
     transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
+/* .table-container-pack{
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #dee2e6;
+    scrollbar-width: none;      // Firefox 
+    -ms-overflow-style: none;   // Internet Explorer et Edge Legacy 
+} */
+
+/* Chrome, Edge, Safari */
+.table-container-pack::-webkit-scrollbar{
+    display: none;
+}
+
+.table-container-pack{
+    max-height: 400px;
+    overflow-y: auto;
+     scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* Internet Explorer et Edge Legacy */
+}
+
+.table-container-pack thead th{
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+}
+
+.table-container-pack table{
+    margin-bottom: 0;
+}
+
 /* END SEXION SESSION PACK */
 
 

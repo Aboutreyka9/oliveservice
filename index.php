@@ -150,7 +150,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
 
         $router->get('recrutements/personnel', [UserController::class, 'recrutement']);
-        $router->get('personnel-enseignants', [UserController::class, 'enseignants']);
+        $router->get('personnel-commercials', [UserController::class, 'enseignants']);
         $router->get('personnel-administratifs', [UserController::class, 'administratif']);
 
         // <!-- parametrage -->
@@ -167,6 +167,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
         // <!-- Activity -->
         $router->get('zones', [ActiviteController::class, 'zone']);
+        $router->get('packs', [ActiviteController::class, 'pack']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
     });
