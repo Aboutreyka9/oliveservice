@@ -241,8 +241,9 @@ class ActiviteController extends MainController
         extract($_POST);
         $f = new ActiviteModel();
 
+        // var_dump($_POST);return;
         $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code')];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
 
 
         $limit  = (int) ($_POST['length'] ?? 10);
@@ -252,19 +253,17 @@ class ActiviteController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
         // $search = $_POST['search'] ?? '';
         $columns = [
-            0 => 'libelle_type_depense',
-            1 => 'periode_depense',
-            2 => 'statut_depense',
-            3 => 'montant_depense',
-            4 => 'user_confirm',
-            5 => 'created_at_confirm'
+            0 => 'libelle_categorie_pack',
+            1 => 'statut_categorie_pack',
+            2 => 'libelle_categorie_pack',
+            3 => 'created_at_categorie_pack'
         ];
         // $columns = [
         //     0 => 'libelle_type_depense',
 
         // ];
 
-        $orderBy = $columns[$orderColumn] ?? 'libelle_type_depense';
+        $orderBy = $columns[$orderColumn] ?? 'libelle_categorie_pack';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
 
@@ -273,7 +272,7 @@ class ActiviteController extends MainController
         if (!empty($search)) {
 
 
-            $likeParams = ['libelle_type_depense' => $search, 'periode_depense' => $search, 'statut_depense' => $search, 'montant_depense' => $search, 'user_confirm' => $search, 'created_at_confirm' => $search];
+            $likeParams = ['libelle_categorie_pack' => $search, 'statut_categorie_pack' => $search, 'created_at_categorie_pack' => $search];
 
             // $likeParams = ['libelle_type_depense' => $search];
         }
@@ -335,13 +334,11 @@ class ActiviteController extends MainController
 
         $v = new Validator();
 
-        $v->required('libelle_zone', $libelle_zone, 'Libelle zone');
-
+        $v->required('libelle_categorie_pack', $libelle_categorie_pack, 'Libelle Categorie');
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
         $result = $this->activiteService->saveCategoriePackData($_POST);
-
 
         if (!$result['success']) {
             Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);

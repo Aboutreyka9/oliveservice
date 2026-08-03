@@ -207,7 +207,7 @@ class ActiviteModel extends Model
         //     );
         // }
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+        $where = "WHERE cat.etablissement_code = :etablissement_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -231,7 +231,7 @@ class ActiviteModel extends Model
         // }
 
 
-        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::DEPENSES . " dp $where";
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CATEGORIES . " cat $where";
 
         $stmt = $this->db->prepare($sql);
 
@@ -246,7 +246,7 @@ class ActiviteModel extends Model
     {
 
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+        $where = "WHERE cat.etablissement_code = :etablissement_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -259,14 +259,13 @@ class ActiviteModel extends Model
 
 
 
-        $sql = "SELECT dp.*, tp.libelle_type_depense FROM " . TABLES::DEPENSES . " dp 
-        JOIN " . TABLES::TYPE_DEPENSES . "  tp ON tp.code_type_depense = dp.type_depense_code 
+        $sql = "SELECT cat.*, CONCAT(us.nom_user,' ',us.prenom_user) AS nom_user FROM " . TABLES::CATEGORIES . " cat 
+        JOIN " . TABLES::USERS . " us ON us.code_user = cat.user_code
         $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
-        $stmt->bindValue(":annee_code", Auth::user('annee_code'));
 
         // Bind les parametreslike
         $like = [];

@@ -95,28 +95,28 @@ class ActiviteService
     {
         extract($post);
 
-        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]))) {
-            return ['success' => false, 'message' => 'Desolé! Ce libelle de zone existe déjà.'];
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_categorie_pack' => $libelle_categorie_pack, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce libelle de categorie existe déjà.'];
         }
 
-        $code = $this->activiteModel->generatorCode(TABLES::CATEGORIES, 'code_zone');
+        $code = $this->activiteModel->generatorCode(TABLES::CATEGORIES, 'code_categorie_pack');
 
-        $data_zone = [
-            'libelle_zone' => strtoupper($libelle_zone),
-            'code_zone' => $code,
-            'statut_zone' => STATUT_ACTIF,
+        $data_categories = [
+            'libelle_categorie_pack' => strtoupper($libelle_categorie_pack),
+            'code_categorie_pack' => $code,
+            'statut_categorie_pack' => STATUT_ACTIF,
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
-            'created_at_zone' => date('Y-m-d H:i:s'),
+            'created_at_categorie_pack' => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->activiteModel->create(TABLES::CATEGORIES, $data_zone)) {
+        if (!$this->activiteModel->create(TABLES::CATEGORIES, $data_categories)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
         return [
             'success' => true,
-            'message' => 'categoriePack enregistrée avec succès.',
+            'message' => 'Categorie enregistrée avec succès.',
         ];
     }
 
@@ -348,20 +348,20 @@ class ActiviteService
     {
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmAddZone">
+            <form action="#" method="post" id="frmAddCategoriePack">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
                         <input type="hidden" value="btn_add_categoriePack" name="action">
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
-                        <label for="libelle_categoriePack" class="form-label">Libelle categoriePack <strong class="text-danger">*</strong></label>
-                        <input type="text" class="form-control" id="libelle_categoriePack" name="libelle_categoriePack" required>
+                        <label for="libelle_categorie_pack" class="form-label">Libelle categorie <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="libelle_categorie_pack" name="libelle_categorie_pack" required>
                     </div>
                     
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-12 modal_footer">
-                        <button type="submit" class="btn btn-primary" id="btnSubmitFormZone"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 
                     </div>
@@ -377,7 +377,7 @@ class ActiviteService
     {
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmUpdateZone">
+            <form action="#" method="post" id="frmUpdateCategoriePack">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
                         <input type="hidden" value="btn_update_categoriePack" name="action">
@@ -394,7 +394,7 @@ class ActiviteService
 
                 <div class="row mb-3">
                     <div class="col-md-12 modal_footer">
-                        <button type="submit" class="btn btn-primary" id="btnSubmitFormZone"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 
                     </div>
@@ -414,7 +414,7 @@ class ActiviteService
         foreach ($categoriePacks as $categoriePack) {
             $i++;
 
-            $etat = checkEtatData($categoriePack['statut_categoriePack']);
+            $etat = checkEtatData($categoriePack['statut_categorie_pack']);
 
             $actions = '
             <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -422,19 +422,19 @@ class ActiviteService
             </button>
             <div class="dropdown-menu">
 
-        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedZone(\'' . $categoriePack['code_categoriePack'] . '\')" 
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedCategoriePack(\'' . $categoriePack['code_categorie_pack'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier categoriePack">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier categoriePack </button>
         ';
-            if ($categoriePack['statut_categoriePack'] == STATUT_ACTIF) {
+            if ($categoriePack['statut_categorie_pack'] == STATUT_ACTIF) {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $categoriePack['code_categoriePack'] . '\',\'' . STATUT_INACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $categoriePack['code_categorie_pack'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Désactiver categoriePack ">
             <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver categoriePack </button>
         ';
             } else {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $categoriePack['code_categoriePack'] . '\',\'' . STATUT_ACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $categoriePack['code_categorie_pack'] . '\',\'' . STATUT_ACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Activer categoriePack ">
             <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer categoriePack </button>
         ';
@@ -445,9 +445,9 @@ class ActiviteService
             $data[] = [
                 $i,
                 $etat,
-                strtoupper($categoriePack['libelle_categoriePack']),
-                textLimit($categoriePack['description_categoriePack']),
-                date_formater($categoriePack['created_at_categoriePack']),
+                strtoupper($categoriePack['libelle_categorie_pack']),
+                date_formater($categoriePack['created_at_categorie_pack']),
+                $categoriePack['nom_user'],
                 $actions
             ];
         }
@@ -613,7 +613,7 @@ class ActiviteService
             </button>
             <div class="dropdown-menu">
 
-        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedZone(\'' . $pack['code_pack'] . '\')" 
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedCategoriePack(\'' . $pack['code_pack'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier pack">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier pack </button>
         ';

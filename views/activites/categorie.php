@@ -29,8 +29,6 @@
     </div>
 </div>
 
-
-
 <!-- Modal categorie_pack-->
 <div class="modal fade" data-backdrop="static" id="categorie-pack-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="categorie_packModalLabel" aria-hidden="true">
@@ -44,7 +42,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="data-categorie_pack-modal">
+                <div class="data-categorie-pack-modal">
 
 
                 </div>

@@ -222,7 +222,7 @@ switch ($action) {
     //end Actions pour les Zones
 
     // Debut Actions pour les Categories pack 
-    case 'charger_data_categoriePacks':
+    case 'charger_data_categorie_packs':
         $ajx = new ActiviteController();
         $ajx->getListeCategoriePack();
         break;

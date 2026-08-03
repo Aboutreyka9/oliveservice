@@ -1871,9 +1871,9 @@ function changeStatutSemestre(code, statut) {
 
 loadDataTable('data-table-categorie-pack', '#data-table-categorie-pack', 'charger_data_categorie_packs');
 
-openModalAddZone();
-function openModalAddZone() {
-    $('#btn_categoriePack_addModal').click(function (e) {
+openModalAddCategoriePack();
+function openModalAddCategoriePack() {
+    $('#btn_categorie_pack_addModal').click(function (e) {
         e.preventDefault();
 
         $.ajax({
@@ -1897,8 +1897,8 @@ function openModalAddZone() {
                 $(".loader_backdrop2").css('display', "none");
                 if (data.success) {
                     var output = data.data;
-                    $(".data-categoriePack-modal").html(output.data);
-                    $("#categoriePack-modal").modal("show");
+                    $(".data-categorie-pack-modal").html(output.data);
+                    $("#categorie-pack-modal").modal("show");
 
 
                 } else {
@@ -1911,9 +1911,9 @@ function openModalAddZone() {
     });
 }
 
-ajouterZone();
-function ajouterZone() {
-    $("body").on("submit", "#frmAddZone", function (e) {
+ajouterCategoriePack();
+function ajouterCategoriePack() {
+    $("body").on("submit", "#frmAddCategoriePack", function (e) {
         e.preventDefault();
         var data = $(this).serialize();
 
@@ -1921,21 +1921,22 @@ function ajouterZone() {
             method: "POST",
             url: APP.ajax,
             data: data,
-            // dataType: "JSON",
+            dataType: "JSON",
             beforeSend: function () {
                 // $(".loader_backdrop2").css('display', "block");
 
-                btnReq("#btnSubmitFormZone", "Enregistrement...");
+                btnReq("#btnSubmitFormCategoriePack", "Enregistrement...");
             },
             success: function (data) {
                 console.log(data);
-                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                // return;
+                btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
-                    APP.tables['data-table-categoriePack'].ajax.reload(null, false);
+                    APP.tables['data-table-categorie-pack'].ajax.reload(null, false);
                     $.notify(data.message, "success");
-                    $("#categoriePack-modal").modal("hide");
+                    $("#categorie-pack-modal").modal("hide");
                 } else {
                     $.notify(data.message);
                 }
@@ -1945,7 +1946,7 @@ function ajouterZone() {
 }
 
 
-function modalUpdatedZone(code) {
+function modalUpdatedCategoriePack(code) {
     // let btn = btn_action.id;
 
     $.ajax({
@@ -1966,7 +1967,7 @@ function modalUpdatedZone(code) {
 
             if (data.success) {
                 $(".data-categoriePack-modal").html(data.data);
-                $("#categoriePack-modal").modal("show");
+                $("#categorie-pack-modal").modal("show");
 
             } else {
                 $.notify(data.message);
@@ -1976,9 +1977,9 @@ function modalUpdatedZone(code) {
     });
 }
 
-updatedZone();
-function updatedZone() {
-    $("body").on("submit", "#frmUpdateZone", function (e) {
+updatedCategoriePack();
+function updatedCategoriePack() {
+    $("body").on("submit", "#frmUpdateCategoriePack", function (e) {
         e.preventDefault();
         var data = $(this).serialize();
 
@@ -1991,18 +1992,18 @@ function updatedZone() {
             beforeSend: function () {
                 // $(".loader_backdrop2").css('display', "block");
 
-                btnReq("#btnSubmitFormZone", "Mise à jour en cours...");
+                btnReq("#btnSubmitFormCategoriePack", "Mise à jour en cours...");
             },
             success: function (data) {
                 // $(".loader_backdrop2").css('display', "none");
                 console.log(data);
 
-                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
-                    APP.tables['data-table-categoriePack'].ajax.reload(null, false);
+                    APP.tables['data-table-categorie-pack'].ajax.reload(null, false);
                     $.notify(data.message, "success");
-                    $("#categoriePack-modal").modal("hide");
+                    $("#categorie-pack-modal").modal("hide");
 
                 } else {
                     $.notify(data.message);
@@ -2265,7 +2266,7 @@ function modalUpdatedPack(code) {
 
 updatedPack();
 function updatedPack() {
-    $("body").on("submit", "#frmUpdateZone", function (e) {
+    $("body").on("submit", "#frmUpdateCategoriePack", function (e) {
         e.preventDefault();
         var data = $(this).serialize();
 
@@ -2277,13 +2278,13 @@ function updatedPack() {
             beforeSend: function () {
                 // $(".loader_backdrop2").css('display', "block");
 
-                btnReq("#btnSubmitFormZone", "Mise à jour en cours...");
+                btnReq("#btnSubmitFormCategoriePack", "Mise à jour en cours...");
             },
             success: function (data) {
                 // $(".loader_backdrop2").css('display', "none");
                 console.log(data);
 
-                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
                 return
                 if (data.success) {
                     APP.tables['data-table-pack'].ajax.reload(null, false);
