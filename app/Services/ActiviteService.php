@@ -151,6 +151,68 @@ class ActiviteService
 
     // END SEXION  CATEGORIES PACK
 
+       // SEXION ARTICLES
+
+    public function saveArticleData(array $post)
+    {
+        extract($post);
+
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_categorie_pack' => $libelle_categorie_pack, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce libelle de categorie existe déjà.'];
+        }
+
+        $code = $this->activiteModel->generatorCode(TABLES::CATEGORIES, 'code_categorie_pack');
+
+        $data_categories = [
+            'libelle_categorie_pack' => strtoupper($libelle_categorie_pack),
+            'code_categorie_pack' => $code,
+            'statut_categorie_pack' => STATUT_ACTIF,
+            'etablissement_code' => Auth::user('etablissement_code'),
+            'user_code' => Auth::user('id'),
+            'created_at_categorie_pack' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->activiteModel->create(TABLES::CATEGORIES, $data_categories)) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Categorie enregistrée avec succès.',
+        ];
+    }
+
+
+    public function updateArticleData($post)
+    {
+        extract($post);
+
+
+        $libelle = $this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]);
+        if (!empty($libelle) && $libelle['code_zone'] != $code_zone) {
+            return ['success' => false, 'message' => 'Desolé! Ce libellé de zone existe déjà.'];
+        }
+
+
+        $data_zone = [
+            'libelle_zone' => strtoupper($libelle_zone),
+            'description_zone' => $description_zone,
+            'updated_at_zone' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->activiteModel->update(TABLES::FONCTIONS, 'code_zone', $code_zone, $data_zone)) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+
+        return [
+            'success' => true,
+            'message' => 'Modification effectuée avec succès.',
+        ];
+    }
+
+    // END SEXION  ARTICLES 
+
     
 
     // SEXION PACKS
@@ -455,7 +517,131 @@ class ActiviteService
         return $data;
     }
 
-    // SEXION CATEGORIE PACKS
+    // SEXION END CATEGORIE PACKS
+
+    // SEXION ARTICLES
+
+    public function articleAddModalService()
+    {
+        $output = "";
+        $output .= '
+            <form action="#" method="post" id="frmAddCategoriePack">
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        <input type="hidden" value="btn_add_article" name="action">
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+                        <label for="libelle_article" class="form-label">Libelle article <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="libelle_article" name="libelle_article" required>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        
+                        <label for="description_article" class="form-label">Description </label>
+                        <textarea rows="3" class="form-control" id="description_article" name="description_article"></textarea>
+                        
+                    </div>
+                    
+                    
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12 modal_footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormArticle"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="button" class="btn btn-light dismiss_modal">Close</button>
+
+                    </div>
+                </div>
+
+
+            </form> ';
+        return $output;
+    }
+
+
+    public function articleUpdateModalService(array $article)
+    {
+        $output = "";
+        $output .= '
+            <form action="#" method="post" id="frmUpdateCategoriePack">
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        <input type="hidden" value="btn_update_article" name="action">
+                        <input type="hidden" value="' . $article['code_article'] . '" name="code_article">
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+                        <label for="libelle_article" class="form-label">Libelle article <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="libelle_article" name="libelle_article" value="' . $article['libelle_article'] . '" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="description_article" class="form-label">Description </label>
+                        <textarea rows="3" class="form-control" name="description_article" id="description_article">' . $article['description_article'] . '</textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12 modal_footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="button" class="btn btn-light dismiss_modal">Close</button>
+
+                    </div>
+                </div>
+
+
+            </form> ';
+        return $output;
+    }
+
+    public function articleDataService($articles)
+    {
+
+        $i = 0;
+        $data = [];
+
+        foreach ($articles as $article) {
+            $i++;
+
+            $etat = checkEtatData($article['statut_categorie_pack']);
+
+            $actions = '
+            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedCategoriePack(\'' . $article['code_categorie_pack'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier article">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier article </button>
+        ';
+            if ($article['statut_categorie_pack'] == STATUT_ACTIF) {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $article['code_categorie_pack'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Désactiver article ">
+            <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver article </button>
+        ';
+            } else {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $article['code_categorie_pack'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Activer article ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer article </button>
+        ';
+            }
+            $actions .= ' </div>
+            ';
+
+            $data[] = [
+                $i,
+                $etat,
+                strtoupper($article['libelle_categorie_pack']),
+                textLimit($article['description_article']),
+                date_formater($article['created_at_categorie_pack']),
+                $article['nom_user'],
+                $actions
+            ];
+        }
+
+        return $data;
+    }
+
+    // SEXION ARTICLES 
 
       // SEXION PACKS
 
@@ -473,15 +659,15 @@ class ActiviteService
                     </div>
                     <div class="col-md-4 mb-3">
                        
-                        <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
+                        <label for="libelle_pack" class="form-label">Libelle Categorie <strong class="text-danger">*</strong></label>
                     
-                            <select class="form-control" id="libelle_pack"  name="libelle_pack" required>
+                            <select class="form-control" id="libelle_categorie_pack"  name="libelle_categorie_pack" required>
                             <option value="">--- CHOISIR ---</option>
 
                         ';
 
         foreach ($categorie_pack as $cat) {
-            $output .= '<option value="' . $cat['code_categorie'] . '">' . $cat['libelle_categorie'] . '</option>';
+            $output .= '<option value="' . $cat['code_categorie_pack'] . '">' . $cat['libelle_categorie_pack'] . '</option>';
         }
 
         $output .= '

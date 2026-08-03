@@ -153,7 +153,7 @@ class ActiviteModel extends Model
 
     // SEXION CATEGORIES PACKS
 
-    // get all annee
+    // get all Categorie PackS
     public function getAllTypeCategoriePacks($etablissement_code): array
     {
         $data = [];
@@ -183,11 +183,13 @@ class ActiviteModel extends Model
     }
 
     // get all depense
+
+          // get all Categorie pack
     public function getAllCategoriePacks($etablissement_code): array
     {
         $data = [];
         try {
-            $sql = "SELECT de* FROM " . TABLES::DEPENSES . " AS de WHERE se.etablissement_code = :etablissement_code AND statut_depense = :statut ORDER BY libelle_depense";
+            $sql = "SELECT * FROM " . TABLES::CATEGORIES . " AS cat WHERE cat.etablissement_code = :etablissement_code AND cat.statut_categorie_pack = :statut ORDER BY libelle_categorie_pack";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
             $data = $stmt->fetchAll();
@@ -286,6 +288,144 @@ class ActiviteModel extends Model
     }
 
     // END SEXION CATEGORIES PACK
+
+    // SEXION ARTICLES
+
+    // get all Categorie PackS
+    public function getAllTypeArticles($etablissement_code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT tpd.* FROM " . TABLES::TYPE_DEPENSES . " tpd WHERE tpd.etablissement_code = :etablissement_code  ORDER BY libelle_type_depense DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['etablissement_code' => $etablissement_code]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getSingleArticleByCode(string $code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT de.*, DATE(de.periode_depense) AS periode FROM " . TABLES::DEPENSES . " AS de WHERE de.code_depense = :code LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['code' => $code]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    // get all depense
+
+          // get all Categorie pack
+    public function getAllArticles($etablissement_code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT * FROM " . TABLES::CATEGORIES . " AS cat WHERE cat.etablissement_code = :etablissement_code AND cat.statut_categorie_pack = :statut ORDER BY libelle_categorie_pack";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function dataTbleCountTotalArticlesRow(array $whereParams, $likeParams = [])
+    {
+        // if (!empty($whereParams)) {
+        //     $where = 'WHERE ';
+        //     $where .=  implode(
+        //         ' AND ',
+        //         array_map(fn($f) => "$f = :$f ", array_keys($whereParams))
+        //     );
+        // }
+
+        $where = "WHERE cat.etablissement_code = :etablissement_code";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        // if (!empty($likeParams)) {
+        //     $where .= empty($where) ? ' WHERE ' : ' AND ';
+        //     $likes = [];
+        //     foreach ($likeParams as $field => $search) {
+        //         // $key = "$field";
+        //         $likes[] = "$field LIKE :$field";
+        //         $likeParams[$field] = "%$search%";
+        //     }
+        //     // return $likeParams;
+        //     $where .= '(' . implode(' OR ', $likes) . ')';
+        // }
+
+
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CATEGORIES . " cat $where";
+
+        $stmt = $this->db->prepare($sql);
+
+        // return $sql;
+        $stmt->execute(array_merge($whereParams, $likeParams));
+        $data = $stmt->fetch();
+        return $data['nb'] ?? 0;
+    }
+
+
+    public function DataTableFetchArticlesListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    {
+
+
+        $where = "WHERE cat.etablissement_code = :etablissement_code";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+
+
+        $sql = "SELECT cat.*, CONCAT(us.nom_user,' ',us.prenom_user) AS nom_user FROM " . TABLES::CATEGORIES . " cat 
+        JOIN " . TABLES::USERS . " us ON us.code_user = cat.user_code
+        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+
+        // Bind les parametreslike
+        $like = [];
+        if (!empty($likeParams)) {
+
+            foreach ($likeParams as $key => $value) {
+                $like[] = "$key => $value";
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        // ✅ Bind LIMIT params correctement
+        $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // END SEXION ARTICLES 
 
       // SEXION PACKS
 

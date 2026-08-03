@@ -249,6 +249,34 @@ switch ($action) {
 
     //end Actions pour les Categories pack
 
+      // Debut Actions pour les Articles 
+    case 'charger_data_articles':
+        $ajx = new ActiviteController();
+        $ajx->getListeArticle();
+        break;
+    case 'change_statut_articles':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutArticle();
+        break;
+    case 'btn_showmodal_article_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddArticle();
+        break;
+    case 'btn_showmodal_article_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedArticle();
+        break;
+    case 'btn_add_article':
+        $ajx = new ActiviteController();
+        $ajx->addArticle();
+        break;
+    case 'btn_update_article':
+        $ajx = new ActiviteController();
+        $ajx->updateArticle();
+        break;
+
+    //end Actions pour les Articles
+
     // Debut Actions pour les packs 
     case 'charger_data_packs':
         $ajx = new ActiviteController();

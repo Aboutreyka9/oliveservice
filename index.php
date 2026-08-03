@@ -169,6 +169,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('zones', [ActiviteController::class, 'zone']);
         $router->get('packs', [ActiviteController::class, 'pack']);
         $router->get('categories-packs', [ActiviteController::class, 'categorie']);
+        $router->get('articles', [ActiviteController::class, 'article']);
 
     });
 

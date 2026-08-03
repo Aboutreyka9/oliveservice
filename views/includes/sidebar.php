@@ -74,6 +74,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="item-link" href="<?= url('articles') ?>">
+                                    <span class="sub-item">Articles</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a class="item-link" href="<?= url('categories-packs') ?>">
                                     <span class="sub-item">Categories Packs</span>
                                 </a>

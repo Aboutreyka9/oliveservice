@@ -60,6 +60,11 @@ class ActiviteController extends MainController
         $this->view('activites/categorie', ['title' => "Categories packs"]);
     }
 
+       public function article()
+    {
+        $this->view('activites/article', ['title' => "Articles"]);
+    }
+
 
 
     /**
@@ -387,6 +392,162 @@ class ActiviteController extends MainController
 
     // END SEXION CATEGORIES PACK
 
+    // SEXION ARTICLES 
+
+
+    public function getListeArticle()
+    {
+
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+        $f = new ActiviteModel();
+
+        // var_dump($_POST);return;
+        $likeParams = [];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+
+
+        $limit  = (int) ($_POST['length'] ?? 10);
+        $start  = (int) ($_POST['start'] ?? 0);
+        $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
+        $orderDir    = strtolower($_POST['order'][0]['dir'] ?? 'desc');
+        $search = trim($_POST['search']['value'] ?? '');
+        // $search = $_POST['search'] ?? '';
+        $columns = [
+            0 => 'libelle_categorie_pack',
+            1 => 'statut_categorie_pack',
+            2 => 'libelle_categorie_pack',
+            3 => 'created_at_categorie_pack'
+        ];
+        // $columns = [
+        //     0 => 'libelle_type_depense',
+
+        // ];
+
+        $orderBy = $columns[$orderColumn] ?? 'libelle_categorie_pack';
+        $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
+
+
+
+        // 🔎 Recherche
+        if (!empty($search)) {
+
+
+            $likeParams = ['libelle_categorie_pack' => $search, 'statut_categorie_pack' => $search, 'created_at_categorie_pack' => $search];
+
+            // $likeParams = ['libelle_type_depense' => $search];
+        }
+
+        // 🔢 Total
+        $total = $f->dataTbleCountTotalArticlesRow($whereParams);
+        // 🔢 Total filtré
+
+        $totalFiltered = $f->dataTbleCountTotalArticlesRow($whereParams, $likeParams);
+        // 📄 Données
+
+        $depenseList = $f->DataTableFetchArticlesListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $data = [];
+
+
+        $data = $this->activiteService->categoriePackDataService($depenseList);
+        // Response::success('operation reussie',);
+        echo json_encode([
+            "draw"            => intval($_POST['draw']),
+            "recordsTotal"    => $total,
+            "recordsFiltered" => $totalFiltered,
+            "data"            => $data
+            // "data"            => $depenseList
+        ]);
+        // // echo json_encode(['data' => $total, 'code' => 200]);
+        return;
+    }
+
+    public function modalAddArticle()
+    {
+
+
+        $output = $this->activiteService->articleAddModalService();
+        Response::success('', ['data' => $output]);
+    }
+
+    public function modalUpdatedArticle()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        // $users = getAllusers();
+        $depense = $this->activiteModel->getSingleArticleByCode($codedepense);
+
+        $typeDepenses = $this->activiteModel->getAllTypeArticles(Auth::user('etablissement_code'));
+
+
+        if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
+
+        $output = $this->activiteService->zoneUpdateModalService($depense, $typeDepenses);
+        echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
+    }
+
+    public function addArticle()
+    {
+
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $v = new Validator();
+
+        $v->required('libelle_article', $libelle_article, 'Libelle article');
+
+        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
+
+        $result = $this->activiteService->saveArticleData($_POST);
+
+        if (!$result['success']) {
+            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        }
+
+        Response::success($result['message'], []);
+    }
+
+    public function updateArticle()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+        $v = new Validator();
+
+        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
+            ->required('date_depense', $date_depense, 'Date depense')
+            ->required('montant_depense', $montant_depense, 'Montant depense')
+            ->digit('montant_depense', $montant_depense, 'Montant depense');
+
+
+        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
+
+        $result = $this->activiteService->updateArticleData($_POST);
+
+
+        if (!$result['success']) {
+            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        }
+
+        Response::success($result['message'], []);
+    }
+
+    public function changeStatutArticle()
+    {
+
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $statut_zone = (isset($statut_zone) && $statut_zone != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
+
+
+        if ($this->activiteModel->update(TABLES::ZONES, 'code_zone', $code_zone, ['statut_zone' => $statut_zone])) Response::success('Statut modifié avec succès', []);
+
+        Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
+    }
+
+    // END SEXION ARTICLES 
+
     // SEXION PACK
 
 
@@ -462,10 +623,10 @@ class ActiviteController extends MainController
     {
 
 
-        $sessions = $this->settingModel->getAllSessions(Auth::user('etablissement_code'));
-        if (empty($sessions)) Response::error('Désolé, aucune session enregistrée!');
+        $categories = $this->activiteModel->getAllCategoriePacks(Auth::user('etablissement_code'));
+        if (empty($categories)) Response::error('Désolé, aucune categorie enregistrée!');
 
-        $output = $this->activiteService->packAddModalService($sessions);
+        $output = $this->activiteService->packAddModalService($categories);
         Response::success('', ['data' => $output]);
     }
 

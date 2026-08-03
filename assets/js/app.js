@@ -2057,6 +2057,196 @@ function changeStatutSemestre(code, statut) {
 /** FIN SECTION CATEGORIES PACKS */
 
 
+/** DEBUT SECTION ARTICLES  */
+
+loadDataTable('data-table-article', '#data-table-article', 'charger_data_articles');
+
+openModalAddArticle();
+function openModalAddArticle() {
+    $('#btn_article_addModal').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'btn_showmodal_article_add'
+            },
+            dataType: "JSON",
+            beforeSend: function () {
+                $(".loader_backdrop2").css('display', "block");
+                // btnReq("#ClientAddModal", "Traitement...");
+
+            },
+            success: function (data) {
+                console.log(data);
+
+                // btnRes("#ClientAddModal", 'Ajouter un client', 'fa-plus');
+                // ;
+
+                $(".loader_backdrop2").css('display', "none");
+                if (data.success) {
+                    var output = data.data;
+                    $(".data-article-modal").html(output.data);
+                    $("#article-modal").modal("show");
+
+
+                } else {
+                    $.notify(data.message);
+
+                }
+
+            }
+        })
+    });
+}
+
+ajouterArticle();
+function ajouterArticle() {
+    $("body").on("submit", "#frmAddArticle", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormArticle", "Enregistrement...");
+            },
+            success: function (data) {
+                console.log(data);
+                // return;
+                btnRes("#btnSubmitFormArticle", "Enregistrer", "fa-save");
+                // $(".loader_backdrop2").css('display', "none");
+
+                if (data.success) {
+                    APP.tables['data-table-article'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#article-modal").modal("hide");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+
+function modalUpdatedArticle(code) {
+    // let btn = btn_action.id;
+
+    $.ajax({
+        method: "POST",
+        url: APP.ajax,
+        data: {
+            action: 'btn_showmodal_session_update',
+            codesession: code
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $(".loader_backdrop2").css('display', "block");
+            // btnReq(".modal_footer", "Traitement...");
+        },
+        success: function (data) {
+
+            $(".loader_backdrop2").css('display', "none");
+
+            if (data.success) {
+                $(".data-article-modal").html(data.data);
+                $("#article-modal").modal("show");
+
+            } else {
+                $.notify(data.message);
+
+            }
+        }
+    });
+}
+
+updatedArticle();
+function updatedArticle() {
+    $("body").on("submit", "#frmUpdateArticle", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormArticle", "Mise à jour en cours...");
+            },
+            success: function (data) {
+                // $(".loader_backdrop2").css('display', "none");
+                console.log(data);
+
+                btnRes("#btnSubmitFormArticle", "Enregistrer", "fa-save");
+                return
+                if (data.success) {
+                    APP.tables['data-table-article'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#article-modal").modal("hide");
+
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+function changeStatutArticle(code, statut) {
+    swal({
+        title: "Notification",
+        text: "Voulez-vous vraiment modifier le statut de cette session?",
+        icon: "warning",
+        dangerMode: true,
+        closeOnClickOutside: false,
+        buttons: {
+            cancel: true,
+            confirm: "Confirmer",
+        },
+    })
+        .then(willDelete => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: APP.ajax,
+                    method: 'POST',
+                    data: {
+                        action: 'change_statut_sessions',
+                        code_session: code,
+                        statut_session: statut
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $(".loader_backdrop2").css('display', "block");
+                    },
+                    success: function (data) {
+                        $(".loader_backdrop2").css('display', "none");
+
+                        if (data.success) {
+                            $.notify(data.message, "success");
+                            APP.tables['data-table-article'].ajax.reload(null, false);
+                        } else {
+                            $.notify(data.message);
+                        }
+                    }
+                });
+            }
+        });
+}
+/** FIN SECTION ARTICLES */
+
+
 /** DEBUT SECTION PACKS */
 
 loadDataTable('data-table-pack', '#data-table-pack', 'charger_data_packs');
