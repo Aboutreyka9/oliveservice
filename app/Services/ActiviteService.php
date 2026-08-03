@@ -89,9 +89,71 @@ class ActiviteService
 
     // END SEXION  ZONE
 
+     // SEXION CATEGORIE PACKS
+
+    public function savecategoriePackData(array $post)
+    {
+        extract($post);
+
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce libelle de zone existe déjà.'];
+        }
+
+        $code = $this->activiteModel->generatorCode(TABLES::CATEGORIES, 'code_zone');
+
+        $data_zone = [
+            'libelle_zone' => strtoupper($libelle_zone),
+            'code_zone' => $code,
+            'statut_zone' => STATUT_ACTIF,
+            'etablissement_code' => Auth::user('etablissement_code'),
+            'user_code' => Auth::user('id'),
+            'created_at_zone' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->activiteModel->create(TABLES::CATEGORIES, $data_zone)) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'categoriePack enregistrée avec succès.',
+        ];
+    }
+
+
+    public function updatecategoriePackData($post)
+    {
+        extract($post);
+
+
+        $libelle = $this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]);
+        if (!empty($libelle) && $libelle['code_zone'] != $code_zone) {
+            return ['success' => false, 'message' => 'Desolé! Ce libellé de zone existe déjà.'];
+        }
+
+
+        $data_zone = [
+            'libelle_zone' => strtoupper($libelle_zone),
+            'description_zone' => $description_zone,
+            'updated_at_zone' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->activiteModel->update(TABLES::FONCTIONS, 'code_zone', $code_zone, $data_zone)) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+
+        return [
+            'success' => true,
+            'message' => 'Modification effectuée avec succès.',
+        ];
+    }
+
+    // END SEXION  CATEGORIES PACK
+
     
 
-    // SEXION ZONE
+    // SEXION PACKS
 
     public function savePackData(array $post)
     {
@@ -118,7 +180,7 @@ class ActiviteService
 
         return [
             'success' => true,
-            'message' => 'Zone enregistrée avec succès.',
+            'message' => 'categoriePack enregistrée avec succès.',
         ];
     }
 
@@ -151,7 +213,7 @@ class ActiviteService
         ];
     }
 
-    // END SEXION  ZONE
+    // END SEXION  PACK
 
 
     /**
@@ -278,6 +340,122 @@ class ActiviteService
 
     // SEXION ZONE
 
+    
+    
+    // SEXION CATEGORIE PACK
+
+    public function categoriePackAddModalService()
+    {
+        $output = "";
+        $output .= '
+            <form action="#" method="post" id="frmAddZone">
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        <input type="hidden" value="btn_add_categoriePack" name="action">
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+                        <label for="libelle_categoriePack" class="form-label">Libelle categoriePack <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="libelle_categoriePack" name="libelle_categoriePack" required>
+                    </div>
+                    
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12 modal_footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormZone"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="button" class="btn btn-light dismiss_modal">Close</button>
+
+                    </div>
+                </div>
+
+
+            </form> ';
+        return $output;
+    }
+
+
+    public function categoriePackUpdateModalService(array $categoriePack)
+    {
+        $output = "";
+        $output .= '
+            <form action="#" method="post" id="frmUpdateZone">
+                <div class="row mb-3">
+                    <div class="col-md-12 mb-3">
+                        <input type="hidden" value="btn_update_categoriePack" name="action">
+                        <input type="hidden" value="' . $categoriePack['code_categoriePack'] . '" name="code_categoriePack">
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+                        <label for="libelle_categoriePack" class="form-label">Libelle categoriePack <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="libelle_categoriePack" name="libelle_categoriePack" value="' . $categoriePack['libelle_categoriePack'] . '" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="description_categoriePack" class="form-label">Description </label>
+                        <textarea rows="3" class="form-control" name="description_categoriePack" id="description_categoriePack">' . $categoriePack['description_categoriePack'] . '</textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12 modal_footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormZone"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="button" class="btn btn-light dismiss_modal">Close</button>
+
+                    </div>
+                </div>
+
+
+            </form> ';
+        return $output;
+    }
+
+    public function categoriePackDataService($categoriePacks)
+    {
+
+        $i = 0;
+        $data = [];
+
+        foreach ($categoriePacks as $categoriePack) {
+            $i++;
+
+            $etat = checkEtatData($categoriePack['statut_categoriePack']);
+
+            $actions = '
+            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedZone(\'' . $categoriePack['code_categoriePack'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier categoriePack">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier categoriePack </button>
+        ';
+            if ($categoriePack['statut_categoriePack'] == STATUT_ACTIF) {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $categoriePack['code_categoriePack'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Désactiver categoriePack ">
+            <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver categoriePack </button>
+        ';
+            } else {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $categoriePack['code_categoriePack'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Activer categoriePack ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer categoriePack </button>
+        ';
+            }
+            $actions .= ' </div>
+            ';
+
+            $data[] = [
+                $i,
+                $etat,
+                strtoupper($categoriePack['libelle_categoriePack']),
+                textLimit($categoriePack['description_categoriePack']),
+                date_formater($categoriePack['created_at_categoriePack']),
+                $actions
+            ];
+        }
+
+        return $data;
+    }
+
+    // SEXION CATEGORIE PACKS
 
       // SEXION PACKS
 

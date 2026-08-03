@@ -1867,6 +1867,194 @@ function changeStatutSemestre(code, statut) {
 }
 /** FIN SECTION ZONE */
 
+/** DEBUT SECTION CATEGORIES PACK */
+
+loadDataTable('data-table-categorie-pack', '#data-table-categorie-pack', 'charger_data_categorie_packs');
+
+openModalAddZone();
+function openModalAddZone() {
+    $('#btn_categoriePack_addModal').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'btn_showmodal_categoriePack_add'
+            },
+            dataType: "JSON",
+            beforeSend: function () {
+                $(".loader_backdrop2").css('display', "block");
+                // btnReq("#ClientAddModal", "Traitement...");
+
+            },
+            success: function (data) {
+                console.log(data);
+
+                // btnRes("#ClientAddModal", 'Ajouter un client', 'fa-plus');
+                // ;
+
+                $(".loader_backdrop2").css('display', "none");
+                if (data.success) {
+                    var output = data.data;
+                    $(".data-categoriePack-modal").html(output.data);
+                    $("#categoriePack-modal").modal("show");
+
+
+                } else {
+                    $.notify(data.message);
+
+                }
+
+            }
+        })
+    });
+}
+
+ajouterZone();
+function ajouterZone() {
+    $("body").on("submit", "#frmAddZone", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            // dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormZone", "Enregistrement...");
+            },
+            success: function (data) {
+                console.log(data);
+                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                // $(".loader_backdrop2").css('display', "none");
+
+                if (data.success) {
+                    APP.tables['data-table-categoriePack'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#categoriePack-modal").modal("hide");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+
+function modalUpdatedZone(code) {
+    // let btn = btn_action.id;
+
+    $.ajax({
+        method: "POST",
+        url: APP.ajax,
+        data: {
+            action: 'btn_showmodal_session_update',
+            codesession: code
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $(".loader_backdrop2").css('display', "block");
+            // btnReq(".modal_footer", "Traitement...");
+        },
+        success: function (data) {
+
+            $(".loader_backdrop2").css('display', "none");
+
+            if (data.success) {
+                $(".data-categoriePack-modal").html(data.data);
+                $("#categoriePack-modal").modal("show");
+
+            } else {
+                $.notify(data.message);
+
+            }
+        }
+    });
+}
+
+updatedZone();
+function updatedZone() {
+    $("body").on("submit", "#frmUpdateZone", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function () {
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormZone", "Mise à jour en cours...");
+            },
+            success: function (data) {
+                // $(".loader_backdrop2").css('display', "none");
+                console.log(data);
+
+                btnRes("#btnSubmitFormZone", "Enregistrer", "fa-save");
+                return
+                if (data.success) {
+                    APP.tables['data-table-categoriePack'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#categoriePack-modal").modal("hide");
+
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+function changeStatutSemestre(code, statut) {
+    swal({
+        title: "Notification",
+        text: "Voulez-vous vraiment modifier le statut de cette session?",
+        icon: "warning",
+        dangerMode: true,
+        closeOnClickOutside: false,
+        buttons: {
+            cancel: true,
+            confirm: "Confirmer",
+        },
+    })
+        .then(willDelete => {
+            if (willDelete) {
+
+                $.ajax({
+                    url: APP.ajax,
+                    method: 'POST',
+                    data: {
+                        action: 'change_statut_sessions',
+                        code_session: code,
+                        statut_session: statut
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $(".loader_backdrop2").css('display', "block");
+                    },
+                    success: function (data) {
+                        $(".loader_backdrop2").css('display', "none");
+
+                        if (data.success) {
+                            $.notify(data.message, "success");
+                            APP.tables['data-table-categoriePack'].ajax.reload(null, false);
+                        } else {
+                            $.notify(data.message);
+                        }
+                    }
+                });
+            }
+        });
+}
+/** FIN SECTION CATEGORIES PACKS */
+
 
 /** DEBUT SECTION PACKS */
 

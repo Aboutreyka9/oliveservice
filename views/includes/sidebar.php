@@ -69,13 +69,18 @@
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
                             ?>
                             <li>
-                                <a class="item-link" href="<?= url('zones') ?>">
-                                    <span class="sub-item">Zones</span>
+                                <a class="item-link" href="<?= url('packs') ?>">
+                                    <span class="sub-item">Packs</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('packs') ?>">
-                                    <span class="sub-item">Packs</span>
+                                <a class="item-link" href="<?= url('categories-packs') ?>">
+                                    <span class="sub-item">Categories Packs</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('zones') ?>">
+                                    <span class="sub-item">Zones</span>
                                 </a>
                             </li>
 

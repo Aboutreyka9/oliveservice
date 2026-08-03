@@ -221,6 +221,34 @@ switch ($action) {
 
     //end Actions pour les Zones
 
+    // Debut Actions pour les Categories pack 
+    case 'charger_data_categoriePacks':
+        $ajx = new ActiviteController();
+        $ajx->getListeCategoriePack();
+        break;
+    case 'change_statut_categoriePacks':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutCategoriePack();
+        break;
+    case 'btn_showmodal_categoriePack_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddCategoriePack();
+        break;
+    case 'btn_showmodal_categoriePack_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedCategoriePack();
+        break;
+    case 'btn_add_categoriePack':
+        $ajx = new ActiviteController();
+        $ajx->addCategoriePack();
+        break;
+    case 'btn_update_categoriePack':
+        $ajx = new ActiviteController();
+        $ajx->updateCategoriePack();
+        break;
+
+    //end Actions pour les Categories pack
+
     // Debut Actions pour les packs 
     case 'charger_data_packs':
         $ajx = new ActiviteController();
