@@ -347,7 +347,7 @@ class ActiviteModel extends Model
         //     );
         // }
 
-        $where = "WHERE cat.etablissement_code = :etablissement_code";
+        $where = "WHERE ar.etablissement_code = :etablissement_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -371,7 +371,7 @@ class ActiviteModel extends Model
         // }
 
 
-        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CATEGORIES . " cat $where";
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::ARTICLES . " ar $where";
 
         $stmt = $this->db->prepare($sql);
 
@@ -385,8 +385,7 @@ class ActiviteModel extends Model
     public function DataTableFetchArticlesListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
 
-
-        $where = "WHERE cat.etablissement_code = :etablissement_code";
+        $where = "WHERE ar.etablissement_code = :etablissement_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -397,10 +396,7 @@ class ActiviteModel extends Model
             $where .= " AND (" . implode(' OR ', $likes) . ")";
         }
 
-
-
-        $sql = "SELECT cat.*, CONCAT(us.nom_user,' ',us.prenom_user) AS nom_user FROM " . TABLES::CATEGORIES . " cat 
-        JOIN " . TABLES::USERS . " us ON us.code_user = cat.user_code
+        $sql = "SELECT ar.* FROM " . TABLES::ARTICLES . " ar 
         $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);

@@ -19,7 +19,7 @@
                         <th> #</th>
                         <th> Statut</th>
                         <th> Libelle</th>
-                        <th> Créer par</th>
+                        <th> Description</th>
                         <th> Créer le</th>
                         <th> Actions</th>
                     </tr>

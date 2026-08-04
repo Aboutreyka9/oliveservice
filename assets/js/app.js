@@ -10,7 +10,7 @@ const APP = {
     dataCheck: [],
     userCode: null,
     date_start_picker:moment().startOf('month'), // 1er du mois
-    date_end_picker:moment() // aujourd’hui
+    date_end_picker:moment() // aujourd'hui
 };
 
 

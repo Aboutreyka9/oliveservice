@@ -157,28 +157,29 @@ class ActiviteService
     {
         extract($post);
 
-        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_categorie_pack' => $libelle_categorie_pack, 'etablissement_code' => Auth::user('etablissement_code')]))) {
-            return ['success' => false, 'message' => 'Desolé! Ce libelle de categorie existe déjà.'];
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::ARTICLES, ['libelle_article' => $libelle_article, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce libelle de article existe déjà.'];
         }
 
-        $code = $this->activiteModel->generatorCode(TABLES::CATEGORIES, 'code_categorie_pack');
+        $code = $this->activiteModel->generatorCode(TABLES::ARTICLES, 'code_article');
 
-        $data_categories = [
-            'libelle_categorie_pack' => strtoupper($libelle_categorie_pack),
-            'code_categorie_pack' => $code,
-            'statut_categorie_pack' => STATUT_ACTIF,
+        $data_articles = [
+            'libelle_article' => $libelle_article,
+            'description_article' => $description_article,
+            'code_article' => $code,
+            'statut_article' => STATUT_ACTIF,
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
-            'created_at_categorie_pack' => date('Y-m-d H:i:s'),
+            'created_at_article' => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->activiteModel->create(TABLES::CATEGORIES, $data_categories)) {
+        if (!$this->activiteModel->create(TABLES::ARTICLES, $data_articles)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
         return [
             'success' => true,
-            'message' => 'Categorie enregistrée avec succès.',
+            'message' => 'Article enregistré avec succès.',
         ];
     }
 
@@ -525,7 +526,7 @@ class ActiviteService
     {
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmAddCategoriePack">
+            <form action="#" method="post" id="frmAddArticle">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
                         <input type="hidden" value="btn_add_article" name="action">
@@ -562,7 +563,7 @@ class ActiviteService
     {
         $output = "";
         $output .= '
-            <form action="#" method="post" id="frmUpdateCategoriePack">
+            <form action="#" method="post" id="frmUpdateArticle">
                 <div class="row mb-3">
                     <div class="col-md-12 mb-3">
                         <input type="hidden" value="btn_update_article" name="action">
@@ -599,7 +600,7 @@ class ActiviteService
         foreach ($articles as $article) {
             $i++;
 
-            $etat = checkEtatData($article['statut_categorie_pack']);
+            $etat = checkEtatData($article['statut_article']);
 
             $actions = '
             <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -607,19 +608,19 @@ class ActiviteService
             </button>
             <div class="dropdown-menu">
 
-        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedCategoriePack(\'' . $article['code_categorie_pack'] . '\')" 
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedArticle(\'' . $article['code_article'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier article">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier article </button>
         ';
-            if ($article['statut_categorie_pack'] == STATUT_ACTIF) {
+            if ($article['statut_article'] == STATUT_ACTIF) {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $article['code_categorie_pack'] . '\',\'' . STATUT_INACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutArticle(\'' . $article['code_article'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Désactiver article ">
             <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver article </button>
         ';
             } else {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutCategoriePack(\'' . $article['code_categorie_pack'] . '\',\'' . STATUT_ACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutArticle(\'' . $article['code_article'] . '\',\'' . STATUT_ACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Activer article ">
             <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer article </button>
         ';
@@ -630,10 +631,9 @@ class ActiviteService
             $data[] = [
                 $i,
                 $etat,
-                strtoupper($article['libelle_categorie_pack']),
+                strtoupper($article['libelle_article']),
                 textLimit($article['description_article']),
-                date_formater($article['created_at_categorie_pack']),
-                $article['nom_user'],
+                date_formater($article['created_at_article']),
                 $actions
             ];
         }

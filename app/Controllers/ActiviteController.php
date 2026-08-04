@@ -414,17 +414,17 @@ class ActiviteController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
         // $search = $_POST['search'] ?? '';
         $columns = [
-            0 => 'libelle_categorie_pack',
-            1 => 'statut_categorie_pack',
-            2 => 'libelle_categorie_pack',
-            3 => 'created_at_categorie_pack'
+            0 => 'libelle_article',
+            1 => 'statut_article',
+            2 => 'libelle_article',
+            3 => 'created_at_article'
         ];
         // $columns = [
         //     0 => 'libelle_type_depense',
 
         // ];
 
-        $orderBy = $columns[$orderColumn] ?? 'libelle_categorie_pack';
+        $orderBy = $columns[$orderColumn] ?? 'libelle_article';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
 
@@ -433,7 +433,7 @@ class ActiviteController extends MainController
         if (!empty($search)) {
 
 
-            $likeParams = ['libelle_categorie_pack' => $search, 'statut_categorie_pack' => $search, 'created_at_categorie_pack' => $search];
+            $likeParams = ['libelle_article' => $search, 'statut_article' => $search, 'created_at_article' => $search];
 
             // $likeParams = ['libelle_type_depense' => $search];
         }
@@ -445,11 +445,11 @@ class ActiviteController extends MainController
         $totalFiltered = $f->dataTbleCountTotalArticlesRow($whereParams, $likeParams);
         // 📄 Données
 
-        $depenseList = $f->DataTableFetchArticlesListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $articleList = $f->DataTableFetchArticlesListe($likeParams, $orderBy, $orderDir, $start, $limit);
         $data = [];
 
 
-        $data = $this->activiteService->categoriePackDataService($depenseList);
+        $data = $this->activiteService->articleDataService($articleList);
         // Response::success('operation reussie',);
         echo json_encode([
             "draw"            => intval($_POST['draw']),
