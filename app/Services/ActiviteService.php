@@ -218,32 +218,64 @@ class ActiviteService
 
     // SEXION PACKS
 
-    public function savePackData(array $post)
+    public function savePackData(array $post,$data_articles)
     {
         extract($post);
 
-        if (!empty($this->activiteModel->getFieldsForParams(TABLES::PACKS, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::PACKS, ['libelle_pack' => $libelle_pack, 'etablissement_code' => Auth::user('etablissement_code'),'annee_code' => Auth::user('annee_code'), 'session_code' => $libelle_session, 'categorie_pack_code' => $libelle_categorie, 'zone_code' => Auth::user('zone_code')]))) {
             return ['success' => false, 'message' => 'Desolé! Ce libelle de zone existe déjà.'];
         }
 
-        $code = $this->activiteModel->generatorCode(TABLES::PACKS, 'code_zone');
+        $code = $this->activiteModel->generatorCode(TABLES::PACKS, 'code_pack');
 
-        $data_zone = [
-            'libelle_zone' => strtoupper($libelle_zone),
-            'code_zone' => $code,
-            'statut_zone' => STATUT_ACTIF,
+        $data_packs = [
+            'libelle_pack' => strtoupper($libelle_pack),
+            'montant_pack' => $montant_pack,
+            'code_pack' => $code,
+            'session_code' =>$libelle_session,
+            'zone_code' =>  Auth::user('zone_code'),
+            'categorie_pack_code' => $libelle_categorie,
+            'statut_pack' => STATUT_ACTIF,
+            'annee_code' => Auth::user('annee_code'),
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
-            'created_at_zone' => date('Y-m-d H:i:s'),
+            'created_at_pack' => date('Y-m-d H:i:s'),
         ];
 
-        if (!$this->activiteModel->create(TABLES::ZONES, $data_zone)) {
-            return ['success' => false, 'message' => "Desolé! echec d'operation."];
-        }
+         $result = $this->activiteModel->transactionData(function () use ($data_packs, $data_articles) {
+            $data = [];
+            $this->activiteModel->create(TABLES::PACKS, $data_packs);
+
+            $lastIdPack = $this->activiteModel->lastInsertId();
+            $date = date('Y-m-d H:i:s');
+            $annee_code = Auth::user('annee_code');
+            $etablissement_code = Auth::user('etablissement_code');
+            $id = Auth::user('id');
+
+            foreach ($data_articles as $article) {
+                $data [] = [
+                    'quantite_article' => $article->qte,
+                    'article_code' =>$article->code,
+                    'pack_code' => $lastIdPack,
+                    'annee_code' =>  $annee_code,
+                    'etablissement_code' => $etablissement_code,
+                    'user_code' => $id,
+                    'created_at_pack_article' => $date,
+                ];
+            }
+
+            $this->activiteModel->insertMultiple(TABLES::PACK_ARTICLES,$data);
+
+        });
+
+        // if (!$result) {
+        //     return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        // }
 
         return [
+            'rest' => $data_articles,
             'success' => true,
-            'message' => 'categoriePack enregistrée avec succès.',
+            'message' => 'Pack enregistré avec succès.',
         ];
     }
 
@@ -645,23 +677,40 @@ class ActiviteService
 
       // SEXION PACKS
 
-    public function packAddModalService(array $categorie_pack)
+    public function packAddModalService( array $sessions, array $categorie_pack,$articles)
     {
         $output = "";
         $output .= '
             <form action="#" method="post" id="frmAddPack">
                 <div class="row mb-3">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <input type="hidden" value="btn_add_pack" name="action">
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
                         <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
                         <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" required>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                        
-                        <label for="libelle_pack" class="form-label">Libelle Categorie <strong class="text-danger">*</strong></label>
+                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
                     
-                            <select class="form-control" id="libelle_categorie_pack"  name="libelle_categorie_pack" required>
+                            <select class="form-control" id="libelle_session"  name="libelle_session" required>
+                            <option value="">--- CHOISIR ---</option>
+
+                        ';
+
+        foreach ($sessions as $session) {
+            $output .= '<option value="' . $session['code_session'] . '">' . $session['libelle_session'] . '</option>';
+        }
+
+        $output .= '
+     
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       
+                        <label for="libelle_categorie" class="form-label">Libelle Categorie <strong class="text-danger">*</strong></label>
+                    
+                            <select class="form-control" id="libelle_categorie"  name="libelle_categorie" required>
                             <option value="">--- CHOISIR ---</option>
 
                         ';
@@ -675,7 +724,7 @@ class ActiviteService
                         </select>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                          <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
                         <input type="number" class="form-control" id="montant_pack" name="montant_pack" required>
                     </div>
@@ -687,34 +736,15 @@ class ActiviteService
                 <div class="row mt-3">
                 <div class="col-md-8 my-3">
                 <select style="background: #0037ff3d;color: #003825;font-size: 17px;" name="" id="dataPack" class="form-control">
-                <option value="455&dhgdhgd58"></option>
-                <option value="4oo5&dhgdhgd58"></option>
-                <option value="4opp;5&5665dhgdhgd58"></option>
-                <option value="4oo5&dhgdhgd58"></option>
-                <option value="4555895&dhgdhgd58"></option>
-                <option value="4u5&dhgdhgd58"></option>
-                <option value="45tu&dh8989gdhgd58"></option>
-                <option value="45ut&dhgdhgd58"></option>
-                <option value="4eyy5&98dhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="4z5&dhgdhgd58"></option>
-                <option value="458688&dhgdhgd58"></option>
-                <option value="4rer5&dhgdhgd58"></option>
-                <option value="4rr5&dhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="45&dfdhgdhgd58"></option>
-                <option value="45d&dhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="45&dddhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="45&ddf"></option>
-                <option value="4s5s&dhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="4dd5&dhgdhgd58"></option>
-                <option value="45&dhgdhgd58"></option>
-                <option value="12&super" class="3">super</option>
-                <option value="35&cool" class="3">cool</option>
-                <option value="33&kiz" class="3">kiz</option>*50
+                            <option value="">--- CHOISIR ---</option>
+
+                ';
+
+        foreach ($articles as $article) {
+            $output .= '<option value="' . $article['code_article'].'&'.$article['libelle_article'] . '">' . $article['libelle_article'] . '</option>';
+        }
+
+        $output .= '
                 </select>
                 </div>
                 <div class="col-md-4 my-3">

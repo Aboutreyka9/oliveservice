@@ -10,6 +10,7 @@ use App\Helpers\Validator;
 use App\Models\ActiviteModel;
 use App\Models\SettingModel;
 use App\Services\ActiviteService;
+use App\Services\SettingService;
 use TABLES;
 
 class ActiviteController extends MainController
@@ -21,6 +22,7 @@ class ActiviteController extends MainController
 
     //   SERVICES
     private ActiviteService $activiteService;
+    private SettingService $settingService;
 
     public function __construct()
     {
@@ -624,10 +626,17 @@ class ActiviteController extends MainController
 
 
         $categories = $this->activiteModel->getAllCategoriePacks(Auth::user('etablissement_code'));
-        if (empty($categories)) Response::error('Désolé, aucune categorie enregistrée!');
+        $sessions = $this->settingModel->getAllSessions(Auth::user('etablissement_code'), Auth::user('annee_code'));
+        $articles = $this->activiteModel->getAllArticles(Auth::user('etablissement_code'));
+       
 
-        $output = $this->activiteService->packAddModalService($categories);
+        if (empty($categories) || empty($sessions) || empty($articles)) Response::error('Désolé, erreur de chargement des données!');
+
+       
+        $output = $this->activiteService->packAddModalService($sessions,$categories,$articles);
         Response::success('', ['data' => $output]);
+        //   var_dump($articles);
+        // return;
     }
 
     public function modalUpdatedPack()
@@ -649,25 +658,31 @@ class ActiviteController extends MainController
 
     public function addPack()
     {
-
+        $data_articles = json_decode($_POST['articles']);
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
+
         $v = new Validator();
 
-        $v->required('libelle_zone', $libelle_zone, 'Libelle zone');
+        $v->required('libelle_pack', $libelle_pack, 'Libelle pack')
+        ->required('libelle_session', $libelle_session, 'Libelle session')
+        ->required('libelle_categorie', $libelle_categorie, 'Libelle categorie')
+        ->required('montant_pack', $montant_pack, 'Montant cautisation')->digit('montant_pack', $montant_pack, 'Montant cautisation');
 
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->activiteService->saveZoneData($_POST);
+        if (count($data_articles) == 0) Response::error('Veuillez ajouter au moins un article', HttpStatusCode::UNAUTHORIZED);
 
+        $result = $this->activiteService->savePackData($_POST, $data_articles);
+var_dump($result);
 
-        if (!$result['success']) {
-            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
-        }
+        // if (!$result['success']) {
+        //     Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        // }
 
-        Response::success($result['message'], []);
+        // Response::success($result['message'], []);
     }
 
     public function updatePack()

@@ -392,13 +392,17 @@ class SettingModel extends Model
     }
 
     // get all session
-    public function getAllSessions($etablissement_code): array
+    public function getAllSessions($etablissement_code,$annee_code): array
     {
         $data = [];
         try {
-            $sql = "SELECT * FROM " . TABLES::SESSIONS . " AS se WHERE se.etablissement_code = :etablissement_code AND statut_session = :statut ORDER BY libelle_session";
+            $sql = "SELECT * FROM " . TABLES::SESSIONS . " AS se WHERE se.etablissement_code = :etablissement_code AND se.annee_code = :annee_code AND se.statut_session = :statut ORDER BY libelle_session";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
+            $stmt->execute([
+                'etablissement_code' => $etablissement_code,
+                'annee_code' => $annee_code,
+                'statut' => STATUT_ACTIF
+                ]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
             die($e->getMessage());

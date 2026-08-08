@@ -785,11 +785,10 @@ abstract class Model
      * @param callable $callback
      * @return boolean
      */
-    public function transactionData($callback)
+    public function transactionData(callable $callback)
     {
-        $this->db->beginTransaction();
         try {
-            $callback();
+            $this->db->beginTransaction();
             $callback($this);
             $this->db->commit();
             return true;

@@ -2358,7 +2358,6 @@ function openModalAddPack() {
             beforeSend: function () {
                 $(".loader_backdrop2").css('display', "block");
                 // btnReq("#ClientAddModal", "Traitement...");
-
             },
             success: function (data) {
                 console.log(data);
@@ -2389,11 +2388,13 @@ ajouterPack();
 function ajouterPack() {
     $("body").on("submit", "#frmAddPack", function (e) {
         e.preventDefault();
-        var data = $(this).serialize();
         var packArticles = pushData('qte');
-        console.log(packArticles);
-        return;
-        
+
+        var data = $(this).serializeArray();
+        data.push({
+            name: 'articles',
+            value: JSON.stringify(packArticles)
+        });
 
         $.ajax({
             method: "POST",
@@ -2407,6 +2408,7 @@ function ajouterPack() {
             },
             success: function (data) {
                 console.log(data);
+                return;
                 // btnRes("#btnSubmitFormPack", "Enregistrer", "fa-save");
                 // $(".loader_backdrop2").css('display', "none");
 

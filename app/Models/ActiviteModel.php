@@ -327,7 +327,7 @@ class ActiviteModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT * FROM " . TABLES::CATEGORIES . " AS cat WHERE cat.etablissement_code = :etablissement_code AND cat.statut_categorie_pack = :statut ORDER BY libelle_categorie_pack";
+            $sql = "SELECT * FROM " . TABLES::ARTICLES . " AS ar WHERE ar.etablissement_code = :etablissement_code AND ar.statut_article = :statut ORDER BY libelle_article";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
             $data = $stmt->fetchAll();

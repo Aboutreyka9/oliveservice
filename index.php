@@ -41,7 +41,7 @@ use Phroute\Phroute\Dispatcher;
 //     $m->update('type_depenses', 'id_type_depense', $key['id_type_depense'], ['code_type_depense' => $code]);
 // }
 
-// var_dump($type);
+// var_dump($_SESSION);
 // return;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
