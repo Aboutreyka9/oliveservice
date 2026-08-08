@@ -11,11 +11,11 @@ use TABLES;
 class SettingService
 {
 
-    public static SettingModel $settingModel;
+    public SettingModel $settingModel;
 
     public function __construct()
     {
-        self::$settingModel = new SettingModel();
+        $this->settingModel = new SettingModel();
     }
 
     /**
@@ -27,16 +27,16 @@ class SettingService
      */
 
     // SEXION FONCTIONS
-    public static function saveFonctionData(array $post)
+    public function saveFonctionData(array $post)
     {
         extract($post);
 
 
-        if (!empty(self::$settingModel->getFieldsForParams(TABLES::FONCTIONS, ['libelle_fonction' => $libelle_fonction, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        if (!empty($this->settingModel->getFieldsForParams(TABLES::FONCTIONS, ['libelle_fonction' => $libelle_fonction, 'etablissement_code' => Auth::user('etablissement_code')]))) {
             return ['success' => false, 'message' => 'Desolé! Ce libelle de fonction existe déjà.'];
         }
 
-        $code = self::$settingModel->generatorCode(TABLES::FONCTIONS, 'code_fonction');
+        $code = $this->settingModel->generatorCode(TABLES::FONCTIONS, 'code_fonction');
 
         $data_fonction = [
             'libelle_fonction' => strtoupper($libelle_fonction),
@@ -48,7 +48,7 @@ class SettingService
             'created_at_fonction' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->create(TABLES::FONCTIONS, $data_fonction)) {
+        if (!$this->settingModel->create(TABLES::FONCTIONS, $data_fonction)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -59,12 +59,12 @@ class SettingService
     }
 
 
-    public static function updateFonctionData($post)
+    public function updateFonctionData($post)
     {
         extract($post);
 
 
-        $libelle = self::$settingModel->getFieldsForParams(TABLES::FONCTIONS, ['libelle_fonction' => $libelle_fonction, 'etablissement_code' => Auth::user('etablissement_code')]);
+        $libelle = $this->settingModel->getFieldsForParams(TABLES::FONCTIONS, ['libelle_fonction' => $libelle_fonction, 'etablissement_code' => Auth::user('etablissement_code')]);
         if (!empty($libelle) && $libelle['code_fonction'] != $code_fonction) {
             return ['success' => false, 'message' => 'Desolé! Ce libellé de fonction existe déjà.'];
         }
@@ -76,7 +76,7 @@ class SettingService
             'updated_at_fonction' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->update(TABLES::FONCTIONS, 'code_fonction', $code_fonction, $data_fonction)) {
+        if (!$this->settingModel->update(TABLES::FONCTIONS, 'code_fonction', $code_fonction, $data_fonction)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -88,16 +88,16 @@ class SettingService
     }
 
     // SEXION SERVICES
-    public static function saveServiceData(array $post)
+    public function saveServiceData(array $post)
     {
         extract($post);
 
 
-        if (!empty(self::$settingModel->getFieldsForParams(TABLES::SERVICES, ['libelle_service' => $libelle_service, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        if (!empty($this->settingModel->getFieldsForParams(TABLES::SERVICES, ['libelle_service' => $libelle_service, 'etablissement_code' => Auth::user('etablissement_code')]))) {
             return ['success' => false, 'message' => 'Desolé! Ce libelle de service existe déjà.'];
         }
 
-        $code = self::$settingModel->generatorCode(TABLES::SERVICES, 'code_service');
+        $code = $this->settingModel->generatorCode(TABLES::SERVICES, 'code_service');
 
         $data_service = [
             'libelle_service' => strtoupper($libelle_service),
@@ -109,7 +109,7 @@ class SettingService
             'created_at_service' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->create(TABLES::SERVICES, $data_service)) {
+        if (!$this->settingModel->create(TABLES::SERVICES, $data_service)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -120,12 +120,12 @@ class SettingService
     }
 
 
-    public static function updateServiceData($post)
+    public function updateServiceData($post)
     {
         extract($post);
 
 
-        $libelle = self::$settingModel->getFieldsForParams(TABLES::SERVICES, ['libelle_service' => $libelle_service, 'etablissement_code' => Auth::user('etablissement_code')]);
+        $libelle = $this->settingModel->getFieldsForParams(TABLES::SERVICES, ['libelle_service' => $libelle_service, 'etablissement_code' => Auth::user('etablissement_code')]);
         if (!empty($libelle) && $libelle['code_service'] != $code_service) {
             return ['success' => false, 'message' => 'Desolé! Ce libellé de service existe déjà.'];
         }
@@ -137,7 +137,7 @@ class SettingService
             'updated_at_service' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->update(TABLES::SERVICES, 'code_service', $code_service, $data_service)) {
+        if (!$this->settingModel->update(TABLES::SERVICES, 'code_service', $code_service, $data_service)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -150,17 +150,17 @@ class SettingService
 
     // SEXION ANNEES
 
-    public static function saveAnneeData(array $post)
+    public function saveAnneeData(array $post)
     {
         extract($post);
 
 
         $libelle_annee = shiftSpaceBlank($libelle_annee);
-        if (!empty(self::$settingModel->getFieldsForParams(TABLES::ANNEES, ['libelle_annee' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        if (!empty($this->settingModel->getFieldsForParams(TABLES::ANNEES, ['libelle_annee' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
             return ['success' => false, 'message' => "Desolé! Ce libelle de l'annee existe déjà."];
         }
 
-        $code = self::$settingModel->generatorCode(TABLES::ANNEES, 'code_annee');
+        $code = $this->settingModel->generatorCode(TABLES::ANNEES, 'code_annee');
 
         $data_annee = [
             'libelle_annee' => $libelle_annee,
@@ -173,7 +173,7 @@ class SettingService
             'created_at_annee' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->create(TABLES::ANNEES, $data_annee)) {
+        if (!$this->settingModel->create(TABLES::ANNEES, $data_annee)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -184,14 +184,14 @@ class SettingService
     }
 
 
-    public static function updateAnneeData($post)
+    public function updateAnneeData($post)
     {
         extract($post);
 
 
         $libelle_annee = shiftSpaceBlank($libelle_annee);
 
-        $libelle = self::$settingModel->getFieldsForParams(TABLES::ANNEES, ['libelle_annee' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
+        $libelle = $this->settingModel->getFieldsForParams(TABLES::ANNEES, ['libelle_annee' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
         if (!empty($libelle) && $libelle['code_annee'] != $code_annee) {
             return ['success' => false, 'message' => "Desolé! Ce libellé de l'annee existe déjà."];
         }
@@ -204,7 +204,7 @@ class SettingService
             'updated_at_annee' => date('Y-m-d H:i:s')
         ];
 
-        if (!self::$settingModel->update(TABLES::ANNEES, 'code_annee', $code_annee, $data_annee)) {
+        if (!$this->settingModel->update(TABLES::ANNEES, 'code_annee', $code_annee, $data_annee)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -217,15 +217,15 @@ class SettingService
 
     // SEXION SESSIONS
 
-    public static function saveSessionData(array $post)
+    public function saveSessionData(array $post)
     {
         extract($post);
 
-        if (!empty(self::$settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        if (!empty($this->settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
             return ['success' => false, 'message' => "Desolé! Ce session existe déjà."];
         }
 
-        $code = self::$settingModel->generatorCode(TABLES::SESSIONS, 'code_session');
+        $code = $this->settingModel->generatorCode(TABLES::SESSIONS, 'code_session');
 
         $data_session = [
             'libelle_session' => $libelle_session,
@@ -239,7 +239,7 @@ class SettingService
             'created_at_session' => date('Y-m-d H:i:s'),
         ];
 
-        if (!self::$settingModel->create(TABLES::SESSIONS, $data_session)) {
+        if (!$this->settingModel->create(TABLES::SESSIONS, $data_session)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -250,12 +250,12 @@ class SettingService
     }
 
 
-    public static function updateSessionData($post)
+    public function updateSessionData($post)
     {
         extract($post);
 
 
-        $libelle = self::$settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
+        $libelle = $this->settingModel->getFieldsForParams(TABLES::SESSIONS, ['libelle_session' => $libelle_session, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]);
         if (!empty($libelle) && $libelle['code_session'] != $code_session) {
             return ['success' => false, 'message' => "Desolé! ce session existe déjà."];
         }
@@ -269,7 +269,7 @@ class SettingService
             'updated_at_session' => date('Y-m-d H:i:s')
         ];
 
-        if (!self::$settingModel->update(TABLES::SESSIONS, 'code_session', $code_session, $data_session)) {
+        if (!$this->settingModel->update(TABLES::SESSIONS, 'code_session', $code_session, $data_session)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -291,7 +291,7 @@ class SettingService
 
     // SEXION FONCTIONS
 
-    public static function fonctionAddModalService()
+    public function fonctionAddModalService()
     {
         $output = "";
         $output .= '
@@ -323,7 +323,7 @@ class SettingService
     }
 
 
-    public static function fonctionUpdateModalService(array $fonction)
+    public function fonctionUpdateModalService(array $fonction)
     {
         $output = "";
         $output .= '
@@ -355,7 +355,7 @@ class SettingService
         return $output;
     }
 
-    public static function fonctionDataService($fonctions)
+    public function fonctionDataService($fonctions)
     {
 
         $i = 0;
@@ -406,7 +406,7 @@ class SettingService
     }
 
     // SEXION SERVICES
-    public static function serviceAddModalService()
+    public function serviceAddModalService()
     {
         $output = "";
         $output .= '
@@ -438,7 +438,7 @@ class SettingService
     }
 
 
-    public static function serviceUpdateModalService(array $service)
+    public function serviceUpdateModalService(array $service)
     {
         $output = "";
         $output .= '
@@ -470,7 +470,7 @@ class SettingService
         return $output;
     }
 
-    public static function serviceDataService($services)
+    public function serviceDataService($services)
     {
 
         $i = 0;
@@ -522,7 +522,7 @@ class SettingService
 
     // SEXION ANNEES
 
-    public static function anneeAddModalService()
+    public function anneeAddModalService()
     {
         $output = "";
         $output .= '
@@ -561,7 +561,7 @@ class SettingService
     }
 
 
-    public static function anneeUpdateModalService(array $annee)
+    public function anneeUpdateModalService(array $annee)
     {
         $output = "";
         $output .= '
@@ -599,7 +599,7 @@ class SettingService
         return $output;
     }
 
-    public static function anneeDataService($annees)
+    public function anneeDataService($annees)
     {
 
         $i = 0;
@@ -652,7 +652,7 @@ class SettingService
 
     // SEXION SESSIONS
 
-    public static function sessionAddModalService(array $annees)
+    public function sessionAddModalService(array $annees)
     {
 
         $output = "";
@@ -716,7 +716,7 @@ class SettingService
     }
 
 
-    public static function sessionUpdateModalService(array $session, $annees)
+    public function sessionUpdateModalService(array $session, $annees)
     {
         $output = "";
         $output .= '
@@ -778,7 +778,7 @@ class SettingService
         return $output;
     }
 
-    public static function sessionDataService($sessions)
+    public function sessionDataService($sessions)
     {
 
         $i = 0;

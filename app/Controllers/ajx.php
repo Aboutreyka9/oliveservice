@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ActiviteController;
 use App\Controllers\EtudiantController;
 use App\Controllers\FinanceController;
 
@@ -164,33 +165,145 @@ switch ($action) {
 
     //end Actions pour les annees
 
-    // Debut Actions pour les semestre 
-    case 'charger_data_semestres':
+    // Debut Actions pour les Session 
+    case 'charger_data_sessions':
         $ajx = new SettingController();
-        $ajx->GetListeSemestre();
+        $ajx->GetListeSession();
         break;
-    case 'change_statut_semestres':
+    case 'change_statut_sessions':
         $ajx = new SettingController();
-        $ajx->changeStatutSemestre();
+        $ajx->changeStatutSession();
         break;
-    case 'btn_showmodal_semestre_add':
+    case 'btn_showmodal_session_add':
         $ajx = new SettingController();
-        $ajx->modalAddSemestre();
+        $ajx->modalAddSession();
         break;
-    case 'btn_showmodal_semestre_update':
+    case 'btn_showmodal_session_update':
         $ajx = new SettingController();
-        $ajx->modalUpdatedSemestre();
+        $ajx->modalUpdatedSession();
         break;
-    case 'btn_add_semestre':
+    case 'btn_add_session':
         $ajx = new SettingController();
-        $ajx->addSemestre();
+        $ajx->addSession();
         break;
-    case 'btn_update_semestre':
+    case 'btn_update_session':
         $ajx = new SettingController();
-        $ajx->updateSemestre();
+        $ajx->updateSession();
         break;
 
-    //end Actions pour les semestre
+    //end Actions pour les session
+
+    // Debut Actions pour les zone 
+    case 'charger_data_zones':
+        $ajx = new ActiviteController();
+        $ajx->getListeZone();
+        break;
+    case 'change_statut_zones':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutZone();
+        break;
+    case 'btn_showmodal_zone_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddZone();
+        break;
+    case 'btn_showmodal_zone_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedZone();
+        break;
+    case 'btn_add_zone':
+        $ajx = new ActiviteController();
+        $ajx->addZone();
+        break;
+    case 'btn_update_zone':
+        $ajx = new ActiviteController();
+        $ajx->updateZone();
+        break;
+
+    //end Actions pour les Zones
+
+    // Debut Actions pour les Categories pack 
+    case 'charger_data_categorie_packs':
+        $ajx = new ActiviteController();
+        $ajx->getListeCategoriePack();
+        break;
+    case 'change_statut_categoriePacks':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutCategoriePack();
+        break;
+    case 'btn_showmodal_categoriePack_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddCategoriePack();
+        break;
+    case 'btn_showmodal_categoriePack_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedCategoriePack();
+        break;
+    case 'btn_add_categoriePack':
+        $ajx = new ActiviteController();
+        $ajx->addCategoriePack();
+        break;
+    case 'btn_update_categoriePack':
+        $ajx = new ActiviteController();
+        $ajx->updateCategoriePack();
+        break;
+
+    //end Actions pour les Categories pack
+
+      // Debut Actions pour les Articles 
+    case 'charger_data_articles':
+        $ajx = new ActiviteController();
+        $ajx->getListeArticle();
+        break;
+    case 'change_statut_articles':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutArticle();
+        break;
+    case 'btn_showmodal_article_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddArticle();
+        break;
+    case 'btn_showmodal_article_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedArticle();
+        break;
+    case 'btn_add_article':
+        $ajx = new ActiviteController();
+        $ajx->addArticle();
+        break;
+    case 'btn_update_article':
+        $ajx = new ActiviteController();
+        $ajx->updateArticle();
+        break;
+
+    //end Actions pour les Articles
+
+    // Debut Actions pour les packs 
+    case 'charger_data_packs':
+        $ajx = new ActiviteController();
+        $ajx->getListePack();
+        break;
+    case 'change_statut_packs':
+        $ajx = new ActiviteController();
+        $ajx->changeStatutPack();
+        break;
+    case 'btn_showmodal_pack_add':
+        $ajx = new ActiviteController();
+        $ajx->modalAddPack();
+        break;
+    case 'btn_showmodal_pack_update':
+        $ajx = new ActiviteController();
+        $ajx->modalUpdatedPack();
+        break;
+    case 'btn_add_pack':
+        $ajx = new ActiviteController();
+        $ajx->addPack();
+        break;
+    case 'btn_update_pack':
+        $ajx = new ActiviteController();
+        $ajx->updatePack();
+        break;
+
+    //end Actions pour les packs
 
     // Debut Actions pour les depenses 
     case 'charger_data_depenses':

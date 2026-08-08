@@ -10,7 +10,7 @@ class Auth
      */
     public static function saveCurrentUrl(): void
     {
-        $url = str_replace("/geicg/", "", $_SERVER["REQUEST_URI"]);
+        $url = str_replace("/".PROJECT_NAME."/", "", $_SERVER["REQUEST_URI"]);
         self::create(OLD_URL, ['url' => $url]);
     }
 
@@ -55,7 +55,8 @@ class Auth
         Session::set($authKey, [
             'id'    => $user['code_user'],
             'annee_code'    => $user['annee_code'],
-            'enseignant'    =>  $user['enseignant'],
+            'zone_code'    => '6QIlVfXP0LiXE9tBzHownYLAAqDi2',
+            'commercial'    =>  $user['commercial'],
             'nom'  => $user['nom_user'] . ' ' . $user['prenom_user'],
             'fonction' => $user['libelle_fonction'],
             "etablissement_code" => $user['etablissement_code'],

@@ -9,11 +9,11 @@ use TABLES;
 class FinanceService
 {
 
-    public static FinanceModel $financeModel;
+    public  FinanceModel $financeModel;
 
     public function __construct()
     {
-        self::$financeModel = new FinanceModel();
+        $this->financeModel = new FinanceModel();
     }
 
     /**
@@ -27,15 +27,15 @@ class FinanceService
 
     // SEXION SEMESTRES
 
-    public static function saveDepenseData(array $post)
+    public function saveDepenseData(array $post)
     {
         extract($post);
 
-        // if (!empty(self::$financeModel->getFieldsForParams(TABLES::DEPENSES, ['libelle_depense' => $libelle_depense, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+        // if (!empty($this->financeModel->getFieldsForParams(TABLES::DEPENSES, ['libelle_depense' => $libelle_depense, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
         //     return ['success' => false, 'message' => "Desolé! Ce depense existe déjà."];
         // }
 
-        $code = self::$financeModel->generatorCode(TABLES::DEPENSES, 'code_depense');
+        $code = $this->financeModel->generatorCode(TABLES::DEPENSES, 'code_depense');
         $date = date('Y-m-d H:i:s');
 
         $data_depense = [
@@ -57,7 +57,7 @@ class FinanceService
             $data_depense['statut_depense'] = STATUT_ACTIF;
         }
 
-        if (!self::$financeModel->create(TABLES::DEPENSES, $data_depense)) {
+        if (!$this->financeModel->create(TABLES::DEPENSES, $data_depense)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -68,7 +68,7 @@ class FinanceService
     }
 
 
-    public static function updateDepenseData($post)
+    public function updateDepenseData($post)
     {
         extract($post);
 
@@ -89,7 +89,7 @@ class FinanceService
             $data_depense['statut_depense'] = STATUT_ACTIF;
         }
 
-        if (!self::$financeModel->update(TABLES::DEPENSES, 'code_depense', $code_depense, $data_depense)) {
+        if (!$this->financeModel->update(TABLES::DEPENSES, 'code_depense', $code_depense, $data_depense)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
@@ -111,7 +111,7 @@ class FinanceService
 
     // SEXION SEMESTRES
 
-    public static function depenseAddModalService(array $typeDepenses)
+    public function depenseAddModalService(array $typeDepenses)
     {
 
         $output = "";
@@ -177,7 +177,7 @@ class FinanceService
     }
 
 
-    public static function depenseUpdateModalService(array $depense, $typeDepenses)
+    public function depenseUpdateModalService(array $depense, $typeDepenses)
     {
         $output = "";
         $output .= '
@@ -242,7 +242,7 @@ class FinanceService
         return $output;
     }
 
-    public static function depenseDataService($depenses)
+    public function depenseDataService($depenses)
     {
 
         $i = 0;

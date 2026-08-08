@@ -21,10 +21,11 @@ define('COMPTE_CODE', "CMP_001");
 class TABLES
 {
     // Gestion académique
-    public const ACCESSOIRES = 'accessoires';
-    public const PACK_ACCESSOIRES = 'pack_accessoires';
+    public const ARTICLES = 'articles';
+    public const PACK_ARTICLES = 'pack_articles';
     public const ANNEES = 'annees';
     public const CAUTISATION_CLIENTS = 'cautisation_clients';
+    public const CATEGORIES = 'categorie_packs';
     public const CLIENTS = 'clients';
     public const COMMERCIALS = 'commercials';
     public const DEPENSES = 'depenses';
@@ -90,7 +91,7 @@ const EXTENSION = ["jpg", "png", "jpeg", "jfif", "webp", "svg", "gif", "bmp", "i
 const PERIODE = "periode";
 const RESERVATION = "reservation";
 const OLD_URL = "old_url";
-const PROJECT_NAME = "geicg";
+const PROJECT_NAME = "oliveservice";
 // CONST SEXE = ['G','F'];
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];

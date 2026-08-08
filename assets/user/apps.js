@@ -1,8 +1,15 @@
-const ORIGIN = window.location.origin;
-/** obtenir cette structure http://localhost/hotel/ */
-// const ORIGIN = (window.location.protocol + '//' + window.location.host);
-const URL_HOME = ORIGIN + "/oliveservice/";
-const URL_AJAX = URL_HOME + "app/controllers/ajx.php";
+
+const APP = {
+    origin: window.location.origin,
+    home: window.location.origin + "/oliveservice/",
+    ajax: window.location.origin + "/oliveservice/app/Controllers/ajx.php"
+};
+
+
+
+
+// const URL_HOME = ORIGIN + "/oliveservice/";
+// const URL_AJAX = URL_HOME + "app/controllers/ajx.php";
 
 let rolesPermissions = [];
 let dataCheck = [];
@@ -18,7 +25,7 @@ function btnLoginUser() {
         var form = $(this).serialize();
 
         $.ajax({
-            url: URL_AJAX,
+            url: APP.ajax,
             method: 'POST',
             data: form,
             dataType: 'JSON',
@@ -44,7 +51,7 @@ function btnLoginUser() {
 
 
                     swal("Notification", data.message, "success").then(() => {
-                        window.location.href = URL_HOME;
+                        window.location.href = APP.home;
                     });
 
                 } else {

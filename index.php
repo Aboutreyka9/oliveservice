@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ActiviteController;
 use App\Controllers\EtudiantController;
 // if (session_status() === PHP_SESSION_NONE) {
 session_name("APP545645465654_SESSION");
@@ -40,7 +41,7 @@ use Phroute\Phroute\Dispatcher;
 //     $m->update('type_depenses', 'id_type_depense', $key['id_type_depense'], ['code_type_depense' => $code]);
 // }
 
-// var_dump($type);
+// var_dump($_SESSION);
 // return;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -149,7 +150,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
 
         $router->get('recrutements/personnel', [UserController::class, 'recrutement']);
-        $router->get('personnel-enseignants', [UserController::class, 'enseignants']);
+        $router->get('personnel-commercials', [UserController::class, 'enseignants']);
         $router->get('personnel-administratifs', [UserController::class, 'administratif']);
 
         // <!-- parametrage -->
@@ -160,11 +161,16 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('depenses', [FinanceController::class, 'depense']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
-        // <!-- ETUDIANT -->
+        // <!-- Client -->
         $router->get('inscriptions', [ClientController::class, 'inscription']);
         // $router->get('annees-semestres', [SettingController::class, 'annee']);
 
-        // 
+        // <!-- Activity -->
+        $router->get('zones', [ActiviteController::class, 'zone']);
+        $router->get('packs', [ActiviteController::class, 'pack']);
+        $router->get('categories-packs', [ActiviteController::class, 'categorie']);
+        $router->get('articles', [ActiviteController::class, 'article']);
+
     });
 
 
