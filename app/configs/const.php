@@ -44,6 +44,7 @@ class TABLES
     public const TYPE_DEPENSES = 'type_depenses';
     public const VERSEMENTS = 'versements';
     public const ZONES = 'zones';
+    public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
 
 class Permissionsss

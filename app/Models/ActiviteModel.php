@@ -425,14 +425,15 @@ class ActiviteModel extends Model
 
       // SEXION PACKS
 
-    // get all annee
-    public function getAllTypePAcks($etablissement_code): array
+    public function getAllPAckArticles(string $pack): array
     {
         $data = [];
         try {
-            $sql = "SELECT tpd.* FROM " . TABLES::TYPE_DEPENSES . " tpd WHERE tpd.etablissement_code = :etablissement_code  ORDER BY libelle_type_depense DESC";
+            $sql = "SELECT pa.*, ar.libelle_article FROM " . TABLES::PACK_ARTICLES . " pa
+            JOIN " . TABLES::ARTICLES . " ar ON pa.article_code = ar.code_article
+             WHERE pa.pack_code = :code_pack  ORDER BY ar.libelle_article DESC";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['etablissement_code' => $etablissement_code]);
+            $stmt->execute(['code_pack' => $pack]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
             die($e->getMessage());
@@ -444,7 +445,7 @@ class ActiviteModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT de.*, DATE(de.periode_depense) AS periode FROM " . TABLES::DEPENSES . " AS de WHERE de.code_depense = :code LIMIT 1";
+            $sql = "SELECT * FROM " . TABLES::PACKS . " AS p WHERE p.code_pack = :code LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['code' => $code]);
             $data = $stmt->fetch();
@@ -454,14 +455,13 @@ class ActiviteModel extends Model
         return $data;
     }
 
-    // get all depense
-    public function getAllPAcks($etablissement_code): array
+    public function getAllPAcks($etablissement_code,$annee_code): array
     {
         $data = [];
         try {
-            $sql = "SELECT de* FROM " . TABLES::DEPENSES . " AS de WHERE se.etablissement_code = :etablissement_code AND statut_depense = :statut ORDER BY libelle_depense";
+            $sql = "SELECT * FROM " . TABLES::PACKS . " AS p WHERE p.etablissement_code = :etablissement_code AND p.annee_code = :annee_code GROUP BY ";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
+            $stmt->execute(['etablissement_code' => $etablissement_code, 'annee_code' => $annee_code]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
             die($e->getMessage());
@@ -479,7 +479,7 @@ class ActiviteModel extends Model
         //     );
         // }
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+        $where = "WHERE p.etablissement_code = :etablissement_code AND p.annee_code = :annee_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -503,7 +503,7 @@ class ActiviteModel extends Model
         // }
 
 
-        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::DEPENSES . " dp $where";
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::PACKS . " p $where";
 
         $stmt = $this->db->prepare($sql);
 
@@ -518,7 +518,7 @@ class ActiviteModel extends Model
     {
 
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+        $where = "WHERE p.etablissement_code = :etablissement_code AND p.annee_code = :annee_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -529,10 +529,9 @@ class ActiviteModel extends Model
             $where .= " AND (" . implode(' OR ', $likes) . ")";
         }
 
-
-
-        $sql = "SELECT dp.*, tp.libelle_type_depense FROM " . TABLES::DEPENSES . " dp 
-        JOIN " . TABLES::TYPE_DEPENSES . "  tp ON tp.code_type_depense = dp.type_depense_code 
+        $sql = "SELECT p.*, se.libelle_session, ca.libelle_categorie_pack FROM " . TABLES::VUE_TOTAL_PARK_ARTICLES . " p 
+        JOIN " . TABLES::SESSIONS . "  se ON se.code_session = p.session_code 
+        JOIN " . TABLES::CATEGORIES . "  ca ON ca.code_categorie_pack = p.categorie_pack_code 
         $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);

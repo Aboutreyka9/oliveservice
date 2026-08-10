@@ -214,8 +214,6 @@ class ActiviteService
 
     // END SEXION  ARTICLES 
 
-    
-
     // SEXION PACKS
 
     public function savePackData(array $post,$data_articles)
@@ -223,7 +221,7 @@ class ActiviteService
         extract($post);
 
         if (!empty($this->activiteModel->getFieldsForParams(TABLES::PACKS, ['libelle_pack' => $libelle_pack, 'etablissement_code' => Auth::user('etablissement_code'),'annee_code' => Auth::user('annee_code'), 'session_code' => $libelle_session, 'categorie_pack_code' => $libelle_categorie, 'zone_code' => Auth::user('zone_code')]))) {
-            return ['success' => false, 'message' => 'Desolé! Ce libelle de zone existe déjà.'];
+            return ['success' => false, 'message' => 'Desolé! Ce libelle de Pack existe déjà.'];
         }
 
         $code = $this->activiteModel->generatorCode(TABLES::PACKS, 'code_pack');
@@ -246,7 +244,6 @@ class ActiviteService
             $data = [];
             $this->activiteModel->create(TABLES::PACKS, $data_packs);
 
-            $lastIdPack = $this->activiteModel->lastInsertId();
             $date = date('Y-m-d H:i:s');
             $annee_code = Auth::user('annee_code');
             $etablissement_code = Auth::user('etablissement_code');
@@ -256,7 +253,7 @@ class ActiviteService
                 $data [] = [
                     'quantite_article' => $article->qte,
                     'article_code' =>$article->code,
-                    'pack_code' => $lastIdPack,
+                    'pack_code' => $data_packs['code_pack'],
                     'annee_code' =>  $annee_code,
                     'etablissement_code' => $etablissement_code,
                     'user_code' => $id,
@@ -268,12 +265,11 @@ class ActiviteService
 
         });
 
-        // if (!$result) {
-        //     return ['success' => false, 'message' => "Desolé! echec d'operation."];
-        // }
+        if (!$result) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
 
         return [
-            'rest' => $data_articles,
             'success' => true,
             'message' => 'Pack enregistré avec succès.',
         ];
@@ -677,7 +673,7 @@ class ActiviteService
 
       // SEXION PACKS
 
-    public function packAddModalService( array $sessions, array $categorie_pack,$articles)
+    public function packAddModalService( array $sessions, array $categorie_pack, array $articles)
     {
         $output = "";
         $output .= '
@@ -780,23 +776,112 @@ class ActiviteService
     }
 
 
-    public function packUpdateModalService(array $pack)
+    public function packUpdateModalService(array $sessions, array $categorie_pack,array $pack, array $articles,array $packArticles)
     {
         $output = "";
         $output .= '
             <form action="#" method="post" id="frmUpdatePack">
                 <div class="row mb-3">
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-6 mb-3">
                         <input type="hidden" value="btn_update_pack" name="action">
                         <input type="hidden" value="' . $pack['code_pack'] . '" name="code_pack">
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
                         <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
                         <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" value="' . $pack['libelle_pack'] . '" required>
                     </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="description_pack" class="form-label">Description </label>
-                        <textarea rows="3" class="form-control" name="description_pack" id="description_pack">' . $pack['description_pack'] . '</textarea>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
+                    
+                            <select class="form-control" id="libelle_session"  name="libelle_session" required>
+                            <option value="">--- CHOISIR ---</option>
+
+                        ';
+
+        foreach ($sessions as $session) {
+            $output .= '<option '.selected($session['code_session'],$pack['session_code']).' value="' . $session['code_session'] . '">' . $session['libelle_session'] . '</option>';
+        }
+
+        $output .= '
+     
+                        </select>
                     </div>
+                    <div class="col-md-6 mb-3">
+                       
+                        <label for="libelle_categorie" class="form-label">Libelle Categorie <strong class="text-danger">*</strong></label>
+                    
+                            <select class="form-control" id="libelle_categorie"  name="libelle_categorie" required>
+                            <option value="">--- CHOISIR ---</option>
+
+                        ';
+
+        foreach ($categorie_pack as $cat) {
+            $output .= '<option  '.selected($cat['code_categorie_pack'],$pack['categorie_pack_code']).' value="' . $cat['code_categorie_pack'] . '">' . $cat['libelle_categorie_pack'] . '</option>';
+        }
+
+        $output .= '
+     
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                         <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
+                        <input  value="' . $pack['montant_pack'] . '" type="number" class="form-control" id="montant_pack" name="montant_pack" required>
+                    </div>
+                    
+                </div>
+                <hr>
+                
+                <h4 class="text-center text-danger"> ---- SELECTION DES ARTICLES DU PACK ----  <span class="badge bg-dark" id="countArticle">0</span> </h4>
+                <div class="row mt-3">
+                <div class="col-md-8 my-3">
+                <select style="background: #b7ccfd;color: #003825;font-size: 17px;" name="" id="dataPack" class="form-control">
+                            <option value="">--- CHOISIR ---</option>
+
+                ';
+
+        foreach ($articles as $article) {
+            $output .= '<option value="' . $article['code_article'].'&'.$article['libelle_article'] . '">' . $article['libelle_article'] . '</option>';
+        }
+
+        $output .= '
+                </select>
+                </div>
+                <div class="col-md-4 my-3">
+                <button class="btn btn-outline-danger w-100" type="button" id="btnAddDataPack" >Ajouter</button>
+                 </div>
+
+                  <div class="col-md-12 my-3">
+                 <div class="table-container-pack">
+                  <table class="table table-bordered table-hover table_add_pack" >
+                    <thead class="thead-light">
+                        <th width="80%">Libelle</th>
+                        <th>Quantite</th>
+                        <th>action</th>
+                    </thead>
+                    <tbody>
+                         ';
+
+        foreach ($packArticles as $pa) {
+            $output .= '<tr data-code="' . $pa['article_code'] . '">
+            <td>' . $pa['libelle_article'] . '</td>
+            <td class="text-dark text-center qte" contenteditable="true">1</td>
+            
+            <td> 
+                <button data-id="' . $pa['article_code'] . '" title="Retirer l\'article de la liste" class="btn btn-danger btn-sm btn_remove_data_article">
+                    <i class="fa fa-trash"></i> 
+                </button>
+            </td>
+        </tr>';
+        }
+
+        $output .= '
+                    </tbody>
+                  </table>
+                 </div>
+                 </div>
+                   
                 </div>
 
                 <div class="row mb-3">
@@ -828,20 +913,23 @@ class ActiviteService
                 <i class="fa fa-ellipsis-h"></i>
             </button>
             <div class="dropdown-menu">
+             <a href="" class="dropdown-item "  
+            data-toggle="tooltip" title="" data-original-title="Voir details pack">
+        <i class="fa fa-eye text-icon-info"></i> &nbsp; &nbsp; Voir details pack </a>
 
-        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedCategoriePack(\'' . $pack['code_pack'] . '\')" 
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedPack(\'' . $pack['code_pack'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier pack">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier pack </button>
         ';
             if ($pack['statut_pack'] == STATUT_ACTIF) {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $pack['code_pack'] . '\',\'' . STATUT_INACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutPack(\'' . $pack['code_pack'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Désactiver pack ">
             <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver pack </button>
         ';
             } else {
                 $actions .= '
-        <button class="dropdown-item " id="" onclick="changeStatutZone(\'' . $pack['code_pack'] . '\',\'' . STATUT_ACTIF . '\')" 
+        <button class="dropdown-item " id="" onclick="changeStatutPack(\'' . $pack['code_pack'] . '\',\'' . STATUT_ACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Activer pack ">
             <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer pack </button>
         ';
@@ -852,8 +940,12 @@ class ActiviteService
             $data[] = [
                 $i,
                 $etat,
-                strtoupper($pack['libelle_pack']),
-                textLimit($pack['description_pack']),
+                $pack['libelle_pack'],
+                $pack['libelle_session'],
+                $pack['libelle_categorie_pack'],
+                $pack['quantite'],
+                $pack['montant_pack'],
+                date_formater($pack['created_at_pack']),
                 date_formater($pack['created_at_pack']),
                 $actions
             ];

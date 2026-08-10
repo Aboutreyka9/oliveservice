@@ -127,7 +127,7 @@ function searchTestInput() {
         e.preventDefault();
         var search = $('input[type="search"]').val();
 
-        testDatable('bcharger_data_utilisateurs', '#data-table-utilisateur', search)
+        testDatable('charger_data_packs', '#data-table-pack', search)
         // loadDataTable('data-table-user', '#data-table-user', 'bcharger_data_users');
     });
 }
@@ -2013,7 +2013,7 @@ function updatedCategoriePack() {
     });
 }
 
-function changeStatutSemestre(code, statut) {
+function changeStatutCategoriePack(code, statut) {
     swal({
         title: "Notification",
         text: "Voulez-vous vraiment modifier le statut de cette session?",
@@ -2255,7 +2255,7 @@ function AddNewRowTable(article) {
     let html = '';
     let index = 0;
 
-    if (APP.articleSelected.includes(article[0])) return $.notify('Désolé,cet article existe déjà dans la liste');
+    if (APP.articleSelected.includes(article[0])) return $.notify('Désolé,cet article existe déjà dans la liste','warn');
 
     // let index = $('.table_commande tbody tr').length + 1;
     APP.articleSelected.push(article[0]);
@@ -2265,6 +2265,7 @@ function AddNewRowTable(article) {
 
     $('.table_add_pack tbody').append(html);
     $('#countArticle').text(index);
+    $.notify('Article : '+article[1]+' ajouté dans la liste de selectionne.','success');
 }
 
 function dataRow(article) {
@@ -2298,7 +2299,7 @@ function addDataPack() {
     });
 }
 
-function pushData(selector) {
+function pushDataPack(selector) {
     let dataselector = [];
     $('.table_add_pack tbody tr').each(function () {
         var code = $(this).data('code');
@@ -2388,7 +2389,7 @@ ajouterPack();
 function ajouterPack() {
     $("body").on("submit", "#frmAddPack", function (e) {
         e.preventDefault();
-        var packArticles = pushData('qte');
+        var packArticles = pushDataPack('qte');
 
         var data = $(this).serializeArray();
         data.push({
@@ -2400,16 +2401,15 @@ function ajouterPack() {
             method: "POST",
             url: APP.ajax,
             data: data,
-            // dataType: "JSON",
+            dataType: "JSON",
             beforeSend: function () {
                 // $(".loader_backdrop2").css('display', "block");
 
-                // btnReq("#btnSubmitFormPack", "Enregistrement...");
+                btnReq("#btnSubmitFormPack", "Enregistrement...");
             },
             success: function (data) {
                 console.log(data);
-                return;
-                // btnRes("#btnSubmitFormPack", "Enregistrer", "fa-save");
+                btnRes("#btnSubmitFormPack", "Enregistrer", "fa-save");
                 // $(".loader_backdrop2").css('display', "none");
 
                 if (data.success) {
@@ -2432,8 +2432,8 @@ function modalUpdatedPack(code) {
         method: "POST",
         url: APP.ajax,
         data: {
-            action: 'btn_showmodal_session_update',
-            codesession: code
+            action: 'btn_showmodal_pack_update',
+            codepack: code
         },
         dataType: 'JSON',
         beforeSend: function () {
@@ -2442,11 +2442,15 @@ function modalUpdatedPack(code) {
         },
         success: function (data) {
 
+
             $(".loader_backdrop2").css('display', "none");
 
             if (data.success) {
                 $(".data-pack-modal").html(data.data);
                 $("#pack-modal").modal("show");
+                APP.articleSelected = data.articleCodes;
+                var index = APP.articleSelected.length;
+                $('#countArticle').text(index);
 
             } else {
                 $.notify(data.message);
@@ -2510,9 +2514,9 @@ function changeStatutPack(code, statut) {
                     url: APP.ajax,
                     method: 'POST',
                     data: {
-                        action: 'change_statut_sessions',
-                        code_session: code,
-                        statut_session: statut
+                        action: 'change_statut_packs',
+                        code_pack: code,
+                        statut_pack: statut
                     },
                     dataType: 'JSON',
                     beforeSend: function () {

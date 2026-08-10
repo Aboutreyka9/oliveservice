@@ -563,7 +563,6 @@ class ActiviteController extends MainController
         $likeParams = [];
         $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code')];
 
-
         $limit  = (int) ($_POST['length'] ?? 10);
         $start  = (int) ($_POST['start'] ?? 0);
         $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
@@ -571,19 +570,19 @@ class ActiviteController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
         // $search = $_POST['search'] ?? '';
         $columns = [
-            0 => 'libelle_type_depense',
-            1 => 'periode_depense',
-            2 => 'statut_depense',
-            3 => 'montant_depense',
-            4 => 'user_confirm',
-            5 => 'created_at_confirm'
+            0 => 'libelle_pack',
+            1 => 'libelle_session',
+            2 => 'libelle_categorie_pack',
+            3 => 'quantite',
+            4 => 'montant_pack',
+            5 => 'created_at_pack'
         ];
         // $columns = [
         //     0 => 'libelle_type_depense',
 
         // ];
 
-        $orderBy = $columns[$orderColumn] ?? 'libelle_type_depense';
+        $orderBy = $columns[$orderColumn] ?? 'libelle_pack';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
 
@@ -592,7 +591,7 @@ class ActiviteController extends MainController
         if (!empty($search)) {
 
 
-            $likeParams = ['libelle_type_depense' => $search, 'periode_depense' => $search, 'statut_depense' => $search, 'montant_depense' => $search, 'user_confirm' => $search, 'created_at_confirm' => $search];
+            $likeParams = ['libelle_pack' => $search, 'libelle_session' => $search, 'libelle_categorie_pack' => $search, 'quantite' => $search, 'montant_pack' => $search, 'created_at_pack' => $search];
 
             // $likeParams = ['libelle_type_depense' => $search];
         }
@@ -604,18 +603,18 @@ class ActiviteController extends MainController
         $totalFiltered = $f->dataTbleCountTotalPacksRow($whereParams, $likeParams);
         // 📄 Données
 
-        $depenseList = $f->DataTableFetchPacksListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $packList = $f->DataTableFetchPacksListe($likeParams, $orderBy, $orderDir, $start, $limit);
         $data = [];
 
 
-        $data = $this->activiteService->packDataService($depenseList);
+        $data = $this->activiteService->packDataService($packList);
         // Response::success('operation reussie',);
         echo json_encode([
             "draw"            => intval($_POST['draw']),
             "recordsTotal"    => $total,
             "recordsFiltered" => $totalFiltered,
             "data"            => $data
-            // "data"            => $depenseList
+            // "data"            => $packList
         ]);
         // // echo json_encode(['data' => $total, 'code' => 200]);
         return;
@@ -644,16 +643,18 @@ class ActiviteController extends MainController
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
-        // $users = getAllusers();
-        $depense = $this->activiteModel->getSinglePackByCode($codedepense);
+        $categories = $this->activiteModel->getAllCategoriePacks(Auth::user('etablissement_code'));
+        $sessions = $this->settingModel->getAllSessions(Auth::user('etablissement_code'), Auth::user('annee_code'));
+        $articles = $this->activiteModel->getAllArticles(Auth::user('etablissement_code'));
+        $packArticles = $this->activiteModel->getAllPAckArticles($codepack);
+        $pack = $this->activiteModel->getSinglePAckByCode($codepack);
+        $articleCodes = array_column($packArticles, 'article_code');
 
-        $typeDepenses = $this->activiteModel->getAllTypePacks(Auth::user('etablissement_code'));
+        if (empty($categories) || empty($sessions) || empty($articles) || empty($pack)) Response::error('Désolé, erreur de chargement des données!');
 
+        $output = $this->activiteService->packUpdateModalService($sessions, $categories, $pack, $articles, $packArticles);
 
-        if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
-
-        $output = $this->activiteService->packUpdateModalService($depense, $typeDepenses);
-        echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
+        echo json_encode(['data' => $output, 'articleCodes' => $articleCodes ,'code' => 200, 'message' => 'operation reussie', 'success' => true]);
     }
 
     public function addPack()
@@ -676,13 +677,13 @@ class ActiviteController extends MainController
         if (count($data_articles) == 0) Response::error('Veuillez ajouter au moins un article', HttpStatusCode::UNAUTHORIZED);
 
         $result = $this->activiteService->savePackData($_POST, $data_articles);
-var_dump($result);
 
-        // if (!$result['success']) {
-        //     Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
-        // }
 
-        // Response::success($result['message'], []);
+        if (!$result['success']) {
+            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        }
+
+        Response::success($result['message'], []);
     }
 
     public function updatePack()
@@ -715,10 +716,10 @@ var_dump($result);
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
-            $statut_zone = (isset($statut_zone) && $statut_zone != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
+            $statut_pack = (isset($statut_pack) && $statut_pack != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
 
 
-        if ($this->activiteModel->update(TABLES::PACKS, 'code_pack', $code_pack, ['statut_pack' => $statut_zone])) Response::success('Statut modifié avec succès', []);
+        if ($this->activiteModel->update(TABLES::PACKS, 'code_pack', $code_pack, ['statut_pack' => $statut_pack])) Response::success('Statut modifié avec succès', []);
 
         Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
     }
