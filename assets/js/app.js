@@ -220,6 +220,7 @@ function ajaxTable(tableId, selector, action) {
 }
 
 menuNav();
+activeMenuLink();
 
 
 function menuNav() {
@@ -229,8 +230,6 @@ function menuNav() {
         $(".current-page").text(currentPage.toUpperCase());
     }
 
-
-    // var te = window.pathname.
     $("body").on('click', '.back', function () {
         history.back();
     });

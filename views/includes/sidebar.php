@@ -58,12 +58,12 @@
                 ?>
 
                 <li class="nav-item">
-                    <a data-toggle="collapse" href="#académique">
+                    <a data-toggle="collapse" href="#academique">
                         <i class="fas fa-pen-square"></i>
                         <p class="text-upper">Activités</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="académique">
+                    <div class="collapse" id="academique">
                         <ul class="nav nav-collapse">
                             <!-- 👉 Caissier, Gérant, Admin -->
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
