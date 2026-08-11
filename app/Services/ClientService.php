@@ -480,7 +480,7 @@ class ClientService
         return $output;
     }
 
-    public function saveClientData(array $post)
+    public function saveClientData(array $post, array $packs = [])
     {
         extract($post);
 
@@ -494,6 +494,8 @@ class ClientService
             'genre_client' => $genre_client,
             'lieu_client' => strtoupper($lieu_client),
             'code_client' => strtoupper($code_client),
+            'email_client' => $email_client ?? null,
+            'profession_client' => $profession_client ?? null,
             'statut_client' => STATUT_ACTIF,
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
@@ -502,6 +504,27 @@ class ClientService
 
         if (!$this->activiteModel->create(TABLES::CLIENTS, $data_client)) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+        if (!empty($packs)) {
+            $date = date('Y-m-d H:i:s');
+            $annee_code = Auth::user('annee_code');
+            $etablissement_code = Auth::user('etablissement_code');
+            $id = Auth::user('id');
+
+            $packInscriptions = [];
+            foreach ($packs as $packCode) {
+                $packInscriptions[] = [
+                    'pack_code' => $packCode,
+                    'client_code' => $code_client,
+                    'annee_code' => $annee_code,
+                    'etablissement_code' => $etablissement_code,
+                    'user_code' => $id,
+                    'created_at_pack_inscription' => $date,
+                ];
+            }
+
+            $this->activiteModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
         }
 
         return [

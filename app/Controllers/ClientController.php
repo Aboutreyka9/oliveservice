@@ -139,7 +139,12 @@ class ClientController extends MainController
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->clientService->saveClientData($_POST);
+        $packs = [];
+        if (!empty($selected_packs)) {
+            $packs = json_decode($selected_packs, true);
+        }
+
+        $result = $this->clientService->saveClientData($_POST, $packs);
 
         if (!$result['success']) {
             Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);

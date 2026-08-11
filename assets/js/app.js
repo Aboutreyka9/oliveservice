@@ -3029,6 +3029,206 @@ function changeStatutinscription(code, statut) {
 /** FIN SECTION INSCRIPTION */
 
 
+allStepInscription()
+
+function allStepInscription () {
+
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        $('.btn-next').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (validateStep(currentStep)) {
+                goToStep(currentStep + 1);
+            }
+        });
+
+        $('.btn-prev').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            goToStep(currentStep - 1);
+        });
+
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return;
+
+            $('#step' + currentStep).addClass('d-none');
+            $('#step' + step).removeClass('d-none');
+            
+            currentStep = step;
+            updateTimeline();
+            updateRecap();
+            
+            $('html, body').animate({
+                scrollTop: $('.timeline-steps').offset().top - 20
+            }, 300);
+        }
+
+        function updateTimeline() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = $('#step' + i + '-indicator');
+                indicator.removeClass('active completed');
+                
+                if (i < currentStep) {
+                    indicator.addClass('completed');
+                } else if (i === currentStep) {
+                    indicator.addClass('active');
+                }
+            }
+        }
+
+        function validateStep(step) {
+            if (step === 1) {
+                let valid = true;
+                const requiredFields = ['nom_client', 'telephone_client', 'lieu_client', 'code_client'];
+                
+                requiredFields.forEach(function(field) {
+                    const value = $('#' + field).val().trim();
+                    if (!value) {
+                        valid = false;
+                        $('#' + field).addClass('is-invalid');
+                    } else {
+                        $('#' + field).removeClass('is-invalid');
+                    }
+                });
+
+                const genreVal = $('#genre_client').val();
+                if (!genreVal) {
+                    valid = false;
+                    $('#genre_client').addClass('is-invalid');
+                } else {
+                    $('#genre_client').removeClass('is-invalid');
+                }
+                
+                if (!valid) {
+                    $.notify('Veuillez remplir tous les champs obligatoires', 'error');
+                    $('html, body').animate({
+                        scrollTop: $('.is-invalid').first().offset().top - 100
+                    }, 300);
+                }
+                
+                return valid;
+            }
+            
+            if (step === 2) {
+                const checkedPacks = $('.pack-check:checked').length;
+                if (checkedPacks === 0) {
+                    $.notify('Veuillez sélectionner au moins un pack', 'error');
+                    return false;
+                }
+                return true;
+            }
+            
+            return true;
+        }
+
+        function updateRecap() {
+            if (currentStep === 3) {
+                $('#recap-nom').text($('#nom_client').val());
+                $('#recap-contact').text($('#telephone_client').val());
+                $('#recap-genre').text($('#genre_client').find('option:selected').text());
+                $('#recap-lieu').text($('#lieu_client').val());
+                $('#recap-code').text($('#code_client').val());
+                $('#recap-email').text($('#email_client').val() || 'Non renseigné');
+                $('#recap-profession').text($('#profession_client').val() || 'Non renseigné');
+
+                const selectedPacks = [];
+                let totalMontant = 0;
+                
+                $('.pack-check:checked').each(function() {
+                    const card = $(this).closest('.pack-card');
+                    const libelle = card.data('pack-libelle');
+                    const montant = card.data('pack-montant');
+                    selectedPacks.push({ libelle: libelle, montant: montant });
+                    totalMontant += parseInt(montant);
+                });
+
+                const tbody = $('#recap-packs');
+                tbody.empty();
+                
+                if (selectedPacks.length === 0) {
+                    tbody.append('<tr><td colspan="2" class="text-center text-muted">Aucun pack sélectionné</td></tr>');
+                } else {
+                    selectedPacks.forEach(function(pack) {
+                        tbody.append('<tr><td>' + pack.libelle + '</td><td>' + Number(pack.montant).toLocaleString('fr-FR') + ' FCFA</td></tr>');
+                    });
+                    tbody.append('<tr class="table-active"><td class="font-weight-bold">Total</td><td class="font-weight-bold">' + totalMontant.toLocaleString('fr-FR') + ' FCFA</td></tr>');
+                }
+            }
+        }
+
+        $('.pack-card').click(function(e) {
+            if (e.target.type !== 'checkbox') {
+                const checkbox = $(this).find('.pack-check');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            }
+            $(this).toggleClass('selected', $(this).find('.pack-check').prop('checked'));
+        });
+
+        $('.pack-check').change(function() {
+            $(this).closest('.pack-card').toggleClass('selected', $(this).prop('checked'));
+        });
+
+        $('form[id="frmAddClient"]').submit(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!validateStep(currentStep)) {
+                return;
+            }
+
+            const selectedPacks = [];
+            $('.pack-check:checked').each(function() {
+                selectedPacks.push($(this).val());
+            });
+            $('#selected_packs').val(JSON.stringify(selectedPacks));
+
+            var form = $(this);
+            var btn = $('#btnSubmitFormClient');
+            var originalText = btn.html();
+            
+            btn.html('<i class="fas fa-spinner fa-spin"></i> &nbsp; Enregistrement...').prop('disabled', true);
+            
+            $.ajax({
+                url: APP.ajax,
+                method: 'POST',
+                data: form.serialize(),
+                dataType: 'JSON',
+                success: function(data) {
+                    if (data.success) {
+                        $.notify(data.message, 'success');
+                        setTimeout(function() {
+                            window.location.href = 'urlllll';
+                        }, 1500);
+                    } else {
+                        $.notify(data.message, 'error');
+                        btn.html(originalText).prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    $.notify('Désolé, une erreur est survenue', 'error');
+                    btn.html(originalText).prop('disabled', false);
+                }
+            });
+        });
+
+        $('.select2').select2({
+            tags: "false",
+            placeholder: "----CHOISIR----",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "Aucun résultat";
+                }
+            },
+            createTag: function(params) {
+                return null;
+            }
+        });
+    }
+
+
 
 
 // SEXION FILTER DATA
