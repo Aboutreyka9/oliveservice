@@ -642,6 +642,8 @@ class ActiviteController extends MainController
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
+        if(Auth::getData(ARTICLE_CODES))
+            Auth::clean(ARTICLE_CODES);
 
         $categories = $this->activiteModel->getAllCategoriePacks(Auth::user('etablissement_code'));
         $sessions = $this->settingModel->getAllSessions(Auth::user('etablissement_code'), Auth::user('annee_code'));
@@ -649,6 +651,7 @@ class ActiviteController extends MainController
         $packArticles = $this->activiteModel->getAllPAckArticles($codepack);
         $pack = $this->activiteModel->getSinglePAckByCode($codepack);
         $articleCodes = array_column($packArticles, 'article_code');
+        Auth::create(ARTICLE_CODES,$articleCodes);
 
         if (empty($categories) || empty($sessions) || empty($articles) || empty($pack)) Response::error('Désolé, erreur de chargement des données!');
 
@@ -659,7 +662,7 @@ class ActiviteController extends MainController
 
     public function addPack()
     {
-        $data_articles = json_decode($_POST['articles']);
+        $data_articles = json_decode($_POST['articles'],true);
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
@@ -688,19 +691,23 @@ class ActiviteController extends MainController
 
     public function updatePack()
     {
+        $data_articles = json_decode($_POST['articles'],true);
         $_POST = sanitizePostData($_POST);
+
         extract($_POST);
         $v = new Validator();
-
-        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
-            ->required('date_depense', $date_depense, 'Date depense')
-            ->required('montant_depense', $montant_depense, 'Montant depense')
-            ->digit('montant_depense', $montant_depense, 'Montant depense');
-
+        
+        $v->required('libelle_pack', $libelle_pack, 'Libelle pack')
+        ->required('libelle_session', $libelle_session, 'Libelle session')
+        ->required('libelle_categorie', $libelle_categorie, 'Libelle categorie')
+        ->required('montant_pack', $montant_pack, 'Montant cautisation')->digit('montant_pack', $montant_pack, 'Montant cautisation');
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->activiteService->updatePackData($_POST);
+        if (count($data_articles) == 0) Response::error('Veuillez ajouter au moins un article', HttpStatusCode::UNAUTHORIZED);
+
+
+        $result = $this->activiteService->updatePackData($_POST,$data_articles);
 
 
         if (!$result['success']) {

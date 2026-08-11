@@ -636,7 +636,7 @@ abstract class Model
             if ($stmt->rowCount() > 0) {
                 $result = true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             die($e->getMessage());
         }
         return $result;
@@ -685,6 +685,46 @@ abstract class Model
         $stmt = $this->db->prepare("DELETE FROM {$table} WHERE {$this->id} = ?");
         return $stmt->execute([$id]);
     }
+
+      public function deletePackArticles(string $pack_code, array $article_code) { 
+        try { 
+        
+          // Création des placeholders 
+         $placeholders = implode( ', ', array_map( fn($index) => ":value_$index", array_keys($article_code) ) ); 
+         $sql = "DELETE FROM ".TABLES::PACK_ARTICLES." WHERE pack_code = :pack_code AND article_code IN ($placeholders)"; 
+         $stmt = $this->db->prepare($sql); 
+         // Préparation des paramètres 
+         $params = ['pack_code' => $pack_code]; 
+         foreach ($article_code as $index => $value) { 
+         $params["value_$index"] = $value; 
+         } 
+         $stmt->execute($params); 
+         return $stmt->rowCount(); 
+         } catch (Exception $e) { 
+            die($e->getMessage()); 
+        } 
+ }
+
+  public function deleteAny(string $table, string $key, array $values) { 
+    try { 
+        // Aucun élément à supprimer 
+        if (empty($values)) { 
+            return false; 
+        }
+         // Création des placeholders 
+         $placeholders = implode( ', ', array_map( fn($index) => ":value_$index", array_keys($values) ) ); 
+         $sql = "DELETE FROM {$table} WHERE {$key} IN ($placeholders)"; 
+         $stmt = $this->db->prepare($sql); 
+         // Préparation des paramètres 
+         $params = []; foreach ($values as $index => $value) { 
+         $params["value_$index"] = $value; 
+         } 
+         $stmt->execute($params); 
+         return $stmt->rowCount(); 
+         } catch (Exception $e) { 
+            die($e->getMessage()); 
+        } 
+ }
 
     /**
      * Summary of deleteMultiple

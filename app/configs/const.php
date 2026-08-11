@@ -93,6 +93,7 @@ const PERIODE = "periode";
 const RESERVATION = "reservation";
 const OLD_URL = "old_url";
 const PROJECT_NAME = "oliveservice";
+const ARTICLE_CODES = "article_codes";
 // CONST SEXE = ['G','F'];
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];

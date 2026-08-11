@@ -2462,9 +2462,15 @@ function modalUpdatedPack(code) {
 
 updatedPack();
 function updatedPack() {
-    $("body").on("submit", "#frmUpdateCategoriePack", function (e) {
+    $("body").on("submit", "#frmUpdatePack", function (e) {
         e.preventDefault();
-        var data = $(this).serialize();
+        var packArticles = pushDataPack('qte');
+
+        var data = $(this).serializeArray();
+        data.push({
+            name: 'articles',
+            value: JSON.stringify(packArticles)
+        });
 
         $.ajax({
             method: "POST",
@@ -2474,14 +2480,13 @@ function updatedPack() {
             beforeSend: function () {
                 // $(".loader_backdrop2").css('display', "block");
 
-                btnReq("#btnSubmitFormCategoriePack", "Mise à jour en cours...");
+                btnReq("#btnSubmitFormPack", "Mise à jour en cours...");
             },
             success: function (data) {
                 // $(".loader_backdrop2").css('display', "none");
+                btnRes("#btnSubmitFormPack", "Enregistrer", "fa-save");
                 console.log(data);
 
-                btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
-                return
                 if (data.success) {
                     APP.tables['data-table-pack'].ajax.reload(null, false);
                     $.notify(data.message, "success");

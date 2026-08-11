@@ -251,8 +251,8 @@ class ActiviteService
 
             foreach ($data_articles as $article) {
                 $data [] = [
-                    'quantite_article' => $article->qte,
-                    'article_code' =>$article->code,
+                    'quantite_article' => $article['qte'],
+                    'article_code' =>$article['code'],
                     'pack_code' => $data_packs['code_pack'],
                     'annee_code' =>  $annee_code,
                     'etablissement_code' => $etablissement_code,
@@ -276,31 +276,63 @@ class ActiviteService
     }
 
 
-    public function updatePackData($post)
+    public function updatePackData($post,$data_articles)
     {
         extract($post);
 
 
-        $libelle = $this->activiteModel->getFieldsForParams(TABLES::ZONES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]);
-        if (!empty($libelle) && $libelle['code_zone'] != $code_zone) {
-            return ['success' => false, 'message' => 'Desolé! Ce libellé de zone existe déjà.'];
+        $libelle = $this->activiteModel->getFieldsForParams(TABLES::PACKS, ['libelle_pack' => $libelle_pack, 'etablissement_code' => Auth::user('etablissement_code'),'annee_code' => Auth::user('annee_code'), 'session_code' => $libelle_session, 'categorie_pack_code' => $libelle_categorie, 'zone_code' => Auth::user('zone_code')]);
+
+
+        if (!empty($libelle) && $libelle['code_pack'] != $code_pack) {
+            return ['success' => false, 'message' => "Desolé! ce libelle Pack existe déjà."];
         }
 
-
-        $data_zone = [
-            'libelle_zone' => strtoupper($libelle_zone),
-            'description_zone' => $description_zone,
-            'updated_at_zone' => date('Y-m-d H:i:s'),
+        $data_packs = [
+            'libelle_pack' => strtoupper($libelle_pack),
+            'montant_pack' => $montant_pack,
+            'session_code' =>$libelle_session,
+            'categorie_pack_code' => $libelle_categorie,
+            'updated_at_pack' => date('Y-m-d H:i:s')
         ];
 
-        if (!$this->activiteModel->update(TABLES::FONCTIONS, 'code_zone', $code_zone, $data_zone)) {
+         $result = $this->activiteModel->transactionData(function () use ($data_packs, $data_articles,$code_pack) {
+            $data = [];
+            $this->activiteModel->update(TABLES::PACKS,'code_pack', $code_pack, $data_packs);
+
+            $date = date('Y-m-d H:i:s');
+            $annee_code = Auth::user('annee_code');
+            $etablissement_code = Auth::user('etablissement_code');
+            $id = Auth::user('id');
+            $dataToDelete = Auth::getData(ARTICLE_CODES);
+            $dataToDelete = array_diff($dataToDelete,array_column($data_articles,'code'));
+
+            foreach ($data_articles as $article) {
+                $data [] = [
+                    'quantite_article' => $article['qte'],
+                    'article_code' => $article['code'],
+                    'pack_code' => $code_pack,
+                    'annee_code' =>  $annee_code,
+                    'etablissement_code' => $etablissement_code,
+                    'user_code' => $id,
+                    'created_at_pack_article' => $date,
+                ];
+            }
+
+            $this->activiteModel->insertOrUpdateMultiplePseudo(TABLES::PACK_ARTICLES,$data,['pack_code','article_code']);
+            if(!empty($dataToDelete)){
+                $this->activiteModel->deletePackArticles($code_pack, $dataToDelete);
+            }
+
+        });
+        
+        if (!$result) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
-
         return [
             'success' => true,
-            'message' => 'Modification effectuée avec succès.',
+            'message' => 'Pack enregistré avec succès.',
         ];
     }
 

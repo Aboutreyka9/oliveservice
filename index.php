@@ -31,6 +31,7 @@ use App\Controllers\SettingController;
 use App\Controllers\UserController;
 use App\Core\Router;
 use App\Middlewares\RouteMiddleWare;
+use App\Models\ActiviteModel;
 use Phroute\Phroute\Dispatcher;
 
 // $m = new FinanceModel();
@@ -41,6 +42,8 @@ use Phroute\Phroute\Dispatcher;
 //     $m->update('type_depenses', 'id_type_depense', $key['id_type_depense'], ['code_type_depense' => $code]);
 // }
 
+
+// var_dump(((new ActiviteModel())->deletePackArticles('l4ymf5',['MGUlgKfYtYque','tQ0oaE7ppDJ4zETjVl9u'])));
 // var_dump($_SESSION);
 // return;
 
