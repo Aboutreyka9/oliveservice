@@ -945,7 +945,7 @@ class ActiviteService
                 <i class="fa fa-ellipsis-h"></i>
             </button>
             <div class="dropdown-menu">
-             <a href="" class="dropdown-item "  
+             <a href="'.url('detail-pack',['code' => $pack['code_pack']]).'" class="dropdown-item "  
             data-toggle="tooltip" title="" data-original-title="Voir details pack">
         <i class="fa fa-eye text-icon-info"></i> &nbsp; &nbsp; Voir details pack </a>
 

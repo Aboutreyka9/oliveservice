@@ -57,6 +57,10 @@ class ActiviteController extends MainController
         $this->view('activites/pack', ['title' => "Pack"]);
     }
 
+    public function detailPack($code)
+    {
+        $this->view('activites/detail_pack_article', ['title' => "Details pack article"]);
+    }
       public function categorie()
     {
         $this->view('activites/categorie', ['title' => "Categories packs"]);
