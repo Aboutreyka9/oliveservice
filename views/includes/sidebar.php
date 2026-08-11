@@ -122,11 +122,21 @@
                                 </a>
                             </li>
                             <li>
+                                <a class="item-link" href="<?= url('clients') ?>">
+                                    <span class="sub-item">Liste clients</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('clients/commande') ?>">
+                                    <span class="sub-item">Commandes</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a class="item-link" href="<?= url('reinscriptions') ?>">
                                     <span class="sub-item">Réinscriptions</span>
                                 </a>
                             </li>
-                           
+                            
                             <?php //endif; 
                             ?>
 

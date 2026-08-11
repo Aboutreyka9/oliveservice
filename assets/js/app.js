@@ -2733,6 +2733,111 @@ function changeStatutDepense(code, statut) {
 
 
 
+/** DEBUT SECTION CLIENT */
+
+loadDataTable('data-table-client', '#data-table-client', 'charger_data_clients');
+
+openModalAddClient();
+function openModalAddClient() {
+    $('#ClientAddModal').click(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'btn_showmodal_client_add'
+            },
+            dataType: "JSON",
+            beforeSend: function () {
+                $(".loader_backdrop2").css('display', "block");
+            },
+            success: function (data) {
+                $(".loader_backdrop2").css('display', "none");
+                if (data.success) {
+                    var output = data.data;
+                    $(".data-modal").html(output.data);
+                    $("#client-modal").modal("show");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+ajouterClient();
+function ajouterClient() {
+    $("body").on("submit", "#frmAddClient", function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
+
+        $.ajax({
+            method: "POST",
+            url: APP.ajax,
+            data: data + '&action=btn_add_client',
+            dataType: "JSON",
+            beforeSend: function () {
+                btnReq("#btnSubmitFormClient", "Enregistrement...");
+            },
+            success: function (data) {
+                btnRes("#btnSubmitFormClient", "Enregistrer", "fa-save");
+                if (data.success) {
+                    APP.tables['data-table-client'].ajax.reload(null, false);
+                    $.notify(data.message, "success");
+                    $("#client-modal").modal("hide");
+                } else {
+                    $.notify(data.message);
+                }
+            }
+        })
+    });
+}
+
+function changeStatutClient(code, statut) {
+    swal({
+        title: "Notification",
+        text: "Voulez-vous vraiment modifier le statut de ce client?",
+        icon: "warning",
+        dangerMode: true,
+        closeOnClickOutside: false,
+        buttons: {
+            cancel: true,
+            confirm: "Confirmer",
+        },
+    })
+        .then(willDelete => {
+            if (willDelete) {
+                $.ajax({
+                    url: APP.ajax,
+                    method: 'POST',
+                    data: {
+                        action: 'change_statut_client',
+                        code_client: code,
+                        statut_client: statut
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $(".loader_backdrop2").css('display', "block");
+                    },
+                    success: function (data) {
+                        $(".loader_backdrop2").css('display', "none");
+                        if (data.success) {
+                            $.notify(data.message, "success");
+                            APP.tables['data-table-client'].ajax.reload(null, false);
+                        } else {
+                            $.notify(data.message);
+                        }
+                    }
+                });
+            }
+        });
+}
+
+/** FIN SECTION CLIENT */
+
+
+
 /** DEBUT SECTION INSCRIPTION */
 
 loadDataTable('data-table-inscription', '#data-table-inscription', 'charger_data_inscriptions');
