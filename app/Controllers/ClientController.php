@@ -47,7 +47,125 @@ class ClientController extends MainController
         $this->view('clients/inscription', ['title' => "Inscription"]);
     }
 
+    public function liste()
+    {
+        $this->view('clients/liste', ['title' => "Liste des clients"]);
+    }
 
+    public function profile($code = null)
+    {
+        $client = [];
+        if ($code) {
+            $client = $this->clientModel->getClientByCode($code);
+        }
+        $this->view('clients/profile', ['title' => "Profil client", 'client' => $client]);
+    }
+
+    public function commande()
+    {
+        $this->view('clients/commande', ['title' => "Commandes clients"]);
+    }
+
+    // ================= AJAX CLIENTS =================
+
+    public function GetListeClient()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+        $f = new ClientModel();
+
+        $likeParams = [];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+
+        $limit = (int) ($_POST['length'] ?? 10);
+        $start = (int) ($_POST['start'] ?? 0);
+        $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
+        $orderDir = strtolower($_POST['order'][0]['dir'] ?? 'desc');
+        $search = trim($_POST['search']['value'] ?? '');
+
+        $columns = [
+            0 => 'nom_client',
+            1 => 'telephone_client',
+            2 => 'genre_client',
+            3 => 'lieu_client',
+            4 => 'code_client',
+            5 => 'created_at_client'
+        ];
+
+        $orderBy = $columns[$orderColumn] ?? 'nom_client';
+        $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
+
+        if (!empty($search)) {
+            $likeParams = [
+                'nom_client' => $search,
+                'telephone_client' => $search,
+                'genre_client' => $search,
+                'lieu_client' => $search,
+                'code_client' => $search
+            ];
+        }
+
+        $total = $f->dataTbleCountTotalClientsRow($whereParams);
+        $totalFiltered = $f->dataTbleCountTotalClientsRow($whereParams, $likeParams);
+        $clientList = $f->DataTableFetchClientsListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $data = $this->clientService->clientDataService($clientList);
+
+        echo json_encode([
+            "draw" => intval($_POST['draw']),
+            "recordsTotal" => $total,
+            "recordsFiltered" => $totalFiltered,
+            "data" => $data
+        ]);
+        return;
+    }
+
+    public function modalAddClient()
+    {
+        $output = $this->clientService->clientAddModalService();
+        Response::success('', ['data' => $output]);
+    }
+
+    public function addClient()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $v = new Validator();
+        $v->required('nom_client', $nom_client, 'Nom client')
+          ->required('telephone_client', $telephone_client, 'Contact')
+          ->required('genre_client', $genre_client, 'Genre')
+          ->required('lieu_client', $lieu_client, 'Lieu de residence')
+          ->required('code_client', $code_client, 'Code client');
+
+        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
+
+        $packs = [];
+        if (!empty($selected_packs)) {
+            $packs = json_decode($selected_packs, true);
+        }
+
+        $result = $this->clientService->saveClientData($_POST, $packs);
+
+        if (!$result['success']) {
+            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        }
+
+        Response::success($result['message'], []);
+    }
+
+    public function changeStatutClient()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $statut_client = (isset($statut_client) && $statut_client != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
+
+        if ($this->clientModel->update(TABLES::CLIENTS, 'code_client', $code_client, ['statut_client' => $statut_client])) {
+            Response::success('Statut modifié avec succès', []);
+        }
+
+        Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
+    }
 
 
     /**

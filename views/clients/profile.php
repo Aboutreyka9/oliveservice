@@ -1,183 +1,143 @@
-<div class="mt-2 mb-4">
-    <div class="card">
-        <div class="card-header">
-            <h3>Profile</h3>
-        </div>
-        <div class="card-body">
-            <form method="post" action="" id="form_update_client">
-                <div class="row">
-                    <div class="col-md-8 mb-2 mt-2">
+<?= breakcrumb($title, 'fa-user'); ?>
 
-                        <label class="mb-1" for="nom">Nom client <i class="fa fa-user"></i> </label>
-                        <input type="text" name="nom" class="form-control" value="<?= $client['nom_client']; ?>">
-
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-primary">
+            <div class="card-header">
+                <div class="card-title">Profil client</div>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="icon icon-primary icon-lg mx-auto">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <div class="col-md-4 mb-2 mt-2">
+                    <h3 class="mt-2">KOUAME JEAN</h3>
+                    <p class="text-muted">CLI-001</p>
+                    <span class="badge badge-success">Client actif</span>
+                </div>
 
-                        <label class="mb-1" for="telephone">Contact <i class="fa fa-phone"></i> </label>
-                        <input type="text" name="telephone" class="form-control telephone"
-                            value="<?= $client['telephone_client']; ?>">
-
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-phone mr-2"></i>Contact</span>
+                        <strong>0102030405</strong>
                     </div>
-                    <div class="col-md-4 mb-2 mt-2">
-                        <label class="mb-1" for="type_piece">Type piece <i class="fa fa-id-card"></i> </label>
-                        <select name="type_piece" class="form-control select" id="">
-                            <option value="">---CHOISIR---</option>
-                            <?php foreach (PIECES_DATA as $tp) : ?>
-                                <option <?= selected($client['type_piece'], $tp) ?> value="<?= $tp; ?>"><?= $tp; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-envelope mr-2"></i>Email</span>
+                        <strong>jean@email.com</strong>
                     </div>
-                    <div class="col-md-4 mb-2 mt-2">
-
-                        <label class="mb-1" for="piece">Piece <i class="fa fa-id-card"></i> </label>
-                        <input type="text" name="piece" class="form-control" value="<?= $client['piece_client']; ?>">
-
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-map-marker-alt mr-2"></i>Résidence</span>
+                        <strong>Cocody</strong>
                     </div>
-
-
-                    <div class="col-md-4 mb-2 mt-2">
-                        <label class="mb-1" for="genre">Genre <i class="fa fa-id-card"></i> </label>
-                        <select name="genre" class="form-control select" id="">
-                            <option value="">---CHOISIR---</option>
-                            <?php foreach (SEXEP as $genre) : ?>
-                                <option <?= selected($client['genre_client'], $genre) ?> value="<?= $genre; ?>"><?= $genre; ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-briefcase mr-2"></i>Profession</span>
+                        <strong>Commerçant</strong>
                     </div>
-
-                    <div class="col-md-6 mt-3 mb-2">
-                        <input type="hidden" name="code_client" value="<?= $client['code_client']; ?>">
-                        <input type="hidden" name="action" value="btn_update_client">
-                        <button disabled type="submit" class="btn btn-info w-75" form="form_update_client" id="btn_update_client"> <i class="fa fa-save"> Enregistrer</i>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-calendar-alt mr-2"></i>Inscrit le</span>
+                        <strong>15/01/2025</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <a href="<?= url('clients') ?>" class="btn btn-default btn-sm">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                    <div>
+                        <button class="btn btn-warning btn-sm" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" title="Supprimer">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
-            </form>
-        </div>
-        <hr class="bg-warning py-1">
-    </div>
-</div>
-
-<div class=" mt-4">
-    <div class="card">
-        <div class="card-header ">
-            <h3>Liste des reservations</h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive table-responsive-md" id="">
-
-                        <table class="table table-striped table-bordered  table-hover table-sm">
-                            <thead class="">
-
-                                <tr>
-                                    <th width="1">#</th>
-                                    <th width="15%">Date</th>
-                                    <th>statut</th>
-                                    <th>Chambre</th>
-                                    <th>Service</th>
-                                    <th>Montant</th>
-                                    <th width="5">Options</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?= chargerListeReservationClient($client['code_client']) ?>
-                            </tbody>
-
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-</div>
 
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="reservation-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="reservationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark" id="reservationModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
-                        class="text-uppercase">Formulaire de Reservation</span> </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="card-title">Historique des commandes</div>
+                    <button type="button" class="btn btn-primary btn-sm" title="Nouvelle commande">
+                        <i class="fas fa-plus"></i> &nbsp; Nouvelle commande
+                    </button>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="row ">
-                    <div class="col-md-12 data-modal">
-
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Date commande</th>
+                                <th>Articles</th>
+                                <th>Montant total</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>10/08/2025</td>
+                                <td>Pack Standard + Manuel maths</td>
+                                <td>25 000 FCFA</td>
+                                <td><span class="badge badge-success">Payée</span></td>
+                                <td>
+                                    <button class="btn btn-light btn-sm btn-link" title="Voir">
+                                        <i class="fa fa-eye text-icon-info"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm btn-link" title="Imprimer">
+                                        <i class="fa fa-print text-icon-primary"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>05/08/2025</td>
+                                <td>Pack Premium</td>
+                                <td>45 000 FCFA</td>
+                                <td><span class="badge badge-warning">En attente</span></td>
+                                <td>
+                                    <button class="btn btn-light btn-sm btn-link" title="Voir">
+                                        <i class="fa fa-eye text-icon-info"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm btn-link" title="Imprimer">
+                                        <i class="fa fa-print text-icon-primary"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>28/07/2025</td>
+                                <td>Pack Standard</td>
+                                <td>25 000 FCFA</td>
+                                <td><span class="badge badge-success">Payée</span></td>
+                                <td>
+                                    <button class="btn btn-light btn-sm btn-link" title="Voir">
+                                        <i class="fa fa-eye text-icon-info"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm btn-link" title="Imprimer">
+                                        <i class="fa fa-print text-icon-primary"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Total: 3 commandes</small>
+                    <div class="text-right">
+                        <strong class="text-primary">Total dépensé: 95 000 FCFA</strong>
                     </div>
                 </div>
             </div>
-            <!-- .modal-footer -->
-            <div class="modal-footer">
-                <button type="submit" form="frm_ajouter_reservation" id="btn_confirme_reservation" class="btn btn-primary "> <i
-                        class="fa fa-check-circle"></i> Enregistrer </button>
-            </div><!-- /.modal-footer -->
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="reservation-modifier-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="reservationModifierModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark" id="reservationModifierModalLabel"><i class="fa fa-user-circle"></i> &nbsp;
-                    <span class="text-uppercase">Formulaire de Reservation</span>
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row ">
-                    <div class="col-md-12 data-modifier-modal">
-
-                    </div>
-                </div>
-            </div>
-            <!-- .modal-footer -->
-            <div class="modal-footer">
-                <button type="submit" form="frm_modfier_reservation" id="btn_modifier_reservation" class="btn btn-primary "> <i
-                        class="fa fa-check-circle"></i> Enregistrer </button>
-            </div><!-- /.modal-footer -->
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="service-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="serviceModifierModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h5 class="modal-title text-dark" id="serviceModifierModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
-                        class="text-uppercase">Formulaire Service</span> </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row ">
-                    <div class="col-md-12 data-service-modal">
-
-                    </div>
-                </div>
-            </div>
-            <!-- .modal-footer -->
-            <div class="modal-footer">
-                <button type="submit" form="frmAttrServiceForReservation" disabled class="btn btn-primary btn_attr_service"> <i
-                        class="fa fa-check-circle"></i> Enregistrer </button>
-            </div><!-- /.modal-footer -->
         </div>
     </div>
 </div>

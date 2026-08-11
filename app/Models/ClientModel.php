@@ -150,4 +150,89 @@ class ClientModel extends Model
     }
 
     // END SEXION depense
+
+    // SEXION CLIENTS
+
+    public function getClientByCode(string $code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT * FROM " . TABLES::CLIENTS . " AS cl WHERE cl.code_client = :code LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['code' => $code]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getAllClients($etablissement_code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT * FROM " . TABLES::CLIENTS . " AS cl WHERE cl.etablissement_code = :etablissement_code AND cl.statut_client = :statut ORDER BY cl.nom_client";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function dataTbleCountTotalClientsRow(array $whereParams, $likeParams = [])
+    {
+        $where = "WHERE cl.etablissement_code = :etablissement_code";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CLIENTS . " cl $where";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($whereParams, $likeParams));
+        $data = $stmt->fetch();
+        return $data['nb'] ?? 0;
+    }
+
+    public function DataTableFetchClientsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    {
+        $where = "WHERE cl.etablissement_code = :etablissement_code";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT cl.* FROM " . TABLES::CLIENTS . " cl 
+        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+
+        if (!empty($likeParams)) {
+            foreach ($likeParams as $key => $value) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // END SEXION CLIENTS
 }

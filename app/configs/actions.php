@@ -24,14 +24,7 @@ function breakcrumb(string $title, string $icon)
 {
   return '
    <!-- breakcrumb -->
-    <div style="height: 80px; border:1px solid red" class="page-header">
-       <div class="menu-rigth-breakcrumb">
-
-        <!-- <h4 class="page-title"> getDataEnv("APP_NAME") </h4> -->
-        <h4 class="page-title"> <i class="fas ' . $icon . ' mr-3" style="font-size:20px;"></i> ' . $title . ' </h4> 
-      
-        </div>
-      
+    <div class="page-header">
        <div class="pmenu-left-breakcrumb">
         <ul class="breadcrumbs">
             <li class="nav-home">
@@ -40,23 +33,25 @@ function breakcrumb(string $title, string $icon)
                 </a>
             </li>
             <li class="separator">
-               
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a class="back" href="#">Retour</a>
+                <a class="back" href="javascript:history.back()">Retour</a>
             </li>
             <li class="separator">
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a class="current-page" href="#"></a>
+                <span class="current-page">' . $title . '</span>
             </li>
         </ul>
-        </div>
-  </div>
-<!-- end breakcrumb -->
-';
+       </div>
+       <div class="menu-rigth-breakcrumb">
+        <h4 class="page-title"> <i class="fas ' . $icon . '"></i> ' . $title . ' </h4> 
+       </div>
+    </div>
+  <!-- end breakcrumb -->
+  ';
 }
 
 function chargerDashboardAdmin()

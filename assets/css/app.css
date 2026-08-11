@@ -1140,3 +1140,134 @@ input::-o-outer-spin-button {
     font-weight: bold;
     color: #57585c;
 }
+
+/* ================= BREADCRUMB ================= */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    min-height: 60px;
+    animation: breadcrumbFadeIn 0.4s ease;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border-left: none;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li a {
+    color: #575962;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li a:hover {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.nav-home a {
+    font-size: 18px;
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.nav-home a:hover {
+    background: rgba(0, 123, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.separator {
+    padding: 0 8px;
+    color: #ccc;
+    font-size: 10px;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.nav-item a.back {
+    color: #007bff;
+    font-weight: 500;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.nav-item a.back:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.pmenu-left-breakcrumb .breadcrumbs li.nav-item span.current-page {
+    color: #333;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.menu-rigth-breakcrumb .page-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.menu-rigth-breakcrumb .page-title i {
+    font-size: 20px;
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu-rigth-breakcrumb {
+        width: 100%;
+    }
+
+    .pmenu-left-breakcrumb {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .pmenu-left-breakcrumb .breadcrumbs {
+        flex-wrap: nowrap;
+    }
+}
+
+@keyframes breadcrumbFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

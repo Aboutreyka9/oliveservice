@@ -377,4 +377,159 @@ class ClientService
 
         return $data;
     }
+
+    // ================= CLIENTS =================
+
+    public function clientDataService($clients)
+    {
+        $i = 0;
+        $data = [];
+
+        foreach ($clients as $client) {
+            $i++;
+
+            $etat = checkEtatData($client['statut_client'] ?? STATUT_ACTIF);
+
+            $actions = '
+            <button class="btn btn-light btn-link" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="' . url('clients/profile/' . $client['code_client']) . '" data-toggle="tooltip" title="" data-original-title="Voir profil">
+                    <i class="fa fa-eye text-icon-info"></i> &nbsp; Voir profil
+                </a>
+                <button class="dropdown-item" onclick="modalUpdatedClient(\'' . $client['code_client'] . '\')" data-toggle="tooltip" title="" data-original-title="Modifier client">
+                    <i class="fa fa-edit text-icon-primary"></i> &nbsp; Modifier
+                </button>
+            ';
+
+            if (($client['statut_client'] ?? STATUT_ACTIF) == STATUT_ACTIF) {
+                $actions .= '
+                <button class="dropdown-item" onclick="changeStatutClient(\'' . $client['code_client'] . '\',\'' . STATUT_INACTIF . '\')" data-toggle="tooltip" title="" data-original-title="Désactiver client">
+                    <i class="fa fa-times text-icon-danger"></i> &nbsp; Désactiver
+                </button>
+                ';
+            } else {
+                $actions .= '
+                <button class="dropdown-item" onclick="changeStatutClient(\'' . $client['code_client'] . '\',\'' . STATUT_ACTIF . '\')" data-toggle="tooltip" title="" data-original-title="Activer client">
+                    <i class="fa fa-check text-icon-success"></i> &nbsp; Activer
+                </button>
+                ';
+            }
+
+            $actions .= '</div>';
+
+            $data[] = [
+                $i,
+                $etat,
+                strtoupper($client['nom_client']),
+                $client['telephone_client'],
+                $client['genre_client'],
+                $client['lieu_client'],
+                $client['code_client'],
+                $client['user_code'],
+                date_formater($client['created_at_client']),
+                $actions
+            ];
+        }
+
+        return $data;
+    }
+
+    public function clientAddModalService()
+    {
+        $output = "";
+        $output .= '
+            <form action="#" method="post" id="frmAddClient">
+                <div class="row mb-3">
+                    <div class="col-md-6 mb-3">
+                        <input type="hidden" value="btn_add_client" name="action">
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+                        <label for="nom_client" class="form-label">Nom complet <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="nom_client" name="nom_client" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="telephone_client" class="form-label">Contact <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control telephone" id="telephone_client" name="telephone_client" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="genre_client" class="form-label">Genre <strong class="text-danger">*</strong></label>
+                        <select class="form-control select2" id="genre_client" name="genre_client" required>
+                            <option value="">--- CHOISIR ---</option>
+                            <option value="Masculin">Masculin</option>
+                            <option value="Féminin">Féminin</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="lieu_client" class="form-label">Lieu de residence <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="lieu_client" name="lieu_client" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="code_client" class="form-label">Code client <strong class="text-danger">*</strong></label>
+                        <input type="text" class="form-control" id="code_client" name="code_client" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12 modal_footer">
+                        <button type="submit" class="btn btn-primary" id="btnSubmitFormClient"><i class="fas fa-save"></i> &nbsp; Enregistrer</button>
+                        <button type="button" class="btn btn-light dismiss_modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        ';
+        return $output;
+    }
+
+    public function saveClientData(array $post, array $packs = [])
+    {
+        extract($post);
+
+        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CLIENTS, ['code_client' => $code_client, 'etablissement_code' => Auth::user('etablissement_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce code client existe déjà.'];
+        }
+
+        $data_client = [
+            'nom_client' => strtoupper($nom_client),
+            'telephone_client' => $telephone_client,
+            'genre_client' => $genre_client,
+            'lieu_client' => strtoupper($lieu_client),
+            'code_client' => strtoupper($code_client),
+            'email_client' => $email_client ?? null,
+            'profession_client' => $profession_client ?? null,
+            'statut_client' => STATUT_ACTIF,
+            'etablissement_code' => Auth::user('etablissement_code'),
+            'user_code' => Auth::user('id'),
+            'created_at_client' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!$this->activiteModel->create(TABLES::CLIENTS, $data_client)) {
+            return ['success' => false, 'message' => "Desolé! echec d'operation."];
+        }
+
+        if (!empty($packs)) {
+            $date = date('Y-m-d H:i:s');
+            $annee_code = Auth::user('annee_code');
+            $etablissement_code = Auth::user('etablissement_code');
+            $id = Auth::user('id');
+
+            $packInscriptions = [];
+            foreach ($packs as $packCode) {
+                $packInscriptions[] = [
+                    'pack_code' => $packCode,
+                    'client_code' => $code_client,
+                    'annee_code' => $annee_code,
+                    'etablissement_code' => $etablissement_code,
+                    'user_code' => $id,
+                    'created_at_pack_inscription' => $date,
+                ];
+            }
+
+            $this->activiteModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Client enregistré avec succès.',
+        ];
+    }
 }

@@ -44,6 +44,7 @@ class TABLES
     public const TYPE_DEPENSES = 'type_depenses';
     public const VERSEMENTS = 'versements';
     public const ZONES = 'zones';
+    public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
 
 class Permissionsss
@@ -92,6 +93,7 @@ const PERIODE = "periode";
 const RESERVATION = "reservation";
 const OLD_URL = "old_url";
 const PROJECT_NAME = "oliveservice";
+const ARTICLE_CODES = "article_codes";
 // CONST SEXE = ['G','F'];
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];

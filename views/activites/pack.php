@@ -20,6 +20,9 @@
                         <th> Statut</th>
                         <th> Libelle</th>
                         <th> Session</th>
+                        <th> Categorie</th>
+                        <th> Articles</th>
+                        <th> Cautisation</th>
                         <th> Créer par</th>
                         <th> Créer le</th>
                         <th> Actions</th>

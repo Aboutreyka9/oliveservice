@@ -341,36 +341,24 @@ switch ($action) {
     //end Actions pour les inscription
 
     // Debut Actions pour les clients 
-    case 'charger_data_inscriptions':
+    case 'charger_data_clients':
         $ajx = new ClientController();
-        $ajx->GetListeInscription();
+        $ajx->GetListeClient();
         break;
-    case 'charger_data_etudiants':
+    case 'change_statut_client':
         $ajx = new ClientController();
-        $ajx->GetListeDepense();
+        $ajx->changeStatutClient();
         break;
-    case 'change_statut_etudiants':
+    case 'btn_showmodal_client_add':
         $ajx = new ClientController();
-        $ajx->changeStatutDepense();
+        $ajx->modalAddClient();
         break;
-    case 'btn_showmodal_inscription_add':
+    case 'btn_add_client':
         $ajx = new ClientController();
-        $ajx->modalAddInscription();
-        break;
-    case 'btn_showmodal_inscription_update':
-        $ajx = new ClientController();
-        $ajx->modalUpdatedDepense();
-        break;
-    case 'btn_add_etudiant':
-        $ajx = new ClientController();
-        $ajx->addDepense();
-        break;
-    case 'btn_update_etudiant':
-        $ajx = new ClientController();
-        $ajx->updateDepense();
+        $ajx->addClient();
         break;
 
-    //end Actions pour les inscription
+    //end Actions pour les clients
 
     // Autres cas...
     default:
