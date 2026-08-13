@@ -36,6 +36,8 @@
     <input type="hidden" name="action" value="btn_add_client">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
+    <input type="hidden" name="session_code" id="session_code" value="">
+    <input type="hidden" name="categorie_pack_code" id="categorie_pack_code" value="">
 
     <!-- ETAPE 1 : Informations personnelles -->
     <div class="step-content" id="step1">
@@ -96,42 +98,115 @@
                 <div class="card-title">Sélection des packs</div>
             </div>
             <div class="card-body">
+                <div style="display: flex;align-items: flex-end;" class="row mb-5">
+                    <div class="col-md-5">
+                        <label for="">SESSION</label>
+                        <select style="background: #c5c5c5; color:#000" name="" id="session_inscription" class="form-control">
+                            <option >--CHOISIR--</option>
+                            <?= chargerSessions(); ?>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                         <label for="">CATEGORIE</label>
+                        <select style="background: #ccc; color:#000" name="" id="categorie_inscription" class="form-control">
+                            <option >Aucune donnée disponible</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button disabled type="button" class="btn btn-outline-dark" id="btn_selection_choix"><i class="fa fa-search"></i> Rechercher</button>
+                    </div>
+                </div>
+                <hr>
                 <div class="row" id="packs-container">
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-001" data-pack-libelle="Pack Standard" data-pack-montant="25000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Standard</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">25 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-001" id="pack1">
-                                    <label class="form-check-label" for="pack1">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-001" data-pack-libelle="Pack Standard" data-pack-montant="25000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-cube fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Standard</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-primary font-weight-bold">25 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Accès aux cours
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Support pédagogique
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> 1 mois d'accès
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-001" id="pack1">
+                                        <label class="form-check-label" for="pack1">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-primary">Populaire</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-002" data-pack-libelle="Pack Premium" data-pack-montant="45000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Premium</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">45 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-002" id="pack2">
-                                    <label class="form-check-label" for="pack2">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-002" data-pack-libelle="Pack Premium" data-pack-montant="45000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-crown fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Premium</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-warning font-weight-bold">45 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Tout du Standard
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> + Accès prioritaire
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> 3 mois d'accès
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-002" id="pack2">
+                                        <label class="form-check-label" for="pack2">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-warning">Recommandé</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-003" data-pack-libelle="Pack Excellence" data-pack-montant="75000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Excellence</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">75 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-003" id="pack3">
-                                    <label class="form-check-label" for="pack3">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-003" data-pack-libelle="Pack Excellence" data-pack-montant="75000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-gem fa-3x text-danger"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Excellence</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-danger font-weight-bold">75 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Tout du Premium
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> + Coaching individuel
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Accès illimité
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-003" id="pack3">
+                                        <label class="form-check-label" for="pack3">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-danger">Premium</span>
                                 </div>
                             </div>
                         </div>
@@ -215,169 +290,213 @@
     </div>
 </form>
 
-<style>
-.timeline-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0;
-}
+<script>
+    $(function() {
+        let currentStep = 1;
+        const totalSteps = 3;
 
-.timeline-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    opacity: 0.5;
-    transition: all 0.3s ease;
-}
+        $('.btn-next').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (validateStep(currentStep)) {
+                goToStep(currentStep + 1);
+            }
+        });
 
-.timeline-step.active {
-    opacity: 1;
-}
+        $('.btn-prev').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            goToStep(currentStep - 1);
+        });
 
-.timeline-step.completed {
-    opacity: 1;
-}
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return;
 
-.step-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #e9ecef;
-    border: 3px solid #dee2e6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: #6c757d;
-    transition: all 0.3s ease;
-}
+            $('#step' + currentStep).addClass('d-none');
+            $('#step' + step).removeClass('d-none');
+            
+            currentStep = step;
+            updateTimeline();
+            updateRecap();
+            
+            $('html, body').animate({
+                scrollTop: $('.timeline-steps').offset().top - 20
+            }, 300);
+        }
 
-.timeline-step.active .step-circle {
-    background: #007bff;
-    border-color: #007bff;
-    color: #fff;
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
-}
+        function updateTimeline() {
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = $('#step' + i + '-indicator');
+                indicator.removeClass('active completed');
+                
+                if (i < currentStep) {
+                    indicator.addClass('completed');
+                } else if (i === currentStep) {
+                    indicator.addClass('active');
+                }
+            }
+        }
 
-.timeline-step.completed .step-circle {
-    background: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
+        function validateStep(step) {
+            if (step === 1) {
+                let valid = true;
+                const requiredFields = ['nom_client', 'telephone_client', 'lieu_client', 'code_client'];
+                
+                requiredFields.forEach(function(field) {
+                    const value = $('#' + field).val().trim();
+                    if (!value) {
+                        valid = false;
+                        $('#' + field).addClass('is-invalid');
+                    } else {
+                        $('#' + field).removeClass('is-invalid');
+                    }
+                });
 
-.step-label {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #495057;
-    text-align: center;
-    white-space: nowrap;
-}
+                const genreVal = $('#genre_client').val();
+                if (!genreVal) {
+                    valid = false;
+                    $('#genre_client').addClass('is-invalid');
+                } else {
+                    $('#genre_client').removeClass('is-invalid');
+                }
+                
+                if (!valid) {
+                    $.notify('Veuillez remplir tous les champs obligatoires', 'error');
+                    $('html, body').animate({
+                        scrollTop: $('.is-invalid').first().offset().top - 100
+                    }, 300);
+                }
+                
+                return valid;
+            }
+            
+            if (step === 2) {
+                const checkedPacks = $('.pack-check:checked').length;
+                if (checkedPacks === 0) {
+                    $.notify('Veuillez sélectionner au moins un pack', 'error');
+                    return false;
+                }
+                return true;
+            }
+            
+            return true;
+        }
 
-.timeline-connector {
-    flex: 1;
-    height: 3px;
-    background: #dee2e6;
-    margin: 0 10px;
-    margin-bottom: 25px;
-    min-width: 80px;
-}
+        function updateRecap() {
+            if (currentStep === 3) {
+                $('#recap-nom').text($('#nom_client').val());
+                $('#recap-contact').text($('#telephone_client').val());
+                $('#recap-genre').text($('#genre_client').find('option:selected').text());
+                $('#recap-lieu').text($('#lieu_client').val());
+                $('#recap-code').text($('#code_client').val());
+                $('#recap-email').text($('#email_client').val() || 'Non renseigné');
+                $('#recap-profession').text($('#profession_client').val() || 'Non renseigné');
 
-.timeline-step.completed + .timeline-connector {
-    background: #28a745;
-}
+                const selectedPacks = [];
+                let totalMontant = 0;
+                
+                $('.pack-check:checked').each(function() {
+                    const card = $(this).closest('.pack-card');
+                    const libelle = card.data('pack-libelle');
+                    const montant = card.data('pack-montant');
+                    selectedPacks.push({ libelle: libelle, montant: montant });
+                    totalMontant += parseInt(montant);
+                });
 
-.pack-card {
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+                const tbody = $('#recap-packs');
+                tbody.empty();
+                
+                if (selectedPacks.length === 0) {
+                    tbody.append('<tr><td colspan="2" class="text-center text-muted">Aucun pack sélectionné</td></tr>');
+                } else {
+                    selectedPacks.forEach(function(pack) {
+                        tbody.append('<tr><td>' + pack.libelle + '</td><td>' + Number(pack.montant).toLocaleString('fr-FR') + ' FCFA</td></tr>');
+                    });
+                    tbody.append('<tr class="table-active"><td class="font-weight-bold">Total</td><td class="font-weight-bold">' + totalMontant.toLocaleString('fr-FR') + ' FCFA</td></tr>');
+                }
+            }
+        }
 
-.pack-card:hover {
-    border-color: #007bff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-}
+        $('.pack-card').click(function(e) {
+            if (e.target.type !== 'checkbox') {
+                const checkbox = $(this).find('.pack-check');
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            }
+            $(this).toggleClass('selected', $(this).find('.pack-check').prop('checked'));
+        });
 
-.pack-card.selected {
-    border-color: #007bff;
-    background-color: #f0f7ff;
-}
+        $('.pack-check').change(function() {
+            $(this).closest('.pack-card').toggleClass('selected', $(this).prop('checked'));
+        });
 
-.step-content {
-    animation: fadeIn 0.4s ease;
-}
+        $('#session_inscription').change(function() {
+            const sessionCode = $(this).val();
+            $('#session_code').val(sessionCode);
+            loadCategoriesBySession(sessionCode, '#categorie_inscription');
+            $('#categorie_pack_code').val('');
+        });
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        $('#categorie_inscription').change(function() {
+            $('#categorie_pack_code').val($(this).val());
+        });
 
-@media (max-width: 768px) {
-    .timeline-steps {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px 0;
-        gap: 0;
-    }
-    
-    .timeline-step {
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        padding: 10px 0;
-    }
-    
-    .step-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        min-width: 40px;
-    }
-    
-    .step-label {
-        margin-top: 0;
-        margin-left: 15px;
-        font-size: 13px;
-        text-align: left;
-    }
-    
-    .timeline-connector {
-        width: 3px;
-        height: 35px;
-        margin: 0;
-        margin-left: 19px;
-        min-width: auto;
-    }
-}
+        $('form[id="frmAddClient"]').submit(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (!validateStep(currentStep)) {
+                return;
+            }
 
-@media (max-width: 576px) {
-    .step-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-        min-width: 35px;
-    }
-    
-    .step-label {
-        font-size: 12px;
-        margin-left: 10px;
-    }
-    
-    .timeline-connector {
-        height: 25px;
-        margin-left: 15px;
-    }
-}
-</style>
+            const selectedPacks = [];
+            $('.pack-check:checked').each(function() {
+                selectedPacks.push($(this).val());
+            });
+            $('#selected_packs').val(JSON.stringify(selectedPacks));
+
+            var form = $(this);
+            var btn = $('#btnSubmitFormClient');
+            var originalText = btn.html();
+            
+            btn.html('<i class="fas fa-spinner fa-spin"></i> &nbsp; Enregistrement...').prop('disabled', true);
+            
+            $.ajax({
+                url: APP.ajax,
+                method: 'POST',
+                data: form.serialize(),
+                dataType: 'JSON',
+                success: function(data) {
+                    if (data.success) {
+                        $.notify(data.message, 'success');
+                        setTimeout(function() {
+                            window.location.href = '<?= url('clients') ?>';
+                        }, 1500);
+                    } else {
+                        $.notify(data.message, 'error');
+                        btn.html(originalText).prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    $.notify('Désolé, une erreur est survenue', 'error');
+                    btn.html(originalText).prop('disabled', false);
+                }
+            });
+        });
+
+        $('.select2').select2({
+            tags: "false",
+            placeholder: "----CHOISIR----",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "Aucun résultat";
+                }
+            },
+            createTag: function(params) {
+                return null;
+            }
+        });
+    });
+</script>
+
 

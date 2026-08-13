@@ -199,6 +199,30 @@ class ActiviteModel extends Model
         return $data;
     }
 
+    public function getCategoriesBySession(string $session_code, string $etablissement_code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT DISTINCT cat.code_categorie_pack, cat.libelle_categorie_pack 
+                    FROM " . TABLES::PACKS . " p 
+                    JOIN " . TABLES::CATEGORIES . " cat ON cat.code_categorie_pack = p.categorie_pack_code 
+                    WHERE p.session_code = :session_code 
+                    AND p.etablissement_code = :etablissement_code 
+                    AND p.statut_pack = :statut 
+                    ORDER BY cat.libelle_categorie_pack";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                'session_code' => $session_code,
+                'etablissement_code' => $etablissement_code,
+                'statut' => STATUT_ACTIF
+            ]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
     public function dataTbleCountTotalCategoriePacksRow(array $whereParams, $likeParams = [])
     {
         // if (!empty($whereParams)) {
@@ -441,6 +465,29 @@ class ActiviteModel extends Model
         return $data;
     }
 
+      public function getPackBySessionAndCategorie(string $session_code,string $categorie_packs, string $etablissement_code): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT DISTINCT cat.code_categorie_pack, cat.libelle_categorie_pack 
+                    FROM " . TABLES::PACKS . " p 
+                    JOIN " . TABLES::CATEGORIES . " cat ON cat.code_categorie_pack = p.categorie_pack_code 
+                    WHERE p.session_code = :session_code 
+                    AND p.etablissement_code = :etablissement_code 
+                    AND p.statut_pack = :statut 
+                    ORDER BY cat.libelle_categorie_pack";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                'session_code' => $session_code,
+                'etablissement_code' => $etablissement_code,
+                'statut' => STATUT_ACTIF
+            ]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
     public function getSinglePAckByCode(string $code): array
     {
         $data = [];

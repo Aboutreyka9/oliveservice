@@ -311,7 +311,22 @@ class ActiviteController extends MainController
         // // echo json_encode(['data' => $total, 'code' => 200]);
         return;
     }
+    public function getCategoriesBySession()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
 
+        if (empty($session_code)) {
+            Response::error('Erreur de traitement de données', HttpStatusCode::UNAUTHORIZED);
+        }
+
+        $categories = $this->activiteModel->getCategoriesBySession($session_code, Auth::user('etablissement_code'));
+
+        $data_categories = $this->activiteService->chargerCategoriePack($categories);
+        $data_packs = $this->activiteService->chargerDataPacks($categories);
+        echo json_encode(['success' => true, 'message' => 'Données chargées avec succès','categories' => $data_categories, 'packs' => $data_packs]);
+        return;
+    }
     public function modalAddCategoriePack()
     {
 

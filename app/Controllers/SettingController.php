@@ -648,4 +648,6 @@ class SettingController extends MainController
 
         Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
     }
+
+
 }

@@ -3224,9 +3224,48 @@ function allStepInscription () {
             },
             createTag: function(params) {
                 return null;
+        }
+    });
+}
+
+// Chargement des catégories par session
+loadCategoriesBySession();
+function loadCategoriesBySession() {
+    $("body").on("change", "#session_inscription", function (e) {
+
+        var sessionCode = $(this).val();
+        if (!sessionCode) {
+            $('#btn_selection_choix').prop('disabled',true);
+            // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
+            return;
+        }
+
+        $.ajax({
+            url: APP.ajax,
+            method: 'POST',
+            data: {
+                action: 'get_categories_by_session',
+                session_code: sessionCode
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                console.log(data);
+                // return;
+                
+                if (data.success) {
+                    // const categories = data.data.data;
+
+                // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
+                $("#categorie_inscription").html(data.categories);
+                $("#packs-container").html(data.packs);
+                }
             }
+            // error: function() {
+            //     // $("#categorie_inscription").html(categories);
+            // }
         });
-    }
+});
+}
 
 
 
