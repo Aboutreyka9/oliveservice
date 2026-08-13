@@ -1276,6 +1276,8 @@ input::-o-outer-spin-button {
 ****************/
 
 
+
+
 .timeline-steps {
     display: flex;
     align-items: center;
@@ -1516,6 +1518,7 @@ input::-o-outer-spin-button {
     transform: translateY(-5px);
     transition: all 0.3s ease;
 }
+
 
 .pack-card .form-check {
     margin-top: auto;

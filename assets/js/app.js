@@ -3160,20 +3160,19 @@ function allStepInscription () {
             }
         }
 
-         $("body").on("click",".pack-card",function(e) {
+        //  $("body").on("click",".pack-card",function(e) {
             
-            if (e.target.type !== 'checkbox') {
-                const checkbox = $(this).find('.pack-check');
-                checkbox.prop('checked', !checkbox.prop('checked'));
-            console.log(checkbox);
+        //     if (e.target.type !== 'checkbox') {
+        //         const checkbox = $(this).find('.pack-check');
+        //         checkbox.prop('checked', !checkbox.prop('checked'));
 
-            }
-            $(this).toggleClass('selected', $(this).find('.pack-check').prop('checked'));
-        });
+        //     }
+        //     // $(this).toggleClass('selected', $(this).find('.pack-check').prop('checked'));
+        // });
 
-        $("body").on("change",".pack-check",function() {
-            $(this).closest('.pack-card').toggleClass('selected', $(this).prop('checked'));
-        });
+        // $("body").on("change",".pack-check",function() {
+        //     $(this).closest('.pack-card').toggleClass('selected', $(this).prop('checked'));
+        // });
 
         $('form[id="frmAddClient"]').submit(function(e) {
             e.preventDefault();
@@ -3263,6 +3262,8 @@ function loadCategoriesBySession() {
                 // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
                 $("#categorie_inscription").html(data.categories);
                 $("#packs-container").html(data.packs);
+                updatePackCardsUI();
+
                 }
             }
             // error: function() {
@@ -3302,13 +3303,82 @@ function loadPacksByCategories() {
 
                 // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
                 $("#packs-container").html(data.packs);
+                updatePackCardsUI();
                 }
             }
             // error: function() {
             //     // $("#categorie_inscription").html(categories);
             // }
         });
-});
+    });
+}
+
+// ================= GESTION SELECTION PACKS =================
+// Initialiser la sélection des packs
+initPackSelection();
+
+function togglePackSelection(packCode, montant, isChecked) {
+    if (isChecked) {
+        if (!APP.packSelected.includes(packCode)) {
+            APP.packSelected.push(packCode);
+        }
+        APP.montantPackSelected += parseInt(montant);
+    } else {
+        APP.packSelected = APP.packSelected.filter(code => code !== packCode);
+        APP.montantPackSelected -= parseInt(montant);
+    }
+
+        console.log(APP.packSelected);
+        console.log(APP.montantPackSelected);
+
+    updatePackCardsUI();
+}
+
+function updatePackCardsUI() {
+
+    $('.pack-card').each(function() {
+        const packCode = $(this).data('pack-code');
+        const checkbox = $(this).find('.pack-check');
+        
+        // console.log(APP.packSelected);
+        
+        if (APP.packSelected.includes(packCode)) {
+
+            $(this).addClass('selected');
+            checkbox.prop('checked', true);
+        } else {
+            $(this).removeClass('selected');
+            checkbox.prop('checked', false);
+        }
+    });
+}
+
+function initPackSelection() {
+    if (!APP.packSelected) {
+        APP.packSelected = [];
+    }
+    if (!APP.montantPackSelected) {
+        APP.montantPackSelected = 0;
+    }
+
+    $("body").on("click", ".pack-card", function(e) {
+        if (e.target.type !== 'checkbox') {
+            const checkbox = $(this).find('.pack-check');
+            const packCode = $(this).data('pack-code');
+            const montant = $(this).data('pack-montant');
+            
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            togglePackSelection(packCode, montant, checkbox.prop('checked'));
+        }
+    });
+
+    // $("body").on("change", ".pack-card", function() {
+    //     const packCard = $(this).closest('.pack-card');
+    //     const packCode = packCard.data('pack-code');
+    //     const montant = packCard.data('pack-montant');
+        
+    //     togglePackSelection(packCode, montant, $(this).prop('checked'));
+    // });
 }
 
 

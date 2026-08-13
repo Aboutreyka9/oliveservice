@@ -600,7 +600,7 @@ function chargerDataPacks($packs)
   foreach ($packs as $pack) {
     $output .= '
                   <div class="col-md-3 mb-4">
-                        <div class="pack-card h-100" data-pack-code="'.$pack['code_pack'].'" data-pack-libelle="'.$pack['libelle_pack'].' data-pack-montant="'.$pack['montant_pack'].'">
+                        <div class="pack-card h-100" data-pack-code="'.$pack['code_pack'].'" data-pack-libelle="'.$pack['libelle_pack'].'" data-pack-montant="'.$pack['montant_pack'].'">
                             <div class="card h-100 border-0 shadow-sm pack-card-inner">
                                 <div class="card-body text-center py-4">
                                     <div class="pack-icon mb-3">
