@@ -595,37 +595,37 @@ function chargerDataPacks($packs)
 {
 
   $output = '';
-  if(empty($packs)) return '<option>Aucune donnée disponible</option>';
+  if(empty($packs)) return '<div class="col-md-12 mb-4"> Aucune données disponible</div>';
 
   foreach ($packs as $pack) {
     $output .= '
                   <div class="col-md-3 mb-4">
-                        <div class="pack-card h-100" data-pack-code="PACK-001" data-pack-libelle="Pack Standard" data-pack-montant="25000">
+                        <div class="pack-card h-100" data-pack-code="'.$pack['code_pack'].'" data-pack-libelle="'.$pack['libelle_pack'].' data-pack-montant="'.$pack['montant_pack'].'">
                             <div class="card h-100 border-0 shadow-sm pack-card-inner">
                                 <div class="card-body text-center py-4">
                                     <div class="pack-icon mb-3">
                                         <i class="fas fa-cube fa-3x text-primary"></i>
                                     </div>
-                                    <h5 class="card-title font-weight-bold mb-2">Pack Standard</h5>
-                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <h5 class="card-title font-weight-bold mb-2">'.$pack['libelle_pack'].'</h5>
+                                    <p class="text-muted small mb-3">'.$pack['libelle_session'].'</p>
                                     <div class="pack-price mb-3">
-                                        <span class="h4 text-primary font-weight-bold">25 000</span>
+                                        <span class="h4 text-primary font-weight-bold">'.number_format($pack['montant_pack'],0,'.',' ').'</span>
                                         <span class="text-muted">FCFA</span>
                                     </div>
                                     <div class="pack-features text-left mb-3">
                                         <small class="text-muted">
-                                            <i class="fas fa-check text-success mr-1"></i> Accès aux cours
-                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Support pédagogique
-                                            <i class="fas fa-check text-success mr-1 ml-2"></i> 1 mois d\'accès
+                                            <i class="fas fa-check text-success mr-1"></i> Total articles : 15 <br>
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Nombre de jours : 55 
+                        
                                         </small>
                                     </div>
                                     <div class="form-check mt-auto">
-                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-001" id="pack1">
-                                        <label class="form-check-label" for="pack1">Sélectionner ce pack</label>
+                                        <input class="form-check-input pack-check" type="checkbox" value="'.$pack['code_pack'].'" id="pack'.$pack['code_pack'].'">
+                                        <label class=" btn btn-warning form-check-label" for="pack'.$pack['code_pack'].'">Sélectionner ce pack</label>
                                     </div>
                                 </div>
                                 <div class="pack-badge">
-                                    <span class="badge badge-primary">Populaire</span>
+                                    <span class="badge badge-primary">'.$pack['libelle_categorie_pack'].'</span>
                                 </div>
                             </div>
                         </div>

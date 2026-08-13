@@ -345,6 +345,11 @@ switch ($action) {
         $ajx = new ActiviteController();
         $ajx->getCategoriesBySession();
         break;
+          // Debut Actions pour les packs par categorie
+    case 'get_packs_by_categorie':
+        $ajx = new ActiviteController();
+        $ajx->getPacksByCategorie();
+        break;
     //end Actions pour les categories par session
 
     // Debut Actions pour les clients 

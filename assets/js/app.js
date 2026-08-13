@@ -7,6 +7,8 @@ const APP = {
     formChanged: false,
     rolesPermissions: [],
     articleSelected: [],
+    packSelected: [],
+    montantPackSelected: 0,
     dataCheck: [],
     userCode: null,
     date_start_picker:moment().startOf('month'), // 1er du mois
@@ -3158,15 +3160,18 @@ function allStepInscription () {
             }
         }
 
-        $('.pack-card').click(function(e) {
+         $("body").on("click",".pack-card",function(e) {
+            
             if (e.target.type !== 'checkbox') {
                 const checkbox = $(this).find('.pack-check');
                 checkbox.prop('checked', !checkbox.prop('checked'));
+            console.log(checkbox);
+
             }
             $(this).toggleClass('selected', $(this).find('.pack-check').prop('checked'));
         });
 
-        $('.pack-check').change(function() {
+        $("body").on("change",".pack-check",function() {
             $(this).closest('.pack-card').toggleClass('selected', $(this).prop('checked'));
         });
 
@@ -3235,7 +3240,7 @@ function loadCategoriesBySession() {
 
         var sessionCode = $(this).val();
         if (!sessionCode) {
-            $('#btn_selection_choix').prop('disabled',true);
+            // $('#btn_selection_choix').prop('disabled',true);
             // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
             return;
         }
@@ -3257,6 +3262,45 @@ function loadCategoriesBySession() {
 
                 // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
                 $("#categorie_inscription").html(data.categories);
+                $("#packs-container").html(data.packs);
+                }
+            }
+            // error: function() {
+            //     // $("#categorie_inscription").html(categories);
+            // }
+        });
+});
+}
+
+loadPacksByCategories();
+function loadPacksByCategories() {
+    $("body").on("change", "#categorie_inscription", function (e) {
+
+        var categorieCode = $(this).val();
+        var sessionCode = $("#session_inscription").val();
+        if (!categorieCode || !sessionCode) {
+            // $('#btn_selection_choix').prop('disabled',true);
+            // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
+            return;
+        }
+
+        $.ajax({
+            url: APP.ajax,
+            method: 'POST',
+            data: {
+                action: 'get_packs_by_categorie',
+                categorie_code: categorieCode,
+                session_code: sessionCode
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                console.log(data);
+                // return;
+                
+                if (data.success) {
+                    // const categories = data.data.data;
+
+                // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
                 $("#packs-container").html(data.packs);
                 }
             }

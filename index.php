@@ -43,7 +43,7 @@ use Phroute\Phroute\Dispatcher;
 // }
 
 
-// var_dump(((new ActiviteModel())->deletePackArticles('l4ymf5',['MGUlgKfYtYque','tQ0oaE7ppDJ4zETjVl9u'])));
+// var_dump(((new ActiviteModel())->getPackBySessionAndCategorie('l8rmIqVzNWaRYF6Nb7kuckHC','6QIlVfXP0LiXE9tBzHownYLAA324qDi2','5454544456','0GklBk07waYoLB6pHwY')));
 // var_dump($_SESSION);
 // return;
 
