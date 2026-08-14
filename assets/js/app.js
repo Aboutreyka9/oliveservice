@@ -3135,29 +3135,97 @@ function allStepInscription () {
                 $('#recap-email').text($('#email_client').val() || 'Non renseigné');
                 $('#recap-profession').text($('#profession_client').val() || 'Non renseigné');
 
-                const selectedPacks = [];
-                let totalMontant = 0;
-                
-                $('.pack-check:checked').each(function() {
-                    const card = $(this).closest('.pack-card');
-                    const libelle = card.data('pack-libelle');
-                    const montant = card.data('pack-montant');
-                    selectedPacks.push({ libelle: libelle, montant: montant });
-                    totalMontant += parseInt(montant);
-                });
-
-                const tbody = $('#recap-packs');
-                tbody.empty();
-                
-                if (selectedPacks.length === 0) {
-                    tbody.append('<tr><td colspan="2" class="text-center text-muted">Aucun pack sélectionné</td></tr>');
-                } else {
-                    selectedPacks.forEach(function(pack) {
-                        tbody.append('<tr><td>' + pack.libelle + '</td><td>' + Number(pack.montant).toLocaleString('fr-FR') + ' FCFA</td></tr>');
-                    });
-                    tbody.append('<tr class="table-active"><td class="font-weight-bold">Total</td><td class="font-weight-bold">' + totalMontant.toLocaleString('fr-FR') + ' FCFA</td></tr>');
-                }
+                   tableRecapData();
+    
             }
+        }
+
+        function tableRecapData(){
+             const tbody = $('#recap-packs');
+
+                    tbody.empty();
+
+                    if (APP.packSelected.length === 0) {
+
+                        tbody.append(`
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">
+                                    Aucun pack sélectionné
+                                </td>
+                            </tr>
+                        `);
+
+                        return;
+                    }
+
+                    let total = 0;
+                    let index = 0;
+
+                    APP.packSelected.forEach(function(pack) {
+                        index ++;
+                        const montant = Number(pack.montant) || 0;
+
+                        total += montant;
+
+                        tbody.append(`
+                            <tr>
+                                <td>${index}</td>
+                                <td>${pack.libelle}</td>
+                                <td>${montant.toLocaleString('fr-FR')} FCFA</td>
+                                <td class="text-center">
+                                    <button 
+                                        type="button"
+                                        class="btn btn-sm btn-danger btn-remove-pack"
+                                        data-pack-code="${pack.packCode}"
+                                        title="Supprimer">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+
+                    });
+
+                    tbody.append(`
+                        <tr class="table-active">
+                            <td colspan="2" class="font-weight-bold">Total</td>
+                            <td colspan="2" class="font-weight-bold">
+                                ${total.toLocaleString('fr-FR')} FCFA
+                            </td>
+                        </tr>
+                    `);
+        }
+
+        $('body').on('click', '.btn-remove-pack', function(e) {
+
+            e.preventDefault();
+
+            if(APP.packSelected.length == 1) return  $.notify('Le nombre minimum de selection ne doit pas êtres inferieur à 1.', "warn");
+
+             const row = $(this).closest('tr');
+                const packCode = $(this).data('pack-code');
+
+                row.fadeOut(250, function() {
+
+                    removePack(packCode);
+
+                });
+            // const packCode = $(this).data('pack-code');
+
+            // removePack(packCode);
+
+        });
+
+        function removePack(packCode) {
+
+            APP.packSelected = APP.packSelected.filter(function(pack) {
+                return String(pack.packCode) !== String(packCode);
+            });
+
+            tableRecapData();
+
+            updatePackCardsUI();
+
         }
 
         //  $("body").on("click",".pack-card",function(e) {
@@ -3182,17 +3250,18 @@ function allStepInscription () {
                 return;
             }
 
-            const selectedPacks = [];
-            $('.pack-check:checked').each(function() {
-                selectedPacks.push($(this).val());
-            });
-            $('#selected_packs').val(JSON.stringify(selectedPacks));
+            // const selectedPacks = [];
+            // $('.pack-check:checked').each(function() {
+            //     selectedPacks.push($(this).val());
+            // });
+            const packCodes = APP.packSelected.map(pack => pack.packCode);
+            $('#selected_packs').val(JSON.stringify(packCodes));
 
             var form = $(this);
             var btn = $('#btnSubmitFormClient');
             var originalText = btn.html();
             
-            btn.html('<i class="fas fa-spinner fa-spin"></i> &nbsp; Enregistrement...').prop('disabled', true);
+            // btn.html('<i class="fas fa-spinner fa-spin"></i> &nbsp; Enregistrement...').prop('disabled', true);
             
             $.ajax({
                 url: APP.ajax,
@@ -3200,11 +3269,21 @@ function allStepInscription () {
                 data: form.serialize(),
                 dataType: 'JSON',
                 success: function(data) {
+                    
                     if (data.success) {
-                        $.notify(data.message, 'success');
-                        setTimeout(function() {
-                            window.location.href = 'urlllll';
-                        }, 1500);
+
+                        swal({
+                                title: "Notification",
+                                text: data.message,
+                                icon: "success"
+                        }).
+                        then((result)=>{
+                            if(result)
+                                history.go(0);
+                        })
+                        // setTimeout(function() {
+                        //     window.location.href = 'urlllll';
+                        // }, 1500);
                     } else {
                         $.notify(data.message, 'error');
                         btn.html(originalText).prop('disabled', false);
@@ -3244,33 +3323,34 @@ function loadCategoriesBySession() {
             return;
         }
 
-        $.ajax({
-            url: APP.ajax,
-            method: 'POST',
-            data: {
-                action: 'get_categories_by_session',
-                session_code: sessionCode
-            },
-            dataType: 'JSON',
-            success: function(data) {
-                console.log(data);
-                // return;
-                
-                if (data.success) {
-                    // const categories = data.data.data;
+        APP.packSelected = [];
+        chargerSessionData(sessionCode);
+});
+}
 
+
+function chargerSessionData(sessionCode) {
+    $.ajax({
+        url: APP.ajax,
+        method: 'POST',
+        data: {
+            action: 'get_categories_by_session',
+            session_code: sessionCode
+        },
+        dataType: 'JSON',
+        success: function (data) {
+            console.log(data);
+            // return;
+            if (data.success) {
+                // const categories = data.data.data;
                 // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
                 $("#categorie_inscription").html(data.categories);
                 $("#packs-container").html(data.packs);
                 updatePackCardsUI();
 
-                }
             }
-            // error: function() {
-            //     // $("#categorie_inscription").html(categories);
-            // }
-        });
-});
+        }
+    });
 }
 
 loadPacksByCategories();
@@ -3279,7 +3359,11 @@ function loadPacksByCategories() {
 
         var categorieCode = $(this).val();
         var sessionCode = $("#session_inscription").val();
-        if (!categorieCode || !sessionCode) {
+        if (!categorieCode) {
+                // updatePackCardsUI();
+                if (sessionCode) 
+                chargerSessionData(sessionCode);
+
             // $('#btn_selection_choix').prop('disabled',true);
             // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
             return;
@@ -3317,10 +3401,51 @@ function loadPacksByCategories() {
 // Initialiser la sélection des packs
 initPackSelection();
 
-function togglePackSelection(packCode, montant, isChecked) {
+function togglePackSelection(packCode, montant, libelle, isChecked) {
+
+    montant = parseInt(montant) || 0;
+
     if (isChecked) {
-        if (!APP.packSelected.includes(packCode)) {
-            APP.packSelected.push(packCode);
+
+        // Vérifier si le pack n'est pas déjà sélectionné
+        const exists = isPackSelected(packCode);
+        // APP.packSelected.some(pack => pack.packCode === packCode);
+
+        if (!exists) {
+
+            APP.packSelected.push({
+                packCode: packCode,
+                libelle: libelle,
+                montant: montant,
+                isChecked: true
+            });
+
+            APP.montantPackSelected += montant;
+        }
+
+    } else {
+
+        // Supprimer le pack
+        APP.packSelected = APP.packSelected.filter(
+            pack => pack.packCode !== packCode
+        );
+
+        APP.montantPackSelected -= montant;
+
+        // Éviter d'avoir un montant négatif
+        if (APP.montantPackSelected < 0) {
+            APP.montantPackSelected = 0;
+        }
+    }
+
+    updatePackCardsUI();
+
+}
+
+function ttogglePackSelectionTest(packCode, montant,libelle, isChecked) {
+    if (isChecked) {
+        if (!APP.packSelected['packCode'].includes(packCode)) {
+            APP.packSelected.push({packCode: packCode, libelle: libelle, montant: montant,isChecked: isChecked});
         }
         APP.montantPackSelected += parseInt(montant);
     } else {
@@ -3328,13 +3453,11 @@ function togglePackSelection(packCode, montant, isChecked) {
         APP.montantPackSelected -= parseInt(montant);
     }
 
-        console.log(APP.packSelected);
-        console.log(APP.montantPackSelected);
 
     updatePackCardsUI();
 }
 
-function updatePackCardsUI() {
+function tupdatePackCardsUtITest() {
 
     $('.pack-card').each(function() {
         const packCode = $(this).data('pack-code');
@@ -3353,6 +3476,30 @@ function updatePackCardsUI() {
     });
 }
 
+function isPackSelected(packCode) {
+
+    return APP.packSelected.some(
+        pack => String(pack.packCode) === String(packCode)
+    );
+
+}
+
+function updatePackCardsUI() {
+
+    $('.pack-card').each(function() {
+
+        const packCode = $(this).data('pack-code');
+        const checkbox = $(this).find('.pack-check');
+
+        const selected = isPackSelected(packCode);
+
+        $(this).toggleClass('selected', selected);
+        checkbox.prop('checked', selected);
+
+    });
+
+}
+
 function initPackSelection() {
     if (!APP.packSelected) {
         APP.packSelected = [];
@@ -3366,9 +3513,10 @@ function initPackSelection() {
             const checkbox = $(this).find('.pack-check');
             const packCode = $(this).data('pack-code');
             const montant = $(this).data('pack-montant');
+            const libelle = $(this).data('pack-libelle');
             
             checkbox.prop('checked', !checkbox.prop('checked'));
-            togglePackSelection(packCode, montant, checkbox.prop('checked'));
+            togglePackSelection(packCode, montant,libelle, checkbox.prop('checked'));
         }
     });
 
@@ -3376,6 +3524,7 @@ function initPackSelection() {
     //     const packCard = $(this).closest('.pack-card');
     //     const packCode = packCard.data('pack-code');
     //     const montant = packCard.data('pack-montant');
+    //     const libelle = packCard.data('pack-libelle');
         
     //     togglePackSelection(packCode, montant, $(this).prop('checked'));
     // });

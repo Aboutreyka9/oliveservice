@@ -36,8 +36,8 @@
     <input type="hidden" name="action" value="btn_add_client">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
-    <input type="hidden" name="session_code" id="session_code" value="">
-    <input type="hidden" name="categorie_pack_code" id="categorie_pack_code" value="">
+    <!-- <input type="hidden" name="session_code" id="session_code" value="">
+    <input type="hidden" name="categorie_pack_code" id="categorie_pack_code" value=""> -->
 
     <!-- ETAPE 1 : Informations personnelles -->
     <div class="step-content" id="step1">
@@ -101,14 +101,14 @@
                 <div class="row mb-5">
                     <div class="col-md-6">
                         <label for="">SESSION</label>
-                        <select style="background: #c5c5c5; color:#000" name="" id="session_inscription" class="form-control">
+                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_inscription" class="form-control">
                             <option >--CHOISIR--</option>
                             <?= chargerSessions(); ?>
                         </select>
                     </div>
                     <div class="col-md-6">
                          <label for="">CATEGORIE</label>
-                        <select style="background: #ccc; color:#000" name="" id="categorie_inscription" class="form-control">
+                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_inscription" class="form-control">
                             <option >Aucune donnée disponible</option>
                         </select>
                     </div>
@@ -257,19 +257,23 @@
                         <div class="card-title">Packs sélectionnés</div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <div class="recap-packs-container">
+                        <table class="table table-bordered mb-0">
                             <thead class="thead-light">
                                 <tr>
+                                    <th>#</th>
                                     <th>Pack</th>
                                     <th>Montant</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="recap-packs">
                                 <tr>
-                                    <td colspan="2" class="text-center text-muted">Aucun pack sélectionné</td>
+                                    <td colspan="4" class="text-center text-muted">Aucun pack sélectionné</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
             </div>

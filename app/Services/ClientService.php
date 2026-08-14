@@ -25,47 +25,90 @@ class ClientService
      */
 
 
-    // SEXION SEMESTRES
+    // SEXION CLIENT
 
-    public function saveDepenseData(array $post)
+        public function saveClientData(array $post, array $packs = [])
     {
         extract($post);
 
-        // if (!empty($this->etudiantModel->getFieldsForParams(TABLES::DEPENSES, ['libelle_depense' => $libelle_depense, 'annee_code' => $libelle_annee, 'etablissement_code' => Auth::user('etablissement_code')]))) {
-        //     return ['success' => false, 'message' => "Desolé! Ce depense existe déjà."];
-        // }
-
-        $code = $this->clientModel->generatorCode(TABLES::DEPENSES, 'code_depense');
-        $date = date('Y-m-d H:i:s');
-
-        $data_depense = [
-            'type_depense_code' => $libelle_depense,
-            'code_depense' => $code,
-            'montant_depense' => $montant_depense,
-            'periode_depense' => $date_depense,
-            'description_depense' => $description_depense,
-            'statut_depense' => '',
-            'annee_code' => Auth::user('annee_code'),
-            'user_code' => Auth::user('id'),
-            'etablissement_code' => Auth::user('etablissement_code'),
-            'created_at_depense' => $date
-        ];
-
-        if (isset($statut_depense)) {
-            $data_depense['user_confirm'] = Auth::user('id');
-            $data_depense['created_at_confirm'] = $date;
-            $data_depense['statut_depense'] = STATUT_ACTIF;
+        if (!empty($this->clientModel->getFieldsForParams(TABLES::CLIENTS, ['telephone_client' => $telephone_client, 'etablissement_code' => Auth::user('etablissement_code'),'zone_code' => Auth::user('zone_code')]))) {
+            return ['success' => false, 'message' => 'Desolé! Ce client existe déjà.'];
         }
 
-        if (!$this->clientModel->create(TABLES::DEPENSES, $data_depense)) {
+        
+        $code_client = $this->clientModel->generatorCode(TABLES::CLIENTS, 'code_client');
+        $code_inscription = $this->clientModel->generatorCode(TABLES::INSCRIPTIONS, 'code_inscription');
+
+        $etablissement_code = Auth::user('etablissement_code');
+        $user_code = Auth::user('id');
+        $annee_code = Auth::user('annee_code');
+        $zone_code = Auth::user('zone_code');
+
+        $date = date('Y-m-d H:i:s');
+
+        $data_client = [
+            'nom_client' => ucFirst($nom_client),
+            'telephone_client' => $telephone_client,
+            'sexe_client' => $genre_client,
+            'lieu_residence_client' => $lieu_client,
+            'code_client' => $code_client,
+            'email_client' => $email_client ?? null,
+            'profession_client' => $profession_client ?? null,
+            'zone_code' => $zone_code,
+            'etablissement_code' => $etablissement_code,
+            'user_code' => $user_code,
+            'created_at_client' => $date,
+        ];
+
+         
+        $data_inscription = [
+            'statut_inscription' => STATUT_INSCRIPTION[0],
+            'client_code' => $code_client,
+            'session_code' => $session_code,
+            'code_inscription' => $code_inscription,
+            'zone_code' => $zone_code,
+            'annee_code' => $annee_code,
+            'etablissement_code' => $etablissement_code,
+            'user_code' => $user_code,
+            'created_at_inscription' => $date
+        ];
+
+
+
+
+        $packInscriptions = [];
+        foreach ($packs as $packCode) {
+            $packInscriptions[] = [
+                'statut_pack_inscription' => STATUT_ACTIF,
+                'inscription_code' => $code_inscription,
+                'pack_code' => $packCode,
+                'annee_code' => $annee_code,
+                'etablissement_code' => $etablissement_code,
+                'user_code' => $user_code,
+                'created_at_pack_inscription' => $date
+            ];
+        }
+
+
+        $result = $this->clientModel->transactionData(function () use ($data_client, $data_inscription,$packInscriptions) {
+
+            $this->clientModel->create(TABLES::CLIENTS, $data_client);
+            $this->clientModel->create(TABLES::INSCRIPTIONS, $data_inscription);
+            $this->clientModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
+
+        });
+
+        if (!$result) {
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
         }
 
         return [
             'success' => true,
-            'message' => 'Depense enregistrée avec succès.',
+            'message' => 'Inscription effectuée avec succès.',
         ];
     }
+
+
 
 
     public function updateDepenseData($post)
@@ -480,56 +523,5 @@ class ClientService
         return $output;
     }
 
-    public function saveClientData(array $post, array $packs = [])
-    {
-        extract($post);
 
-        if (!empty($this->activiteModel->getFieldsForParams(TABLES::CLIENTS, ['code_client' => $code_client, 'etablissement_code' => Auth::user('etablissement_code')]))) {
-            return ['success' => false, 'message' => 'Desolé! Ce code client existe déjà.'];
-        }
-
-        $data_client = [
-            'nom_client' => strtoupper($nom_client),
-            'telephone_client' => $telephone_client,
-            'genre_client' => $genre_client,
-            'lieu_client' => strtoupper($lieu_client),
-            'code_client' => strtoupper($code_client),
-            'email_client' => $email_client ?? null,
-            'profession_client' => $profession_client ?? null,
-            'statut_client' => STATUT_ACTIF,
-            'etablissement_code' => Auth::user('etablissement_code'),
-            'user_code' => Auth::user('id'),
-            'created_at_client' => date('Y-m-d H:i:s'),
-        ];
-
-        if (!$this->activiteModel->create(TABLES::CLIENTS, $data_client)) {
-            return ['success' => false, 'message' => "Desolé! echec d'operation."];
-        }
-
-        if (!empty($packs)) {
-            $date = date('Y-m-d H:i:s');
-            $annee_code = Auth::user('annee_code');
-            $etablissement_code = Auth::user('etablissement_code');
-            $id = Auth::user('id');
-
-            $packInscriptions = [];
-            foreach ($packs as $packCode) {
-                $packInscriptions[] = [
-                    'pack_code' => $packCode,
-                    'client_code' => $code_client,
-                    'annee_code' => $annee_code,
-                    'etablissement_code' => $etablissement_code,
-                    'user_code' => $id,
-                    'created_at_pack_inscription' => $date,
-                ];
-            }
-
-            $this->activiteModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
-        }
-
-        return [
-            'success' => true,
-            'message' => 'Client enregistré avec succès.',
-        ];
-    }
 }

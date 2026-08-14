@@ -1275,7 +1275,53 @@ input::-o-outer-spin-button {
 **************
 ****************/
 
+/* debut recap packs */
 
+/* .recap-packs-container {
+    max-height: 400px!important;
+    overflow-y: auto;
+    scrollbar-width: none;
+    border:2px solid #000;
+}
+
+.recap-packs-container::-webkit-scrollbar {
+    display: none;
+} */
+
+.recap-packs-container {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.recap-packs-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.recap-packs-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+}
+
+.recap-packs-container thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f8f9fa;
+}
+
+.btn-remove-pack {
+    transition: all 0.2s ease;
+}
+
+.btn-remove-pack:hover {
+    transform: scale(1.15);
+}
+
+.btn-remove-pack:active {
+    transform: scale(0.9);
+}
+
+/* END recap packs */
 
 
 .timeline-steps {
