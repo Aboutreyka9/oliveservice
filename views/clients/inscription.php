@@ -36,6 +36,8 @@
     <input type="hidden" name="action" value="btn_add_client">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
+    <!-- <input type="hidden" name="session_code" id="session_code" value="">
+    <input type="hidden" name="categorie_pack_code" id="categorie_pack_code" value=""> -->
 
     <!-- ETAPE 1 : Informations personnelles -->
     <div class="step-content" id="step1">
@@ -96,42 +98,112 @@
                 <div class="card-title">Sélection des packs</div>
             </div>
             <div class="card-body">
+                <div class="row mb-5">
+                    <div class="col-md-6">
+                        <label for="">SESSION</label>
+                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_inscription" class="form-control">
+                            <option >--CHOISIR--</option>
+                            <?= chargerSessions(); ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                         <label for="">CATEGORIE</label>
+                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_inscription" class="form-control">
+                            <option >Aucune donnée disponible</option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
                 <div class="row" id="packs-container">
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-001" data-pack-libelle="Pack Standard" data-pack-montant="25000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Standard</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">25 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-001" id="pack1">
-                                    <label class="form-check-label" for="pack1">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-001" data-pack-libelle="Pack Standard" data-pack-montant="25000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-cube fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Standard</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-primary font-weight-bold">25 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Accès aux cours
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Support pédagogique
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> 1 mois d'accès
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-001" id="pack1">
+                                        <label class="form-check-label" for="pack1">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-primary">Populaire</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-002" data-pack-libelle="Pack Premium" data-pack-montant="45000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Premium</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">45 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-002" id="pack2">
-                                    <label class="form-check-label" for="pack2">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-002" data-pack-libelle="Pack Premium" data-pack-montant="45000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-crown fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Premium</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-warning font-weight-bold">45 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Tout du Standard
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> + Accès prioritaire
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> 3 mois d'accès
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-002" id="pack2">
+                                        <label class="form-check-label" for="pack2">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-warning">Recommandé</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card pack-card" data-pack-code="PACK-003" data-pack-libelle="Pack Excellence" data-pack-montant="75000">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Pack Excellence</h5>
-                                <p class="text-muted">Session Décembre 2025</p>
-                                <h4 class="text-primary">75 000 FCFA</h4>
-                                <div class="form-check mt-3">
-                                    <input class="form-check-input pack-check" type="checkbox" value="PACK-003" id="pack3">
-                                    <label class="form-check-label" for="pack3">Sélectionner</label>
+                    <div class="col-md-4 mb-4">
+                        <div class="pack-card h-100" data-pack-code="PACK-003" data-pack-libelle="Pack Excellence" data-pack-montant="75000">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-gem fa-3x text-danger"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">Pack Excellence</h5>
+                                    <p class="text-muted small mb-3">Session Décembre 2025</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-danger font-weight-bold">75 000</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Tout du Premium
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> + Coaching individuel
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Accès illimité
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="PACK-003" id="pack3">
+                                        <label class="form-check-label" for="pack3">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-danger">Premium</span>
                                 </div>
                             </div>
                         </div>
@@ -185,19 +257,23 @@
                         <div class="card-title">Packs sélectionnés</div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <div class="recap-packs-container">
+                        <table class="table table-bordered mb-0">
                             <thead class="thead-light">
                                 <tr>
+                                    <th>#</th>
                                     <th>Pack</th>
                                     <th>Montant</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="recap-packs">
                                 <tr>
-                                    <td colspan="2" class="text-center text-muted">Aucun pack sélectionné</td>
+                                    <td colspan="4" class="text-center text-muted">Aucun pack sélectionné</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -215,169 +291,4 @@
     </div>
 </form>
 
-<style>
-.timeline-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0;
-}
-
-.timeline-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    opacity: 0.5;
-    transition: all 0.3s ease;
-}
-
-.timeline-step.active {
-    opacity: 1;
-}
-
-.timeline-step.completed {
-    opacity: 1;
-}
-
-.step-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #e9ecef;
-    border: 3px solid #dee2e6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: #6c757d;
-    transition: all 0.3s ease;
-}
-
-.timeline-step.active .step-circle {
-    background: #007bff;
-    border-color: #007bff;
-    color: #fff;
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
-}
-
-.timeline-step.completed .step-circle {
-    background: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
-
-.step-label {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #495057;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.timeline-connector {
-    flex: 1;
-    height: 3px;
-    background: #dee2e6;
-    margin: 0 10px;
-    margin-bottom: 25px;
-    min-width: 80px;
-}
-
-.timeline-step.completed + .timeline-connector {
-    background: #28a745;
-}
-
-.pack-card {
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.pack-card:hover {
-    border-color: #007bff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-}
-
-.pack-card.selected {
-    border-color: #007bff;
-    background-color: #f0f7ff;
-}
-
-.step-content {
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 768px) {
-    .timeline-steps {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px 0;
-        gap: 0;
-    }
-    
-    .timeline-step {
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        padding: 10px 0;
-    }
-    
-    .step-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        min-width: 40px;
-    }
-    
-    .step-label {
-        margin-top: 0;
-        margin-left: 15px;
-        font-size: 13px;
-        text-align: left;
-    }
-    
-    .timeline-connector {
-        width: 3px;
-        height: 35px;
-        margin: 0;
-        margin-left: 19px;
-        min-width: auto;
-    }
-}
-
-@media (max-width: 576px) {
-    .step-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-        min-width: 35px;
-    }
-    
-    .step-label {
-        font-size: 12px;
-        margin-left: 10px;
-    }
-    
-    .timeline-connector {
-        height: 25px;
-        margin-left: 15px;
-    }
-}
-</style>
 

@@ -8,6 +8,7 @@ use App\Core\Auth;
 use App\Models\Catalogue;
 use App\Models\Factory;
 use App\Models\Personne;
+use App\Models\SettingModel;
 use App\Services\Service;
 
 function bTest()
@@ -53,6 +54,22 @@ function breakcrumb(string $title, string $icon)
   <!-- end breakcrumb -->
   ';
 }
+
+function chargerSessions()
+{
+
+$sessions = (new SettingModel())->getAllSessions(auth()->user('etablissement_code'),auth()->user('annee_code'));
+  $output = "";
+  if(empty($sessions)) return '<option>Aucune donnée disponible</option>';
+
+  foreach ($sessions as $session) {
+    $output .= '<option value="' . $session['code_session'] . '">' . $session['libelle_session'] . '</option>';
+  }
+
+  return $output;
+}
+
+
 
 function chargerDashboardAdmin()
 {

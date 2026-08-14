@@ -340,6 +340,18 @@ switch ($action) {
     
     //end Actions pour les inscription
 
+    // Debut Actions pour les categories par session
+    case 'get_categories_by_session':
+        $ajx = new ActiviteController();
+        $ajx->getCategoriesBySession();
+        break;
+          // Debut Actions pour les packs par categorie
+    case 'get_packs_by_categorie':
+        $ajx = new ActiviteController();
+        $ajx->getPacksByCategorie();
+        break;
+    //end Actions pour les categories par session
+
     // Debut Actions pour les clients 
     case 'charger_data_clients':
         $ajx = new ClientController();

@@ -578,6 +578,64 @@ class ActiviteService
         return $data;
     }
 
+    function chargerCategoriePack($categories)
+{
+
+  $output = '<option value="">--- CHOISIR ---</option>';
+  if(empty($categories)) return '<option>Aucune donnée disponible</option>';
+
+  foreach ($categories as $categorie) {
+    $output .= '<option value="' . $categorie['code_categorie_pack'] . '">' . $categorie['libelle_categorie_pack'] . '</option>';
+  }
+
+  return $output;
+}
+
+function chargerDataPacks($packs)
+{
+
+  $output = '';
+  if(empty($packs)) return '<div class="col-md-12 mb-4"> Aucune données disponible</div>';
+
+  foreach ($packs as $pack) {
+    $output .= '
+                  <div class="col-md-3 mb-4">
+                        <div class="pack-card h-100" data-pack-code="'.$pack['code_pack'].'" data-pack-libelle="'.$pack['libelle_pack'].'" data-pack-montant="'.$pack['montant_pack'].'">
+                            <div class="card h-100 border-0 shadow-sm pack-card-inner">
+                                <div class="card-body text-center py-4">
+                                    <div class="pack-icon mb-3">
+                                        <i class="fas fa-cube fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold mb-2">'.$pack['libelle_pack'].'</h5>
+                                    <p class="text-muted small mb-3">'.$pack['libelle_session'].'</p>
+                                    <div class="pack-price mb-3">
+                                        <span class="h4 text-primary font-weight-bold">'.number_format($pack['montant_pack'],0,'.',' ').'</span>
+                                        <span class="text-muted">FCFA</span>
+                                    </div>
+                                    <div class="pack-features text-left mb-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-check text-success mr-1"></i> Total articles : 15 <br>
+                                            <i class="fas fa-check text-success mr-1 ml-2"></i> Nombre de jours : 55 
+                        
+                                        </small>
+                                    </div>
+                                    <div class="form-check mt-auto">
+                                        <input class="form-check-input pack-check" type="checkbox" value="'.$pack['code_pack'].'" id="pack'.$pack['code_pack'].'">
+                                        <label class=" btn btn-warning form-check-label" for="pack'.$pack['code_pack'].'">Sélectionner ce pack</label>
+                                    </div>
+                                </div>
+                                <div class="pack-badge">
+                                    <span class="badge badge-primary">'.$pack['libelle_categorie_pack'].'</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    ';
+  }
+
+  return $output;
+}
+
     // SEXION END CATEGORIE PACKS
 
     // SEXION ARTICLES

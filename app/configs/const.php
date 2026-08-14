@@ -83,6 +83,7 @@ class Groupesss
 //             ];
 
 const STATUT_DATA = ['actif', 'inactif', ''];
+const STATUT_INSCRIPTION = ['valide', 'solde', 'reconduit','annule'];
 const STATUT_DEPENSE = ['En attente', 'Confirmee', 'Annulee'];
 const PAIEMENT = ['Especes', 'Carte', 'Mobile money'];
 const SEXEP = ['Mr', 'Mlle', 'Mme'];

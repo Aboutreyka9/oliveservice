@@ -127,24 +127,31 @@ class ClientController extends MainController
 
     public function addClient()
     {
+        $packs = json_decode($_POST['selected_packs'], true);
         $_POST = sanitizePostData($_POST);
         extract($_POST);
+
 
         $v = new Validator();
         $v->required('nom_client', $nom_client, 'Nom client')
           ->required('telephone_client', $telephone_client, 'Contact')
           ->required('genre_client', $genre_client, 'Genre')
           ->required('lieu_client', $lieu_client, 'Lieu de residence')
-          ->required('code_client', $code_client, 'Code client');
+          ->required('code_client', $code_client, 'Code client')
+          ->required('session_code', $session_code, 'Libelle session');
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $packs = [];
-        if (!empty($selected_packs)) {
-            $packs = json_decode($selected_packs, true);
-        }
+        if (empty($packs)) Response::error('Aucun pack selectionné', HttpStatusCode::UNAUTHORIZED);
+
+        // $packs = [];
+        // if (!empty($selected_packs)) {
+        //     $packs = json_decode($selected_packs, true);
+        // }
 
         $result = $this->clientService->saveClientData($_POST, $packs);
+
+
 
         if (!$result['success']) {
             Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);

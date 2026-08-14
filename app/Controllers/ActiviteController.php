@@ -311,7 +311,39 @@ class ActiviteController extends MainController
         // // echo json_encode(['data' => $total, 'code' => 200]);
         return;
     }
+    public function getCategoriesBySession()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
 
+        if (empty($session_code)) {
+            Response::error('Erreur de traitement de données', HttpStatusCode::UNAUTHORIZED);
+        }
+
+        $categories = $this->activiteModel->getCategoriesBySession($session_code, Auth::user('etablissement_code'));
+        $packs = $this->activiteModel->getPackBySessionAndCategorie($session_code,'', Auth::user('etablissement_code'),Auth::user('annee_code'));
+
+        $data_categories = $this->activiteService->chargerCategoriePack($categories);
+        $data_packs = $this->activiteService->chargerDataPacks($packs);
+        echo json_encode(['success' => true, 'message' => 'Données chargées avec succès','categories' => $data_categories, 'packs' => $data_packs]);
+        return;
+    }
+
+      public function getPacksByCategorie()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        if (empty($session_code) || empty($categorie_code)) {
+            Response::error('Erreur de traitement de données', HttpStatusCode::UNAUTHORIZED);
+        }
+
+        $packs = $this->activiteModel->getPackBySessionAndCategorie($session_code,$categorie_code, Auth::user('etablissement_code'),Auth::user('annee_code'));
+
+        $data_packs = $this->activiteService->chargerDataPacks($packs);
+        echo json_encode(['success' => true, 'message' => 'Données chargées avec succès', 'packs' => $data_packs]);
+        return;
+    }
     public function modalAddCategoriePack()
     {
 
