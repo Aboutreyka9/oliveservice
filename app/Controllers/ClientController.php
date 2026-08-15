@@ -66,6 +66,11 @@ class ClientController extends MainController
         $this->view('clients/commande', ['title' => "Commandes clients"]);
     }
 
+    public function listeInscription()
+    {
+        $this->view('clients/liste_inscription', ['title' => "Liste des inscriptions"]);
+    }
+
     // ================= AJAX CLIENTS =================
 
     public function GetListeClient()
@@ -185,7 +190,7 @@ class ClientController extends MainController
      */
 
 
-    // SEXION depense
+    // SEXION Inscription
 
 
     public function GetListeInscription()
@@ -196,7 +201,7 @@ class ClientController extends MainController
         $f = new ClientModel();
 
         $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code')];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code'),'zone_code' => Auth::user('zone_code')];
 
 
         $limit  = (int) ($_POST['length'] ?? 10);
@@ -206,19 +211,19 @@ class ClientController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
         // $search = $_POST['search'] ?? '';
         $columns = [
-            0 => 'libelle_type_depense',
-            1 => 'periode_depense',
-            2 => 'statut_depense',
-            3 => 'montant_depense',
-            4 => 'user_confirm',
-            5 => 'created_at_confirm'
+            0 => 'code_client',
+            1 => 'code_client',
+            2 => 'code_client',
+            3 => 'code_client',
+            4 => 'code_client',
+            5 => 'code_client'
         ];
         // $columns = [
         //     0 => 'libelle_type_depense',
 
         // ];
 
-        $orderBy = $columns[$orderColumn] ?? 'libelle_type_depense';
+        $orderBy = $columns[$orderColumn] ?? 'code_client';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
 
@@ -227,23 +232,24 @@ class ClientController extends MainController
         if (!empty($search)) {
 
 
-            $likeParams = ['libelle_type_depense' => $search, 'periode_depense' => $search, 'statut_depense' => $search, 'montant_depense' => $search, 'user_confirm' => $search, 'created_at_confirm' => $search];
+            $likeParams = ['code_client' => $search];
+            // $likeParams = ['libelle_type_depense' => $search, 'periode_depense' => $search, 'statut_depense' => $search, 'montant_depense' => $search, 'user_confirm' => $search, 'created_at_confirm' => $search];
 
             // $likeParams = ['libelle_type_depense' => $search];
         }
 
         // 🔢 Total
-        $total = $f->dataTbleCountTotalDepensesRow($whereParams);
+        $total = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams);
         // 🔢 Total filtré
 
-        $totalFiltered = $f->dataTbleCountTotalDepensesRow($whereParams, $likeParams);
+        $totalFiltered = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams, $likeParams);
         // 📄 Données
 
-        $depenseList = $f->DataTableFetchDepensesListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $inscriptionList = $this->clientModel->DataTableFetchInscriptionListe($likeParams, $orderBy, $orderDir, $start, $limit);
         $data = [];
 
 
-        $data = $this->clientService->depenseDataService($depenseList);
+        $data = $this->clientService->inscriptionDataService($inscriptionList);
         // Response::success('operation reussie',);
         echo json_encode([
             "draw"            => intval($_POST['draw']),

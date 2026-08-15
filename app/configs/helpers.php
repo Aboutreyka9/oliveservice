@@ -575,6 +575,31 @@ function checkStatusDepense(string $etat, array $data = STATUT_DEPENSE)
     return $result;
 }
 
+function checkStatusInscription(string $etat, array $data = STATUT_INSCRIPTION)
+{
+    $result = "";
+    switch ($etat) {
+        case $data[0]:
+            $result = '<span class="badge badge-statut statut-primary"><span class="dot"></span> ' . $data[0] . '</span>';
+            break;
+        case $data[1]:
+            $result = '<span class="badge badge-statut statut-success"><span class="dot"></span> ' . $data[1] . '</span>';
+            break;
+        case $data[2]:
+            $result = '<span class="badge badge-statut statut-warning"><span class="dot"></span> ' . $data[2] . '</span>';
+            break;
+        case $data[3]:
+            $result = '<span class="badge badge-statut statut-danger"><span class="dot"></span> ' . $data[3] . '</span>';
+            break;
+        default:
+            $result = '';
+            break;
+    }
+
+
+    return $result;
+}
+
 function showHtmlElement($item = 1, $equal = 2, $return = 'active show')
 {
     return $item == $equal ? $return : '';

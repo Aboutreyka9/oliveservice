@@ -146,7 +146,7 @@ class ClientService
     /**
      * ------------------------------------------------------------------------
      * **********************************************************************
-     * * DEBUT SEXION SETTING TEMPLATES 
+     * * DEBUT SEXION client TEMPLATES 
      * **********************************************************************
      * --------------------------------------------------------------------------
      */
@@ -154,79 +154,9 @@ class ClientService
 
     // SEXION CLIENT
 
-     public function packsSessionData($sessions,)
-    {
-        $output = '';
-        foreach ($sessions as $data) {
-            $output .= ' 
-            <div class="session-container">
-                    <div class="session-header  toggle-role"  data-user="' . $data['user'] . '" data-groupe="' . $data['groupe'] . '" data-role="' . $data['code_role'] . '" id="r' . $data['code_role'] . '" data-checked="false">
-                    <div class="" >
-                    <h5> <i class="fa fa-check-circle"></i> ' .  strtoupper($data['module']) . '</h5>
-                   
-                    </div>
-                        <div class="">
-                        </div>
 
-                    </div>
 
-                    <div class="packs mt-3" id="packs-r' . $data['code_role'] . '">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th width="45%">MODULES</th>
-                                    <th>➕ AJOUTER</th>
-                                    <th>👁️ VOIR</th>
-                                    <th>✏️ MODIFIER</th>
-                                    <th>❌ SUPPRIMER</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sexion-r' . $data['code_role'] . '">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            ';
-        }
-        return $output;
-    }
 
-     public function DataTablePack($userRolesPermissions, $roles)
-    {
-        $output = '';
-        $checked = '';
-        foreach ($roles as $data) {
-            $equal = $this->checkIfExistRole($userRolesPermissions, $data);
-            // $checked = rolePermissionChecked($userRolesPermissions[$data['code_role']]) ? 'checked' : '';
-            if (array_key_exists($data['code_role'], $userRolesPermissions))
-                $checked = isAllPermissionsChecked($userRolesPermissions[$data['code_role']], [
-                    'create',
-                    'show',
-                    'edit',
-                    'delete'
-                ]) ? 'checked' : '';
-
-            $c = $equal['create'] ? 'checked' : '';
-            $s = $equal['show'] ? 'checked' : '';
-            $e = $equal['edit'] ? 'checked' : '';
-            $d = $equal['delete'] ? 'checked' : '';
-
-            $output .= '
-                <tr data-id="' . $data['code_role'] . '" >
-                    <td> 
-                    <input ' . $checked . ' type="checkbox" class="form-check-input me-2 role-check" id="role' . $data['code_role'] . '"> &nbsp;
-                        <label for="role' . $data['code_role'] . '">' .  strtoupper($data['libelle_role']) . '
-                        </label> </td>
-
-                    <td><input id="create' . $data['code_role'] . '" ' . $c . ' class="perm" data-type="create" type="checkbox"></td>
-                    <td><input id="show' . $data['code_role'] . '" ' . $s . ' class="perm" data-type="show" type="checkbox"></td>
-                    <td><input id="edit' . $data['code_role'] . '" ' . $e . ' class="perm" data-type="edit" type="checkbox"></td>
-                    <td><input id="delete' . $data['code_role'] . '" ' . $d . ' class="perm" data-type="delete" type="checkbox"></td>
-                </tr>
-                ';
-        }
-        return $output;
-    }
 
     public function inscriptionAddModalService(array $typeDepenses = [])
     {
@@ -361,66 +291,7 @@ class ClientService
         return $output;
     }
 
-    public function depenseDataService($depenses)
-    {
-
-        $i = 0;
-        $data = [];
-
-        foreach ($depenses as $depense) {
-            $i++;
-
-            $etat = checkStatusDepense($depense['statut_depense']);
-
-            $actions = '
-            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-h"></i>
-            </button>
-            <div class="dropdown-menu">
-
-       ';
-            if ($depense['statut_depense'] == STATUT_DEPENSE[0]) {
-                $actions .= '
-
-                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $depense['code_depense'] . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Modifier depense">
-        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier depense </button>
-       
-
-                <button class="dropdown-item " id="" onclick="changeStatutDepense(\'' . $depense['code_depense'] . '\',\'' . STATUT_ACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Activer depense ">
-            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider depense </button>
-
-             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $depense['code_depense'] . '\',\'' . STATUT_INACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Annuler depense ">
-            <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler depense </button>
-       
-        ';
-            } else {
-                $actions .= '
-         <button class="dropdown-item " id="" onclick="imprimerDepense(\'' . $depense['code_depense'] . '\',\'' . STATUT_INACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Imprimer depense ">
-            <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer depense </button>
-        ';
-            }
-            $actions .= ' </div>
-            ';
-
-            $data[] = [
-                $i,
-                $depense['libelle_type_depense'],
-                date_formater($depense['periode_depense']),
-                $etat,
-                $depense['montant_depense'],
-                $depense['user_confirm'],
-                date_formater($depense['periode_depense']),
-                $actions
-            ];
-        }
-
-        return $data;
-    }
-
+  
     // ================= CLIENTS =================
 
     public function clientDataService($clients)
@@ -521,6 +392,69 @@ class ClientService
             </form>
         ';
         return $output;
+    }
+
+      public function inscriptionDataService($inscriptions)
+    {
+
+        $i = 0;
+        $data = [];
+
+        foreach ($inscriptions as $inscription) {
+            $i++;
+
+            $etat = checkStatusInscription($inscription['statut_inscription']);
+
+            $actions = '
+            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+
+       ';
+            if ($inscription['statut_inscription'] == STATUT_INSCRIPTION[0]) {
+                $actions .= '
+
+                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $inscription['code_inscription'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier inscription">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier inscription </button>
+       
+
+                <button class="dropdown-item " id="" onclick="changeStatutInscription(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Activer inscription ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider inscription </button>
+
+             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Annuler inscription ">
+            <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler inscription </button>
+       
+        ';
+            } else {
+                $actions .= '
+         <button class="dropdown-item " id="" onclick="imprimerInscription(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Imprimer inscription ">
+            <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer inscription </button>
+        ';
+            }
+            $actions .= ' </div>
+            ';
+
+            $data[] = [
+                $i,
+                $inscription['code_inscription'],
+                $inscription['nom_client'],
+                $inscription['telephone_client'],
+                $inscription['libelle_session'],
+                $inscription['code_inscription'],
+                $inscription['code_inscription'],
+                $etat,
+                $inscription['nom_complet'],
+                date_formater($inscription['created_at_inscription']),
+                $actions
+            ];
+        }
+
+        return $data;
     }
 
 

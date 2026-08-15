@@ -60,7 +60,7 @@ class ClientModel extends Model
         return $data;
     }
 
-    public function dataTbleCountTotalClientRow(array $whereParams, $likeParams = [])
+    public function dataTableCountTotalInscriptionRow(array $whereParams, $likeParams = [])
     {
         // if (!empty($whereParams)) {
         //     $where = 'WHERE ';
@@ -70,7 +70,7 @@ class ClientModel extends Model
         //     );
         // }
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+        $where = "WHERE etablissement_code = :etablissement_code AND annee_code = :annee_code AND zone_code = :zone_code";
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -94,7 +94,7 @@ class ClientModel extends Model
         // }
 
 
-        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::DEPENSES . " dp $where";
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::INSCRIPTIONS . " $where";
 
         $stmt = $this->db->prepare($sql);
 
@@ -105,11 +105,13 @@ class ClientModel extends Model
     }
 
 
-    public function DataTableFetchClientListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    public function DataTableFetchInscriptionListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
 
 
-        $where = "WHERE dp.etablissement_code = :etablissement_code AND dp.annee_code = :annee_code";
+    
+        $where = "WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code";
+
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -122,13 +124,16 @@ class ClientModel extends Model
 
 
 
-        $sql = "SELECT dp.*, tp.libelle_type_depense FROM " . TABLES::DEPENSES . " dp 
-        JOIN " . TABLES::TYPE_DEPENSES . "  tp ON tp.code_type_depense = dp.type_depense_code 
+        $sql = "SELECT ins.*, ins.created_at_inscription, ins.statut_inscription,se.libelle_session, cl.nom_client, cl.telephone_client, CONCAT(us.nom_user, ' ', us.prenom_user) AS nom_complet FROM " . TABLES::INSCRIPTIONS . " ins 
+        JOIN " . TABLES::SESSIONS . "  se ON se.code_session = ins.session_code 
+        JOIN " . TABLES::CLIENTS . "  cl ON cl.code_client = ins.client_code 
+        JOIN " . TABLES::USERS . "  us ON us.code_user = ins.user_code 
         $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);
 
         $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+        $stmt->bindValue(":zone_code", Auth::user('zone_code'));
         $stmt->bindValue(":annee_code", Auth::user('annee_code'));
 
         // Bind les parametreslike
