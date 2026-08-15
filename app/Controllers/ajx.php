@@ -353,6 +353,10 @@ switch ($action) {
     //end Actions pour les categories par session
 
     // Debut Actions pour les clients 
+    case 'charger_data_inscriptions':
+        $ajx = new ClientController();
+        $ajx->GetListeInscription();
+        break;
     case 'charger_data_clients':
         $ajx = new ClientController();
         $ajx->GetListeClient();

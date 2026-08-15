@@ -2842,193 +2842,10 @@ function changeStatutClient(code, statut) {
 
 /** DEBUT SECTION INSCRIPTION */
 
+
 loadDataTable('data-table-inscription', '#data-table-inscription', 'charger_data_inscriptions');
 
-openModalAddInscription();
-function openModalAddInscription() {
-    $('#btn_inscription_addModal').click(function (e) {
-        e.preventDefault();
 
- 
-        $.ajax({
-            method: "POST",
-            url: APP.ajax,
-            data: {
-                action: 'btn_showmodal_inscription_add'
-            },
-            dataType: "JSON",
-            beforeSend: function () {
-                $(".loader_backdrop2").css('display', "block");
-                // btnReq("#ClientAddModal", "Traitement...");
-
-            },
-            success: function (data) {
-                console.log(data);
-
-                // btnRes("#ClientAddModal", 'Ajouter un client', 'fa-plus');
-                // ;
-
-                $(".loader_backdrop2").css('display', "none");
-                if (data.success) {
-                    var output = data.data;
-                    $(".data-inscription-client-modal").html(output.data);
-                    $("#inscription-client-modal").modal("show");
-
-
-                } else {
-                    $.notify(data.message);
-
-                }
-
-            }
-        })
-    });
-}
-
-ajouterinscription();
-function ajouterinscription() {
-    $("body").on("submit", "#frmAddInscription", function (e) {
-        e.preventDefault();
-        var data = $(this).serialize();
-
-        $.ajax({
-            method: "POST",
-            url: APP.ajax,
-            data: data,
-            dataType: "JSON",
-            beforeSend: function () {
-                // $(".loader_backdrop2").css('display', "block");
-
-                btnReq("#btnSubmitFormInscription", "Enregistrement...");
-            },
-            success: function (data) {
-                console.log(data);
-                btnRes("#btnSubmitFormInscription", "Enregistrer", "fa-save");
-                // $(".loader_backdrop2").css('display', "none");
-
-                if (data.success) {
-                    APP.tables['data-table-inscription'].ajax.reload(null, false);
-                    $.notify(data.message, "success");
-                    $("#inscription-modal").modal("hide");
-                } else {
-                    $.notify(data.message);
-                }
-            }
-        })
-    });
-}
-
-
-function modalUpdatedInscription(code) {
-    // let btn = btn_action.id;
-
-    $.ajax({
-        method: "POST",
-        url: APP.ajax,
-        data: {
-            action: 'btn_showmodal_depense_update',
-            codedepense: code
-        },
-        dataType: 'JSON',
-        beforeSend: function () {
-            $(".loader_backdrop2").css('display', "block");
-            // btnReq(".modal_footer", "Traitement...");
-        },
-        success: function (data) {
-            console.log(data);
-
-            $(".loader_backdrop2").css('display', "none");
-
-            if (data.success) {
-                $(".data-depense-modal").html(data.data);
-                $("#depense-modal").modal("show");
-
-            } else {
-                $.notify(data.message);
-
-            }
-        }
-    });
-}
-
-updatedinscription();
-function updatedinscription() {
-    $("body").on("submit", "#frmUpdateinscription", function (e) {
-        e.preventDefault();
-        var data = $(this).serialize();
-
-
-        $.ajax({
-            method: "POST",
-            url: APP.ajax,
-            data: data,
-            // dataType: "JSON",
-            beforeSend: function () {
-                // $(".loader_backdrop2").css('display', "block");
-
-                btnReq("#btnSubmitFormInscription", "Mise à jour en cours...");
-            },
-            success: function (data) {
-                // $(".loader_backdrop2").css('display', "none");
-                console.log(data);
-
-                btnRes("#btnSubmitFormInscription", "Enregistrer", "fa-save");
-                return
-                if (data.success) {
-                    APP.tables['data-table-depense'].ajax.reload(null, false);
-                    $.notify(data.message, "success");
-                    $("#depense-modal").modal("hide");
-
-                } else {
-                    $.notify(data.message);
-                }
-            }
-        })
-    });
-}
-
-function changeStatutinscription(code, statut) {
-    swal({
-        title: "Notification",
-        text: "Voulez-vous vraiment modifier le statut de cette depense?",
-        icon: "warning",
-        dangerMode: true,
-        closeOnClickOutside: false,
-        buttons: {
-            cancel: true,
-            confirm: "Confirmer",
-        },
-    })
-        .then(willDelete => {
-            if (willDelete) {
-
-                $.ajax({
-                    url: APP.ajax,
-                    method: 'POST',
-                    data: {
-                        action: 'change_statut_depenses',
-                        code_depense: code,
-                        statut_depense: statut
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function () {
-                        $(".loader_backdrop2").css('display', "block");
-                    },
-                    success: function (data) {
-                        $(".loader_backdrop2").css('display', "none");
-
-                        if (data.success) {
-                            $.notify(data.message, "success");
-                            APP.tables['data-table-depense'].ajax.reload(null, false);
-                        } else {
-                            $.notify(data.message);
-                        }
-                    }
-                });;
-            }
-        });
-}
-/** FIN SECTION INSCRIPTION */
 
 
 allStepInscription()
@@ -3531,7 +3348,7 @@ function initPackSelection() {
 }
 
 
-
+/** FIN SECTION INSCRIPTION */
 
 // SEXION FILTER DATA
 
@@ -3591,3 +3408,8 @@ function initDateRangeFilterDepense(startDate, endDate) {
     });
 
 }
+
+
+
+
+

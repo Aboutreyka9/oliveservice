@@ -166,6 +166,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
         // <!-- Client -->
         $router->get('inscriptions', [ClientController::class, 'inscription']);
+        $router->get('inscriptions/liste', [ClientController::class, 'listeInscription']);
         $router->get('clients', [ClientController::class, 'liste']);
         $router->get('clients/profile/{code}', [ClientController::class, 'profile']);
         $router->get('clients/commande', [ClientController::class, 'commande']);
