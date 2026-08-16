@@ -64,9 +64,23 @@ class UserController extends MainController
         $this->view('personnels/recrutement', ['title' => "Liste du personnel"]);
     }
 
-    public function enseignants()
+    public function profile($code)
     {
-        $this->view('personnels/enseignant', ['title' => "Liste des Enseignants"]);
+        $data = [
+            'title' => "Profil utilisateur",
+            'user' => [],
+            'roles' => [],
+            'commercial' => [],
+        ];
+
+        if ($code) {
+            $profileData = $this->userService->getProfileData($code);
+            if (!empty($profileData)) {
+                $data = array_merge($data, $profileData);
+            }
+        }
+
+        $this->view('admins/profile', $data);
     }
 
     public function administratif()
@@ -74,6 +88,10 @@ class UserController extends MainController
         $this->view('personnels/liste', ['title' => "Liste des utilisateurs"]);
     }
 
+    public function commercials()
+    {
+        $this->view('admins/liste_commercial', ['title' => "Liste des Commerciaux"]);
+    }
 
 
     /**
@@ -86,6 +104,50 @@ class UserController extends MainController
      */
 
 
+
+    public function GetListeCommercial()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $likeParams = [];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+
+        $limit  = (int) ($_POST['length'] ?? 10);
+        $start  = (int) ($_POST['start'] ?? 0);
+        $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
+        $orderDir    = strtolower($_POST['order'][0]['dir'] ?? 'asc');
+        $search = trim($_POST['search']['value'] ?? '');
+
+        $columns = [
+            0 => 'nom_user',
+            1 => 'statut_user',
+            2 => 'nom_user',
+            3 => 'prenom_user',
+            4 => 'telephone_user',
+            5 => 'libelle_fonction',
+        ];
+
+        $orderBy = $columns[$orderColumn] ?? 'libelle_fonction';
+        $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
+
+        if (!empty($search)) {
+            $likeParams = ['nom_user' => $search, 'prenom_user' => $search, 'email_user' => $search, 'telephone_user' => $search, 'matricule_user' => $search, 'sexe_user' => $search, 'libelle_fonction' => $search, 'created_at_user' => $search];
+        }
+
+        $total = $this->userModel->getCommercialsCountTotal($whereParams);
+        $totalFiltered = $this->userModel->getCommercialsCountTotal($whereParams, $likeParams);
+        $userList = $this->userModel->DataTableFetchCommercialsListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $data = $this->userService->commercialDataService($userList);
+
+        echo json_encode([
+            "draw"            => intval($_POST['draw']),
+            "recordsTotal"    => $total,
+            "recordsFiltered" => $totalFiltered,
+            "data"            => $data
+        ]);
+        return;
+    }
 
     public function GetListeUser()
     {

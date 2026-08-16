@@ -45,6 +45,10 @@ switch ($action) {
         $ajx = new UserController();
         $ajx->GetListeUser();
         break;
+    case 'charger_data_commercials':
+        $ajx = new UserController();
+        $ajx->GetListeCommercial();
+        break;
     case 'change_statut_utilisateurs':
         $ajx = new UserController();
         $ajx->changeStatutUser();

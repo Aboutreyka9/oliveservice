@@ -192,6 +192,26 @@ class UserService
 
 
 
+    public function getProfileData(string $userCode): array
+    {
+        $etablissementCode = Auth::user('etablissement_code');
+        $user = $this->userModel->getProfileWithRelations($userCode, $etablissementCode);
+
+        if (empty($user)) {
+            return [];
+        }
+
+        $roles = $this->userModel->getRolesWithPermissions($userCode);
+        // $commercial = $this->userModel->getCommercialByUserCode($userCode);
+        $commercial = [];
+
+        return [
+            'user' => $user,
+            'roles' => $roles,
+            'commercial' => $commercial,
+        ];
+    }
+
     public  function userAddModalService(array $fonctions, array $services)
     {
         $output = "";
@@ -454,6 +474,67 @@ class UserService
     }
 
 
+
+    public function commercialDataService($users)
+    {
+        $i = 0;
+        $data = [];
+
+        foreach ($users as $user) {
+            $i++;
+
+            $etat = checkEtatData($user['statut_user']);
+
+            $actions = '
+            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+
+        <a class="dropdown-item" href="" data-toggle="tooltip" title="" data-original-title="Voir les détails de la commande">
+            <i class="fa fa-eye text-icon-info"></i> &nbsp; &nbsp; Voir details
+        </a>
+        <button class="dropdown-item " id="Modifier" onclick="modalUpdatedUtilisateurr(\'' . $user['code_user'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier utilisateur">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier utilisateur </button>
+         <button class="dropdown-item "  onclick="ModalAddrolePermissionUser(\'' . $user['code_user'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Rôles & permissions">
+        <i class="fa fa-user-circle text-icon-warning"></i> &nbsp; &nbsp; Rôles & permissions </button>
+        ';
+            if ($user['statut_user'] == STATUT_ACTIF) {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutUser(\'' . $user['code_user'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Désactiver compte ">
+            <i class="fa fa-times text-icon-danger"></i> &nbsp; &nbsp; Désactiver compte </button>
+        ';
+            } else {
+                $actions .= '
+        <button class="dropdown-item " id="" onclick="changeStatutUser(\'' . $user['code_user'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Activer compte ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Activer compte </button>
+        ';
+            }
+            $actions .= '
+        <div role="separator" class="dropdown-divider"></div>
+
+        <a class="dropdown-item " href="" target="_blank" data-toggle="tooltip" title="" data-original-title="Imprimer la facture de la commande">
+            <i class="fas fa fa-print text-icon-dark"></i> &nbsp; &nbsp; Imprimer la commande commande </a>
+    </div>
+            ';
+
+            $data[] = [
+                $i,
+                $etat,
+                ucfirst($user['nom_user']),
+                ucfirst($user['prenom_user']),
+                $user['telephone_user'],
+                ucfirst($user['libelle_fonction']),
+                $actions
+            ];
+        }
+
+        return $data;
+    }
 
     public static function rolesDataGroupes($groupes, $code)
     {

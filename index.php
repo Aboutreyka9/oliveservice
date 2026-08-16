@@ -153,8 +153,9 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
 
         $router->get('recrutements/personnel', [UserController::class, 'recrutement']);
-        $router->get('personnel-commercials', [UserController::class, 'enseignants']);
+        $router->get('personnel-commercials', [UserController::class, 'commercials']);
         $router->get('personnel-administratifs', [UserController::class, 'administratif']);
+        $router->get('utilsateur/profile/{code}', [UserController::class, 'profile']);
 
         // <!-- parametrage -->
         $router->get('services-fonctions', [SettingController::class, 'fonction']);

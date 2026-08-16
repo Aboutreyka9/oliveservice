@@ -429,6 +429,7 @@ function deconnecter() {
 /** DEBUT SECTION UTILISATEUR */
 
 loadDataTable('data-table-utilisateur', '#data-table-utilisateur', 'charger_data_utilisateurs');
+loadDataTable('data-table-commercial', '#data-table-commercial', 'charger_data_commercials');
 
 
 openModalAddUtilisateur();

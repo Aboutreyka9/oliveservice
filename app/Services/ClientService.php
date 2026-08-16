@@ -108,6 +108,29 @@ class ClientService
         ];
     }
 
+    public function getProfileData(string $clientCode): array
+    {
+        $etablissementCode = Auth::user('etablissement_code');
+        $client = $this->clientModel->getSingleClientByCode($clientCode);
+
+        if (empty($client)) {
+            return [];
+        }
+
+        $inscriptions = $this->clientModel->getInscriptionsByClientCode($clientCode, $etablissementCode);
+        $packInscriptions = $this->clientModel->getPackInscriptionsByClientCode($clientCode, $etablissementCode);
+        $distributions = $this->clientModel->getDistributionsByClientCode($clientCode, $etablissementCode);
+        $cautisations = $this->clientModel->getCautisationsByClientCode($clientCode, $etablissementCode);
+
+        return [
+            'client' => $client,
+            'inscriptions' => $inscriptions,
+            'pack_inscriptions' => $packInscriptions,
+            'distributions' => $distributions,
+            'cautisations' => $cautisations,
+        ];
+    }
+
     public function inscriptionDataService($inscriptions)
     {
 

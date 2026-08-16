@@ -195,4 +195,88 @@ class ClientModel extends Model
     }
 
     // END SEXION CLIENTS
+
+    public function getInscriptionsByClientCode(string $clientCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT ins.*, se.libelle_session, se.date_debut_session, se.date_fin_session,
+                           an.libelle_annee, an.date_debut_annee, an.date_fin_annee,
+                           zo.libelle_zone
+                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                    JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                    JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
+                    WHERE ins.client_code = :client_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY ins.created_at_inscription DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getPackInscriptionsByClientCode(string $clientCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT pi.*, p.libelle_pack, p.montant_pack, p.statut_pack,
+                           pa.quantite_article, pa.article_code, a.libelle_article
+                    FROM " . TABLES::PACK_INSCRIPTIONS . " pi
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code
+                    JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                    LEFT JOIN " . TABLES::PACK_ARTICLES . " pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
+                    LEFT JOIN " . TABLES::ARTICLES . " a ON a.code_article = pa.article_code
+                    WHERE ins.client_code = :client_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY pi.created_at_pack_inscription DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getDistributionsByClientCode(string $clientCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT d.*
+                    FROM " . TABLES::DISTRIBUTIONS . " d
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = d.inscription_code
+                    WHERE ins.client_code = :client_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY d.created_at_distribution DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getCautisationsByClientCode(string $clientCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    WHERE ins.client_code = :client_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY c.created_at_cautisation_client DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
 }

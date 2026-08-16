@@ -54,11 +54,23 @@ class ClientController extends MainController
 
     public function profile($code = null)
     {
-        $client = [];
+        $data = [
+            'title' => "Profil client",
+            'client' => [],
+            'inscriptions' => [],
+            'pack_inscriptions' => [],
+            'distributions' => [],
+            'cautisations' => [],
+        ];
+
         if ($code) {
-            $client = $this->clientModel->getClientByCode($code);
+            $profileData = $this->clientService->getProfileData($code);
+            if (!empty($profileData)) {
+                $data = array_merge($data, $profileData);
+            }
         }
-        $this->view('clients/profile', ['title' => "Profil client", 'client' => $client]);
+
+        $this->view('clients/profile', $data);
     }
 
     public function commande()

@@ -136,8 +136,8 @@
                                     <span class="sub-item">Liste clients</span>
                                 </a>
                             </li>
-                           
-                           
+                        
+                        
                             
                             <?php //endif; 
                             ?>
@@ -246,7 +246,7 @@
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
                             ?>
                             <li>
-                                <a class="item-link" href="<?= url('personnel-comercials') ?>">
+                                <a class="item-link" href="<?= url('personnel-commercials') ?>">
                                     <span class="sub-item"> Commercials</span>
                                 </a>
                             </li>
