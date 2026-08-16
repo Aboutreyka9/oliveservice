@@ -71,66 +71,20 @@ class ClientController extends MainController
         $this->view('clients/liste_inscription', ['title' => "Liste des inscriptions"]);
     }
 
-    // ================= AJAX CLIENTS =================
 
-    public function GetListeClient()
-    {
-        $_POST = sanitizePostData($_POST);
-        extract($_POST);
-        $f = new ClientModel();
+    /**
+     * ------------------------------------------------------------------------
+     * **********************************************************************
+     * * SEXION POUR LES REQUESTS AJAX
+     * SEXION POUR LES AJAX REQUESTS
+     * **********************************************************************
+     * --------------------------------------------------------------------------
+     */
 
-        $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
 
-        $limit = (int) ($_POST['length'] ?? 10);
-        $start = (int) ($_POST['start'] ?? 0);
-        $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
-        $orderDir = strtolower($_POST['order'][0]['dir'] ?? 'desc');
-        $search = trim($_POST['search']['value'] ?? '');
+    // SEXION Inscription
 
-        $columns = [
-            0 => 'nom_client',
-            1 => 'telephone_client',
-            2 => 'genre_client',
-            3 => 'lieu_client',
-            4 => 'code_client',
-            5 => 'created_at_client'
-        ];
-
-        $orderBy = $columns[$orderColumn] ?? 'nom_client';
-        $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
-
-        if (!empty($search)) {
-            $likeParams = [
-                'nom_client' => $search,
-                'telephone_client' => $search,
-                'genre_client' => $search,
-                'lieu_client' => $search,
-                'code_client' => $search
-            ];
-        }
-
-        $total = $f->dataTbleCountTotalClientsRow($whereParams);
-        $totalFiltered = $f->dataTbleCountTotalClientsRow($whereParams, $likeParams);
-        $clientList = $f->DataTableFetchClientsListe($likeParams, $orderBy, $orderDir, $start, $limit);
-        $data = $this->clientService->clientDataService($clientList);
-
-        echo json_encode([
-            "draw" => intval($_POST['draw']),
-            "recordsTotal" => $total,
-            "recordsFiltered" => $totalFiltered,
-            "data" => $data
-        ]);
-        return;
-    }
-
-    public function modalAddClient()
-    {
-        $output = $this->clientService->clientAddModalService();
-        Response::success('', ['data' => $output]);
-    }
-
-    public function addClient()
+    public function addInscription()
     {
         $packs = json_decode($_POST['selected_packs'], true);
         $_POST = sanitizePostData($_POST);
@@ -154,7 +108,7 @@ class ClientController extends MainController
         //     $packs = json_decode($selected_packs, true);
         // }
 
-        $result = $this->clientService->saveClientData($_POST, $packs);
+        $result = $this->clientService->saveInscriptionData($_POST, $packs);
 
 
 
@@ -164,34 +118,6 @@ class ClientController extends MainController
 
         Response::success($result['message'], []);
     }
-
-    public function changeStatutClient()
-    {
-        $_POST = sanitizePostData($_POST);
-        extract($_POST);
-
-        $statut_client = (isset($statut_client) && $statut_client != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
-
-        if ($this->clientModel->update(TABLES::CLIENTS, 'code_client', $code_client, ['statut_client' => $statut_client])) {
-            Response::success('Statut modifié avec succès', []);
-        }
-
-        Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
-    }
-
-
-    /**
-     * ------------------------------------------------------------------------
-     * **********************************************************************
-     * * SEXION POUR LES REQUESTS AJAX
-     * SEXION POUR LES AJAX REQUESTS
-     * **********************************************************************
-     * --------------------------------------------------------------------------
-     */
-
-
-    // SEXION Inscription
-
 
     public function GetListeInscription()
     {
@@ -262,50 +188,90 @@ class ClientController extends MainController
         return;
     }
 
-    public function modalAddInscription()
-    {
-        // $typeDepenses = $this->clientModel->getFieldsForParams(TABLES::);
-        // if (empty($typeDepenses)) Response::error('Désolé, aucune année enregistrée!');
+    // SEXION CLIENT
 
-        // $output = $this->clientService->depenseAddModalService($typeDepenses);
-        $output = $this->clientService->inscriptionAddModalService();
-        Response::success('', ['data' => $output]);
+       public function GetListeClient()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+        $f = new ClientModel();
+
+        $likeParams = [];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+
+        $limit = (int) ($_POST['length'] ?? 10);
+        $start = (int) ($_POST['start'] ?? 0);
+        $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
+        $orderDir = strtolower($_POST['order'][0]['dir'] ?? 'desc');
+        $search = trim($_POST['search']['value'] ?? '');
+
+        $columns = [
+            0 => 'nom_client',
+            1 => 'telephone_client',
+            2 => 'genre_client',
+            3 => 'lieu_client',
+            4 => 'code_client',
+            5 => 'created_at_client'
+        ];
+
+        $orderBy = $columns[$orderColumn] ?? 'nom_client';
+        $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
+
+        if (!empty($search)) {
+            $likeParams = [
+                'nom_client' => $search,
+                'telephone_client' => $search,
+                'sexe_client' => $search,
+                'lieu_residence_client' => $search,
+                'code_client' => $search
+            ];
+        }
+
+        $total = $this->clientModel->dataTableCountTotalClientsRow($whereParams);
+        $totalFiltered = $this->clientModel->dataTableCountTotalClientsRow($whereParams, $likeParams);
+        $clientList = $this->clientModel->DataTableFetchClientsListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $data = $this->clientService->clientDataService($clientList);
+
+        echo json_encode([
+            "draw" => intval($_POST['draw']),
+            "recordsTotal" => $total,
+            "recordsFiltered" => $totalFiltered,
+            "data" => $data
+        ]);
+        return;
     }
 
-    public function modalUpdatedDepense()
+      public function modalUpdateClient()
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
 
         // $users = getAllusers();
-        $depense = $this->clientModel->getSingledepenseByCode($codedepense);
+        $client = $this->clientModel->getSingleClientByCode($codeclient);
 
-        $typeDepenses = $this->clientModel->getAllTypeDepenses(Auth::user('etablissement_code'));
+        if (empty($client)) Response::error('Désolé, une erreur est survenue lors du traitement!');
+   
 
-
-        if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
-
-        $output = $this->clientService->depenseUpdateModalService($depense, $typeDepenses);
+        $output = $this->clientService->ClienteUpdateModalService($client);
         echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
     }
 
-    public function addDepense()
-    {
 
+    public function updateClient()
+    {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
-
         $v = new Validator();
 
-        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
-            ->required('date_depense', $date_depense, 'Date depense')
-            ->required('montant_depense', $montant_depense, 'Montant depense')
-            ->digit('montant_depense', $montant_depense, 'Montant depense');
+        $v->required('nom_client', $nom_client, 'Nom client')
+            ->required('telephone_client', $telephone_client, 'Telephone client')
+            ->required('genre_client', $genre_client, 'Genre client')
+            ->required('lieu_client', $lieu_client, 'Lieu de residence client');
 
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->clientService->saveDepenseData($_POST);
+        $result = $this->clientService->updateClientData($_POST);
 
 
         if (!$result['success']) {
@@ -315,114 +281,4 @@ class ClientController extends MainController
         Response::success($result['message'], []);
     }
 
-    public function updateDepense()
-    {
-        $_POST = sanitizePostData($_POST);
-        extract($_POST);
-        $v = new Validator();
-
-        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
-            ->required('date_depense', $date_depense, 'Date depense')
-            ->required('montant_depense', $montant_depense, 'Montant depense')
-            ->digit('montant_depense', $montant_depense, 'Montant depense');
-
-
-        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
-
-        $result = $this->clientService->updateDepenseData($_POST);
-
-
-        if (!$result['success']) {
-            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
-        }
-
-        Response::success($result['message'], []);
-    }
-
-    public function changeStatutDepense()
-    {
-
-        $_POST = sanitizePostData($_POST);
-        extract($_POST);
-
-        // $statut_user = (isset($statut_utilisateur) && $statut_utilisateur != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
-
-
-        if ($this->clientModel->update(TABLES::DEPENSES, 'code_depense', $code_depense, ['statut_depense' => $statut_depense])) Response::success('Statut modifié avec succès', []);
-
-        Response::error("Echec de l'opération", HttpStatusCode::INTERNAL_SERVER_ERROR);
-    }
-
-    public static function getDataDateRangeFilterDepense()
-    {
-        if (isset($_POST['btn_filter_depense'])) {
-            extract($_POST);
-            $dateDebut = $_POST['dateDebut'] ?? null;
-            $dateFin = $_POST['dateFin'] ?? null;
-
-            $depense_annule = Soutra::getTotalDepenseAny($dateDebut, $dateFin, STATUT_DEPENSE[2]); // méthode adaptée que l'on a créée
-            $depense_en_attente = Soutra::getTotalDepenseAny($dateDebut, $dateFin, STATUT_DEPENSE[0]); // méthode adaptée que l'on a créée
-            $depense_approuve = Soutra::getTotalDepenseAny($dateDebut, $dateFin, STATUT_DEPENSE[1]); // 
-
-
-            echo json_encode(compact('depense_annule', 'depense_en_attente', 'depense_approuve'));
-        }
-    }
-
-    public static function validation_depense()
-    {
-        if (isset($_POST['btn_action']) && $_POST['btn_action'] == "btn_validation_depense") {
-            extract($_POST);
-            $msg = [];
-
-            if (empty($id)) {
-                $msg = ["success" => false, "msg" => "ID de la dépense manquant"];
-                echo json_encode($msg);
-                return;
-            }
-
-            $data = [
-                'statut_depense' => STATUT_DEPENSE[1],
-                'employe_confirm' => $_SESSION['id_employe'],
-                'date_confirm' => date('Y-m-d H:i:s'),
-                'entrepot_id' => $_SESSION['id_entrepot'],
-                'ID_depense' => $id
-            ];
-
-            if (Soutra::update("depense", $data)) {
-                $msg = ["success" => true, "msg" => "Dépense validee avec succès"];
-            } else {
-                $msg = ["success" => false, "msg" => "Une erreur est survenue !"];
-            }
-            echo json_encode($msg);
-        }
-    }
-
-    public static function annulation_depense()
-    {
-        if (isset($_POST['btn_action']) && $_POST['btn_action'] == "btn_annulation_depense") {
-            extract($_POST);
-            $msg = [];
-            if (empty($id)) {
-                $msg = ["success" => false, "msg" => "ID de la dépense manquant"];
-                echo json_encode($msg);
-                return;
-            }
-
-            $data = [
-                'statut_depense' => STATUT_DEPENSE[2],
-                'employe_confirm' => $_SESSION['id_employe'],
-                'date_confirm' => date('Y-m-d H:i:s'),
-                'entrepot_id' => $_SESSION['id_entrepot'],
-                'ID_depense' => $id
-            ];
-
-            if (Soutra::update("depense", $data)) {
-                $msg = ["success" => true, "msg" => "Dépense annulee avec succès"];
-            } else {
-                $msg = ["success" => false, "msg" => "Une erreur est survenue !"];
-            }
-            echo json_encode($msg);
-        }
-    }
 }

@@ -357,22 +357,23 @@ switch ($action) {
         $ajx = new ClientController();
         $ajx->GetListeInscription();
         break;
+    case 'btn_add_inscription':
+        $ajx = new ClientController();
+        $ajx->addInscription();
+        break;
     case 'charger_data_clients':
         $ajx = new ClientController();
         $ajx->GetListeClient();
         break;
-    case 'change_statut_client':
+    case 'btn_showmodal_client_update':
         $ajx = new ClientController();
-        $ajx->changeStatutClient();
+        $ajx->modalUpdateClient();
         break;
-    case 'btn_showmodal_client_add':
+    case 'btn_update_client':
         $ajx = new ClientController();
-        $ajx->modalAddClient();
+        $ajx->updateClient();
         break;
-    case 'btn_add_client':
-        $ajx = new ClientController();
-        $ajx->addClient();
-        break;
+  
 
     //end Actions pour les clients
 

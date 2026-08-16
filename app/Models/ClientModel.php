@@ -14,52 +14,7 @@ class ClientModel extends Model
     public string $id = 'code_client';
 
 
-    // SEXION DEPENSES
-
-    // get all annee
-    public function getAllTypeClient($etablissement_code): array
-    {
-        $data = [];
-        try {
-            $sql = "SELECT tpd.* FROM " . TABLES::TYPE_DEPENSES . " tpd WHERE tpd.etablissement_code = :etablissement_code  ORDER BY libelle_type_depense DESC";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['etablissement_code' => $etablissement_code]);
-            $data = $stmt->fetchAll();
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-        return $data;
-    }
-
-    public function getSingleDepenseByCode(string $code): array
-    {
-        $data = [];
-        try {
-            $sql = "SELECT de.*, DATE(de.periode_depense) AS periode FROM " . TABLES::DEPENSES . " AS de WHERE de.code_depense = :code LIMIT 1";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['code' => $code]);
-            $data = $stmt->fetch();
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-        return $data;
-    }
-
-    // get all depense
-    public function getAllClient($etablissement_code): array
-    {
-        $data = [];
-        try {
-            $sql = "SELECT de* FROM " . TABLES::DEPENSES . " AS de WHERE se.etablissement_code = :etablissement_code AND statut_depense = :statut ORDER BY libelle_depense";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['etablissement_code' => $etablissement_code, 'statut' => STATUT_ACTIF]);
-            $data = $stmt->fetchAll();
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-        return $data;
-    }
-
+// SEXION INSCRIPTION 
     public function dataTableCountTotalInscriptionRow(array $whereParams, $likeParams = [])
     {
         // if (!empty($whereParams)) {
@@ -154,15 +109,14 @@ class ClientModel extends Model
         return $stmt->fetchAll();
     }
 
-    // END SEXION depense
 
     // SEXION CLIENTS
 
-    public function getClientByCode(string $code): array
+     public function getSingleClientByCode(string $code): array
     {
         $data = [];
         try {
-            $sql = "SELECT * FROM " . TABLES::CLIENTS . " AS cl WHERE cl.code_client = :code LIMIT 1";
+            $sql = "SELECT cl.* FROM " . TABLES::CLIENTS . " AS cl WHERE cl.code_client = :code LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['code' => $code]);
             $data = $stmt->fetch();
@@ -171,6 +125,7 @@ class ClientModel extends Model
         }
         return $data;
     }
+
 
     public function getAllClients($etablissement_code): array
     {
@@ -186,7 +141,7 @@ class ClientModel extends Model
         return $data;
     }
 
-    public function dataTbleCountTotalClientsRow(array $whereParams, $likeParams = [])
+      public function dataTableCountTotalClientsRow(array $whereParams, $likeParams = [])
     {
         $where = "WHERE cl.etablissement_code = :etablissement_code";
 

@@ -2739,101 +2739,72 @@ function changeStatutDepense(code, statut) {
 
 loadDataTable('data-table-client', '#data-table-client', 'charger_data_clients');
 
-openModalAddClient();
-function openModalAddClient() {
-    $('#ClientAddModal').click(function (e) {
-        e.preventDefault();
+function modalUpdatedClient(code) {
+    // let btn = btn_action.id;
 
-        $.ajax({
-            method: "POST",
-            url: APP.ajax,
-            data: {
-                action: 'btn_showmodal_client_add'
-            },
-            dataType: "JSON",
-            beforeSend: function () {
-                $(".loader_backdrop2").css('display', "block");
-            },
-            success: function (data) {
-                $(".loader_backdrop2").css('display', "none");
-                if (data.success) {
-                    var output = data.data;
-                    $(".data-modal").html(output.data);
-                    $("#client-modal").modal("show");
-                } else {
-                    $.notify(data.message);
-                }
+    $.ajax({
+        method: "POST",
+        url: APP.ajax,
+        data: {
+            action: 'btn_showmodal_client_update',
+            codeclient: code
+        },
+        dataType: 'JSON',
+        beforeSend: function () {
+            $(".loader_backdrop2").css('display', "block");
+            // btnReq(".modal_footer", "Traitement...");
+        },
+        success: function (data) {
+            console.log(data);
+
+            $(".loader_backdrop2").css('display', "none");
+
+            if (data.success) {
+                $(".data-client-modal").html(data.data);
+                $("#client-modal").modal("show");
+
+            } else {
+                $.notify(data.message);
+
             }
-        })
+        }
     });
 }
 
-ajouterClient();
-function ajouterClient() {
-    $("body").on("submit", "#frmAddClient", function (e) {
+updatedClient();
+function updatedClient() {
+    $("body").on("submit", "#frmUpdateClient", function (e) {
         e.preventDefault();
         var data = $(this).serialize();
+
 
         $.ajax({
             method: "POST",
             url: APP.ajax,
-            data: data + '&action=btn_add_client',
-            dataType: "JSON",
+            data: data,
+            // dataType: "JSON",
             beforeSend: function () {
-                btnReq("#btnSubmitFormClient", "Enregistrement...");
+                // $(".loader_backdrop2").css('display', "block");
+
+                btnReq("#btnSubmitFormClient", "Mise à jour en cours...");
             },
             success: function (data) {
+                // $(".loader_backdrop2").css('display', "none");
+                console.log(data);
+
                 btnRes("#btnSubmitFormClient", "Enregistrer", "fa-save");
+                return
                 if (data.success) {
                     APP.tables['data-table-client'].ajax.reload(null, false);
                     $.notify(data.message, "success");
                     $("#client-modal").modal("hide");
+
                 } else {
                     $.notify(data.message);
                 }
             }
         })
     });
-}
-
-function changeStatutClient(code, statut) {
-    swal({
-        title: "Notification",
-        text: "Voulez-vous vraiment modifier le statut de ce client?",
-        icon: "warning",
-        dangerMode: true,
-        closeOnClickOutside: false,
-        buttons: {
-            cancel: true,
-            confirm: "Confirmer",
-        },
-    })
-        .then(willDelete => {
-            if (willDelete) {
-                $.ajax({
-                    url: APP.ajax,
-                    method: 'POST',
-                    data: {
-                        action: 'change_statut_client',
-                        code_client: code,
-                        statut_client: statut
-                    },
-                    dataType: 'JSON',
-                    beforeSend: function () {
-                        $(".loader_backdrop2").css('display', "block");
-                    },
-                    success: function (data) {
-                        $(".loader_backdrop2").css('display', "none");
-                        if (data.success) {
-                            $.notify(data.message, "success");
-                            APP.tables['data-table-client'].ajax.reload(null, false);
-                        } else {
-                            $.notify(data.message);
-                        }
-                    }
-                });
-            }
-        });
 }
 
 /** FIN SECTION CLIENT */
