@@ -1,8 +1,12 @@
 <?php
 
 use App\Controllers\ActiviteController;
+use App\Controllers\CautisationController;
+use App\Controllers\DistributionController;
 use App\Controllers\EtudiantController;
 use App\Controllers\FinanceController;
+use App\Controllers\ValidationController;
+use App\Controllers\VersementCommercialController;
 
 session_name("APP545645465654_SESSION");
 
@@ -365,6 +369,14 @@ switch ($action) {
         $ajx = new ClientController();
         $ajx->addInscription();
         break;
+    case 'btn_add_reinscription':
+        $ajx = new ClientController();
+        $ajx->addReinscription();
+        break;
+    case 'search_client':
+        $ajx = new ClientController();
+        $ajx->searchClient();
+        break;
     case 'charger_data_clients':
         $ajx = new ClientController();
         $ajx->GetListeClient();
@@ -380,6 +392,59 @@ switch ($action) {
   
 
     //end Actions pour les clients
+
+    // Debut Actions pour les cautions
+    case 'charger_data_cautions':
+        $ajx = new CautisationController();
+        $ajx->GetListeCautions();
+        break;
+    case 'btn_add_cautisation':
+        $ajx = new CautisationController();
+        $ajx->addCautisation();
+        break;
+    case 'btn_validate_cautisation':
+        $ajx = new CautisationController();
+        $ajx->validateCautisation();
+        break;
+    case 'btn_showmodal_cautisation_add':
+        $ajx = new CautisationController();
+        $ajx->modalAddCautisation();
+        break;
+
+    //end Actions pour les cautions
+
+    // Debut Actions pour les versements commerciaux
+    case 'charger_data_versements_commerciaux':
+        $ajx = new VersementCommercialController();
+        $ajx->GetListeVersements();
+        break;
+    case 'btn_add_versement_commercial':
+        $ajx = new VersementCommercialController();
+        $ajx->addVersement();
+        break;
+    case 'btn_validate_versement_commercial':
+        $ajx = new VersementCommercialController();
+        $ajx->validateVersement();
+        break;
+    case 'btn_showmodal_versement_commercial_add':
+        $ajx = new VersementCommercialController();
+        $ajx->modalAddVersement();
+        break;
+    //end Actions pour les versements commerciaux
+
+    // Debut Actions pour les validations
+    case 'charger_data_validations':
+        $ajx = new ValidationController();
+        $ajx->GetListeValidations();
+        break;
+    //end Actions pour les validations
+
+    // Debut Actions pour les distributions
+    case 'charger_data_distributions':
+        $ajx = new DistributionController();
+        $ajx->getDistributionsByClient();
+        break;
+    //end Actions pour les distributions
 
     // Autres cas...
     default:

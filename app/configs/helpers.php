@@ -831,6 +831,36 @@ if (!function_exists('auth')) {
     }
 }
 
+if (!function_exists('has_role')) {
+    function has_role(string $role): bool
+    {
+        return auth()->hasRole($role);
+    }
+}
+
+if (!function_exists('has_groupe')) {
+    function has_groupe(string $groupe): bool
+    {
+        return auth()->hasGroupe($groupe);
+    }
+}
+
+if (!function_exists('can')) {
+    function can(string $role, string $permission): bool
+    {
+        return auth()->can($role, $permission);
+    }
+}
+
+if (!function_exists('menu_item')) {
+    function menu_item(string $groupe, string $role = null): bool
+    {
+        if (!has_groupe($groupe)) return false;
+        if ($role !== null && !has_role($role)) return false;
+        return true;
+    }
+}
+
 if (!function_exists('service')) {
     function service(): Service
     {
@@ -1036,26 +1066,28 @@ class Permissions
     public const DELETE = 'delete_permission';
 }
 
-class Roles
-{
-    public const SUPER = 'sup1';
-    public const PARAMETRE = 'para1';
-    public const ADMIN_H = 'ga1';
-    public const DASHBOARD_H = 'ga3';
-    public const COMPTATBLE_H = 'gcom1';
-    public const SALAIRE_H = 'gcom2';
-    public const MANAGER_H = 'gh1';
-    public const DEPENSE_H = 'gh2';
-    public const RECEPTION_H = 'grecp1';
-}
 
 class Groupes
 {
-    public const ADMIN = 'GADMIN';
-    public const PEDAGOGIE = 'GPEDAGOGIE';
-    public const COMPTABLE = 'GCOMPT';
-    public const RECEPTION = 'GRECP';
-    public const HOTEL = 'GHOT';
-    public const PARAMETRE = 'PARA';
-    public const SUPER = 'SUPER';
+    const SUPER = 'SUPER';
+    const ADMIN = 'ADMIN';
+    const COMPTABLE = 'COMPTABLE';
+    const GESTION = 'GESTION';
+    const COMMERCIAL = 'COMMERCIAL';
+}
+
+class Roles
+{
+    const SUPER_ADMIN = 'super_admin';
+    const ADMIN_PARAM = 'admin_param';
+    const ADMIN_USER = 'admin_user';
+    const COMPT_CAISSE = 'compt_caisse';
+    const COMPT_DEPENSE = 'compt_depense';
+    const COMPT_VERSEMENT = 'compt_versement';
+    const GEST_VALID = 'gest_valid';
+    const GEST_DISTRIB = 'gest_distrib';
+    const GEST_CAUTION = 'gest_caution';
+    const COMM_CLIENT = 'comm_client';
+    const COMM_CAUTION = 'comm_caution';
+    const COMM_VERSEMENT = 'comm_versement';
 }

@@ -253,6 +253,39 @@ if (!empty($roles)) {
                 </div>
             </div>
         </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card custom-card-detail">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="icon bg-primary mr-2">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h6 class="montan-title">Clients</h6>
+                                <h5 class="montan-value">-</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card custom-card-detail">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="icon bg-success mr-2">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div>
+                                <h6 class="montan-title">Versements</h6>
+                                <h5 class="montan-value">-</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php endif; ?>
 
         <div class="card">

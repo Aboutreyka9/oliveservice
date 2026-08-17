@@ -126,6 +126,22 @@ class ClientModel extends Model
         return $data;
     }
 
+    public function searchClient(string $search): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT cl.* FROM " . TABLES::CLIENTS . " AS cl 
+                    WHERE cl.code_client = :search OR cl.telephone_client = :search 
+                    LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['search' => $search]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
 
     public function getAllClients($etablissement_code): array
     {

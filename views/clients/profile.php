@@ -110,6 +110,72 @@ $cautisations = $cautisations ?? [];
     </div>
 </div>
 
+<?php
+$totalPacks = 0;
+$totalPaye = 0;
+foreach ($inscriptions as $ins) {
+    foreach ($packInscriptions as $pi) {
+        if ($pi['inscription_code'] === $ins['code_inscription']) {
+            $totalPacks += $pi['montant_pack'] ?? 0;
+        }
+    }
+}
+foreach ($cautisations as $c) {
+    if ($c['statut_cautisation_client'] === 'valide') {
+        $totalPaye += $c['montant_cautisation_client'];
+    }
+}
+$resteDu = max(0, $totalPacks - $totalPaye);
+?>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-primary mr-2">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Montant total packs</h6>
+                        <h5 class="montan-value"><?= number_format($totalPacks, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-success mr-2">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Total payé</h6>
+                        <h5 class="montan-value"><?= number_format($totalPaye, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-danger mr-2">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Reste dû</h6>
+                        <h5 class="montan-value"><?= number_format($resteDu, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-4">
         <div class="card">

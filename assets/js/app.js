@@ -2820,7 +2820,10 @@ loadDataTable('data-table-inscription', '#data-table-inscription', 'charger_data
 
 
 
-allStepInscription()
+// Conditionnellement initialiser les étapes : inscription OU réinscription
+if (!$('#frmAddReinscription').length) {
+    allStepInscription()
+}
 
 function allStepInscription () {
 
@@ -3321,6 +3324,160 @@ function initPackSelection() {
 
 
 /** FIN SECTION INSCRIPTION */
+
+/** DEBUT SECTION REINSCRIPTION */
+
+if ($('#frmAddReinscription').length) {
+    initReinscriptionSteps();
+}
+
+function initReinscriptionSteps() {
+    $('.btn-next').click(function() {
+        const nextStep = $(this).data('step');
+        $('.step-content').addClass('d-none');
+        $('#step' + nextStep).removeClass('d-none');
+        $('.timeline-step').removeClass('active');
+        $('#step' + nextStep + '-indicator').addClass('active');
+    });
+
+    $('.btn-prev').click(function() {
+        const prevStep = $(this).data('step');
+        $('.step-content').addClass('d-none');
+        $('#step' + prevStep).removeClass('d-none');
+        $('.timeline-step').removeClass('active');
+        $('#step' + prevStep + '-indicator').addClass('active');
+    });
+}
+
+// Recherche client pour réinscription
+$('#btn_search_client').click(function() {
+    const searchValue = $('#search_client').val().trim();
+    if (!searchValue) {
+        $.notify('Veuillez saisir un code client ou un numéro de téléphone', 'error');
+        return;
+    }
+
+    $.ajax({
+        url: APP.ajax,
+        method: 'POST',
+        data: {
+            action: 'search_client',
+            search_value: searchValue
+        },
+        dataType: 'JSON',
+        success: function(data) {
+            if (data.success) {
+                const client = data.data.client;
+                $('#found_nom').text(client.nom_client);
+                $('#found_telephone').text(client.telephone_client);
+                $('#found_lieu').text(client.lieu_residence_client);
+                $('#client_code').val(client.code_client);
+                $('#client_found').removeClass('d-none');
+                $('#client_not_found').addClass('d-none');
+                $('#btn_next_step2').prop('disabled', false);
+            } else {
+                $('#client_found').addClass('d-none');
+                $('#client_not_found').removeClass('d-none');
+                $('#btn_next_step2').prop('disabled', true);
+            }
+        }
+    });
+});
+
+// Soumission formulaire réinscription
+$('#frmAddReinscription').submit(function(e) {
+    e.preventDefault();
+
+    const selectedPacks = [];
+    $('.pack-check:checked').each(function() {
+        selectedPacks.push($(this).val());
+    });
+
+    if (selectedPacks.length === 0) {
+        $.notify('Veuillez sélectionner au moins un pack', 'error');
+        return;
+    }
+
+    $('#selected_packs').val(JSON.stringify(selectedPacks));
+
+    const formData = $(this).serialize();
+
+    $.ajax({
+        url: APP.ajax,
+        method: 'POST',
+        data: formData + '&action=btn_add_reinscription',
+        dataType: 'JSON',
+        beforeSend: function() {
+            $(".loader_backdrop2").css('display', "block");
+        },
+        success: function(data) {
+            $(".loader_backdrop2").css('display', "none");
+            if (data.success) {
+                $.notify(data.message, "success");
+                setTimeout(function() {
+                    history.go(0);
+                }, 1500);
+            } else {
+                $.notify(data.message, "error");
+            }
+        },
+        error: function() {
+            $(".loader_backdrop2").css('display', "none");
+            $.notify("Une erreur est survenue lors de l'opération", "error");
+        }
+    });
+});
+
+// Recap réinscription
+function updateRecapReinscription() {
+    const nom = $('#found_nom').text();
+    const telephone = $('#found_telephone').text();
+    const lieu = $('#found_lieu').text();
+    const code = $('#client_code').val();
+
+    $('#recap-nom').text(nom);
+    $('#recap-contact').text(telephone);
+    $('#recap-lieu').text(lieu);
+    $('#recap-code').text(code);
+
+    const tbody = $('#recap-packs');
+    tbody.empty();
+
+    if (APP.packSelected.length === 0) {
+        tbody.html('<tr><td colspan="4" class="text-center text-muted">Aucun pack sélectionné</td></tr>');
+        return;
+    }
+
+    let total = 0;
+    APP.packSelected.forEach(function(pack, index) {
+        total += pack.montant;
+        tbody.append(`
+            <tr>
+                <td>${index + 1}</td>
+                <td>${pack.libelle}</td>
+                <td>${pack.montant.toLocaleString()} FCFA</td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="removePackRecap('${pack.packCode}')">Supprimer</button></td>
+            </tr>
+        `);
+    });
+}
+
+function removePackRecap(packCode) {
+    APP.packSelected = APP.packSelected.filter(p => p.packCode !== packCode);
+    updatePackCardsUI();
+    updateRecapReinscription();
+}
+
+// Override next button for step 3 to update recap
+$(document).ready(function() {
+    const originalNext = $.fn.dataTable ? null : null;
+    
+    $('body').on('click', '#step2 .btn-next', function() {
+        updateRecapReinscription();
+    });
+});
+
+/** FIN SECTION REINSCRIPTION */
 
 // SEXION FILTER DATA
 

@@ -5,12 +5,21 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Gqr;
 use App\Core\MainController;
+use App\Models\DashboardModel;
 use App\Models\Factory;
 use App\Services\Service;
 use Roles;
 
 class HomeController extends MainController
 {
+
+    private DashboardModel $dashboardModel;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->dashboardModel = new DashboardModel();
+    }
 
     /**
      * ------------------------------------------------------------------------
@@ -24,10 +33,17 @@ class HomeController extends MainController
     public function acueil()
     {
 
-        $result = "";
+        $etablissementCode = Auth::user('etablissement_code');
+        $totals = $this->dashboardModel->getTotals($etablissementCode);
+        $activities = $this->dashboardModel->getLastActivities($etablissementCode);
+        $alerts = $this->dashboardModel->getAlerts($etablissementCode);
 
-        // return $this->view('welcome', ['title' => "Mon espace"]);
-        return $this->view('dashboard/dashboard', ['title' => "Mon espace"]);
+        return $this->view('dashboard/dashboard', [
+            'title' => "Mon espace",
+            'totals' => $totals,
+            'activities' => $activities,
+            'alerts' => $alerts,
+        ]);
     }
 
     public function googleAuth()

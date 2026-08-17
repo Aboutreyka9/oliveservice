@@ -43,6 +43,7 @@ class TABLES
     public const USER_ROLES = 'user_roles';
     public const TYPE_DEPENSES = 'type_depenses';
     public const VERSEMENTS = 'versements';
+    public const VERSEMENTS_COMMERCIAUX = 'versements_commerciaux';
     public const ZONES = 'zones';
     public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
@@ -57,24 +58,27 @@ class Permissionsss
 
 class Rolesss
 {
-    const ADMIN = 'ga';
-    const DIRECTEUR = 'g1ad1';
-    const ENSEIGNANT = 'g2pe2';
-    const ECONOME = 'g1ad2';
-    const EDUCATEUR = 'g2pe1';
-    const ASSITANT = 'g1ad3';
-    const SUPERVISOR = 'supervisor';
-    const BIBLIOTHECAIRE = 'librarian';
-    const STUDENT = 'student';
-    const SECRETARY = 'secretary';
-    const PARENT = 'parent';
+    const SUPER_ADMIN = 'super_admin';
+    const ADMIN_PARAM = 'admin_param';
+    const ADMIN_USER = 'admin_user';
+    const COMPT_CAISSE = 'compt_caisse';
+    const COMPT_DEPENSE = 'compt_depense';
+    const COMPT_VERSEMENT = 'compt_versement';
+    const GEST_VALID = 'gest_valid';
+    const GEST_DISTRIB = 'gest_distrib';
+    const GEST_CAUTION = 'gest_caution';
+    const COMM_CLIENT = 'comm_client';
+    const COMM_CAUTION = 'comm_caution';
+    const COMM_VERSEMENT = 'comm_versement';
 }
 
 class Groupesss
 {
-    const SUPER = 'ga';
-    const ADMIN = 'g1';
-    const PEDAGOGIE = 'g2';
+    const SUPER = 'SUPER';
+    const ADMIN = 'ADMIN';
+    const COMPTABLE = 'COMPTABLE';
+    const GESTION = 'GESTION';
+    const COMMERCIAL = 'COMMERCIAL';
 }
 
 

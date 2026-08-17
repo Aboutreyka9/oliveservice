@@ -108,6 +108,63 @@ class ClientService
         ];
     }
 
+    public function saveReinscriptionData(array $post, array $packs = [])
+    {
+        extract($post);
+
+        $client = $this->clientModel->getSingleClientByCode($client_code);
+        if (empty($client)) {
+            return ['success' => false, 'message' => 'Désolé! Ce client n\'existe pas.'];
+        }
+
+        $code_inscription = $this->clientModel->generatorCode(TABLES::INSCRIPTIONS, 'code_inscription');
+
+        $etablissement_code = Auth::user('etablissement_code');
+        $user_code = Auth::user('id');
+        $annee_code = Auth::user('annee_code');
+        $zone_code = Auth::user('zone_code');
+        $date = date('Y-m-d H:i:s');
+
+        $data_inscription = [
+            'statut_inscription' => STATUT_INSCRIPTION[0],
+            'client_code' => $client_code,
+            'session_code' => $session_code,
+            'code_inscription' => $code_inscription,
+            'zone_code' => $zone_code,
+            'annee_code' => $annee_code,
+            'etablissement_code' => $etablissement_code,
+            'user_code' => $user_code,
+            'created_at_inscription' => $date
+        ];
+
+        $packInscriptions = [];
+        foreach ($packs as $packCode) {
+            $packInscriptions[] = [
+                'statut_pack_inscription' => STATUT_ACTIF,
+                'inscription_code' => $code_inscription,
+                'pack_code' => $packCode,
+                'annee_code' => $annee_code,
+                'etablissement_code' => $etablissement_code,
+                'user_code' => $user_code,
+                'created_at_pack_inscription' => $date
+            ];
+        }
+
+        $result = $this->clientModel->transactionData(function () use ($data_inscription, $packInscriptions) {
+            $this->clientModel->create(TABLES::INSCRIPTIONS, $data_inscription);
+            $this->clientModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
+        });
+
+        if (!$result) {
+            return ['success' => false, 'message' => "Désolé! échec d'opération."];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Réinscription effectuée avec succès.',
+        ];
+    }
+
     public function getProfileData(string $clientCode): array
     {
         $etablissementCode = Auth::user('etablissement_code');

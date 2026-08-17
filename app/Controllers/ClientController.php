@@ -42,6 +42,11 @@ class ClientController extends MainController
 
 
 
+    public function reinscription()
+    {
+        $this->view('clients/reinscription', ['title' => "Réinscription client"]);
+    }
+
     public function inscription()
     {
         $this->view('clients/inscription', ['title' => "Inscription"]);
@@ -129,6 +134,43 @@ class ClientController extends MainController
         }
 
         Response::success($result['message'], []);
+    }
+
+    public function addReinscription()
+    {
+        $packs = json_decode($_POST['selected_packs'], true);
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $v = new Validator();
+        $v->required('client_code', $client_code, 'Client')
+          ->required('session_code', $session_code, 'Session');
+
+        if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
+
+        if (empty($packs)) Response::error('Aucun pack selectionné', HttpStatusCode::UNAUTHORIZED);
+
+        $result = $this->clientService->saveReinscriptionData($_POST, $packs);
+
+        if (!$result['success']) {
+            Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);
+        }
+
+        Response::success($result['message'], []);
+    }
+
+    public function searchClient()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $client = $this->clientModel->searchClient($search_value);
+
+        if (empty($client)) {
+            Response::error('Client non trouvé', HttpStatusCode::NOT_FOUND);
+        }
+
+        Response::success('Client trouvé', ['client' => $client]);
     }
 
     public function GetListeInscription()

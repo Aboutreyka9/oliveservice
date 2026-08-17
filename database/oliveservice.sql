@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 12 août 2026 à 22:58
+-- Généré le : lun. 17 août 2026 à 14:17
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -152,17 +152,29 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `nom_client` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `sexe_client` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `lieu_residence_client` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `profession_client` varchar(255) DEFAULT NULL,
   `telephone_client` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `email_client` varchar(50) DEFAULT NULL,
   `photo_client` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `password_client` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `numero_cni` varchar(50) DEFAULT NULL,
   `created_at_client` datetime NOT NULL,
   `updated_at_client` datetime DEFAULT NULL,
   `user_code` varchar(50) NOT NULL,
+  `zone_code` varchar(50) NOT NULL,
   `etablissement_code` varchar(50) NOT NULL,
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `code_etudiant` (`code_client`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `clients`
+--
+
+INSERT INTO `clients` (`id_client`, `code_client`, `nom_client`, `sexe_client`, `lieu_residence_client`, `profession_client`, `telephone_client`, `email_client`, `photo_client`, `password_client`, `numero_cni`, `created_at_client`, `updated_at_client`, `user_code`, `zone_code`, `etablissement_code`) VALUES
+(9, 'wyopxuIweBV8GjQ3omFoXe4', 'Test kolo', 'Mlle', 'Cupidatat deserunt a', 'Mane', '(+225) 01 44 42 39 72', NULL, NULL, NULL, NULL, '2026-08-14 12:21:09', '2026-08-16 08:41:42', '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(10, 'wE2rKMLnr8Cpou32QYzai6ED', 'Ut est dolore aut n', 'Masculin', 'Aliquam similique ma', 'Ipsam molestiae dolo', '(+225) 01 71 65 26 95', 'jacicasu@mailinator.com', NULL, NULL, NULL, '2026-08-14 12:28:15', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(11, 'OM30bC7UHKbwG0CjDT', 'Quia quia earum quis', 'Masculin', 'Sed ad voluptas ulla', 'Qui sint elit unde', '(+225) 01 27 77 58 40', 'fokul@mailinator.com', NULL, NULL, NULL, '2026-08-14 12:29:32', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456');
 
 -- --------------------------------------------------------
 
@@ -320,12 +332,27 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `annee_code` varchar(50) NOT NULL,
   `session_code` varchar(50) NOT NULL,
   `user_code` varchar(50) NOT NULL,
-  `created_at_inscription` datetime DEFAULT NULL,
+  `created_at_inscription` datetime NOT NULL,
   `updated_at_inscription` datetime DEFAULT NULL,
-  `statut_inscription` enum('valide','solde','annule','reconduit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `statut_inscription` enum('valide','solde','annule','reconduit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id_inscription`),
-  UNIQUE KEY `uq_inscription` (`client_code`,`annee_code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `uq_inscription` (`client_code`,`annee_code`),
+  KEY `user_code` (`user_code`),
+  KEY `session_code` (`session_code`),
+  KEY `zone_code` (`zone_code`),
+  KEY `etablissement_code` (`etablissement_code`),
+  KEY `code_inscription` (`code_inscription`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `inscriptions`
+--
+
+INSERT INTO `inscriptions` (`id_inscription`, `code_inscription`, `client_code`, `zone_code`, `etablissement_code`, `annee_code`, `session_code`, `user_code`, `created_at_inscription`, `updated_at_inscription`, `statut_inscription`) VALUES
+(10, 'IZH94NvZA24MgPaeNvxHTaL', 'lopBd5aRL3H', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:17:58', NULL, 'valide'),
+(11, 'aF4DpbPrR72MqzBcKTU56', 'wyopxuIweBV8GjQ3omFoXe4', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:21:09', NULL, 'valide'),
+(12, 'JefTHmBKIuN', 'wE2rKMLnr8Cpou32QYzai6ED', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:28:15', NULL, 'valide'),
+(13, 'vV3ghTnI5WaB1', 'OM30bC7UHKbwG0CjDT', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:29:32', NULL, 'valide');
 
 -- --------------------------------------------------------
 
@@ -438,17 +465,32 @@ INSERT INTO `pack_articles` (`id_pack_article`, `quantite_article`, `pack_code`,
 DROP TABLE IF EXISTS `pack_inscriptions`;
 CREATE TABLE IF NOT EXISTS `pack_inscriptions` (
   `id_pack_inscription` int NOT NULL AUTO_INCREMENT,
-  `code_pack_inscription` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `inscription_code` varchar(50) NOT NULL,
   `pack_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `annee_code` varchar(50) NOT NULL,
   `statut_pack_inscription` enum('actif','inactif') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'actif',
   `created_at_pack_inscription` timestamp NOT NULL,
-  `etablissement_code` varchar(50) DEFAULT NULL,
-  `user_code` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_pack_inscription`),
-  UNIQUE KEY `code_accessoire_inscription` (`code_pack_inscription`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `etablissement_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `user_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id_pack_inscription`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `pack_inscriptions`
+--
+
+INSERT INTO `pack_inscriptions` (`id_pack_inscription`, `inscription_code`, `pack_code`, `annee_code`, `statut_pack_inscription`, `created_at_pack_inscription`, `etablissement_code`, `user_code`) VALUES
+(10, 'aF4DpbPrR72MqzBcKTU56', 'itT57K3khk9', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(11, 'aF4DpbPrR72MqzBcKTU56', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(12, 'aF4DpbPrR72MqzBcKTU56', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(13, 'JefTHmBKIuN', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(14, 'JefTHmBKIuN', 'itT57K3khk9', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(15, 'JefTHmBKIuN', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(16, 'JefTHmBKIuN', 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(17, 'vV3ghTnI5WaB1', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(18, 'vV3ghTnI5WaB1', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(19, 'vV3ghTnI5WaB1', 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(20, 'vV3ghTnI5WaB1', 'FNEF8arPTaNxhYUGlGrjhHlN', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -492,22 +534,25 @@ CREATE TABLE IF NOT EXISTS `roles` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_role` (`code_role`),
   KEY `groupe` (`groupe`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `roles`
 --
 
 INSERT INTO `roles` (`id`, `libelle_role`, `code_role`, `module`, `groupe`, `statut_role`, `description`) VALUES
-(1, 'ADMIN_H', 'ga1', 'ADMIN', 'GADMIN', 'actif', 'SUPPER ADMINISTRATEUR'),
-(3, 'DASHBOARD_H ', 'ga3', 'ADMIN', 'GADMIN', 'actif', NULL),
-(5, 'COMPTABLE_H ', 'gcom1', 'COMPTABLE', 'GCOMPT', 'actif', NULL),
-(7, 'MANAGER_H ', 'gh1', 'HOTEL', 'GHOT', 'actif', NULL),
-(8, 'SALAIRE_H ', 'gcom2', 'COMPTABLE', 'GCOMPT', 'actif', NULL),
-(9, 'DEPENSE_H ', 'gh2', 'HOTEL', 'GHOT', 'actif', NULL),
-(12, 'RECEPTION_H ', 'grecp1', 'RECEPTION', 'GRECP', 'actif', NULL),
-(15, 'SUPER', 'sup1', 'SUPER', 'SUPER', 'actif', NULL),
-(23, 'PARAMETRE', 'para1', 'PARAMETRE', 'PARA', 'actif', NULL);
+(1, 'Super administrateur', 'super_admin', 'GLOBAL', 'SUPER', 'actif', 'Accès total à tous les modules'),
+(2, 'Administration - Paramétrage', 'admin_param', 'ADMIN', 'ADMIN', 'actif', 'Gestion des paramètres globaux'),
+(3, 'Administration - Utilisateurs', 'admin_user', 'ADMIN', 'ADMIN', 'actif', 'Gestion des utilisateurs et rôles'),
+(4, 'Comptable - Caisse', 'compt_caisse', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion de la caisse et paiements'),
+(5, 'Comptable - Dépenses', 'compt_depense', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion des dépenses'),
+(6, 'Comptable - Versements', 'compt_versement', 'FINANCE', 'COMPTABLE', 'actif', 'Suivi des versements commerciaux'),
+(7, 'Gestionnaire - Validations', 'gest_valid', 'FINANCE', 'GESTION', 'actif', 'Validation des versements et cautions'),
+(8, 'Gestionnaire - Distributions', 'gest_distrib', 'CLIENTS', 'GESTION', 'actif', 'Gestion des distributions articles'),
+(9, 'Gestionnaire - Cautions', 'gest_caution', 'CLIENTS', 'GESTION', 'actif', 'Validation des cautions clients'),
+(10, 'Commercial - Clients', 'comm_client', 'CLIENTS', 'COMMERCIAL', 'actif', 'Gestion des clients et souscriptions'),
+(11, 'Commercial - Cautions', 'comm_caution', 'CLIENTS', 'COMMERCIAL', 'actif', 'Enregistrement des paiements cautions'),
+(12, 'Commercial - Versements', 'comm_versement', 'FINANCE', 'COMMERCIAL', 'actif', 'Dépôts de versements au bureau');
 
 -- --------------------------------------------------------
 
@@ -650,7 +695,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id_user`, `code_user`, `matricule_user`, `nom_user`, `prenom_user`, `email_user`, `sexe_user`, `password_user`, `telephone_user`, `photo_user`, `last_connexion`, `token_user`, `service_code`, `fonction_code`, `etablissement_code`, `auth_uid`, `created_at_user`, `updated_at_user`, `statut_user`) VALUES
-(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-09 21:52:18', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
+(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-17 14:02:31', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
 (2, 'yhveAqqunh', 'AUT VOLUPTATEM MINU', 'ID RERUM IUSTO LABOR 2', 'MAXIME EXERCITATION', 'vijasit@mailinator.com', 'Mme', '$2y$10$.CAaqXxLvPBmGENuZQuwgedqy0JMOtud/W5n1wk8v5WFJWzHdknwK', '(+225) 01 82 95 39 55', NULL, NULL, 'FEjrZldQclekdKylyairPzLZr6S6Yxy0rYQrrCkSv9zUU16UP8', '123', '8875', '5454544456', NULL, '2026-07-15 11:41:56', NULL, 'actif'),
 (9, 'JwucjkPg4w', 'EAQUE DUCIMUS VOLUP', 'DOLORES SED VOLUPTAT', 'EUM EARUM UT QUAS ES', 'zoddoudep@m5ailinator.com', 'Mlle', '$2y$10$a8MD50XhdXzJ59bBkZF.y.FxK0bkAgsMnTQlkT0VQjGbnsCh65Dei', '(+225) 01 43 67 81 55', NULL, NULL, 'pYQ20JoEy3dxhgv8pmEJw6cqo7rw6o7bxxJccCRn1VJyecP9V1UAL', '955', '8875', '5454544456', NULL, '2026-07-06 03:04:15', NULL, 'inactif'),
 (8, 'Xq9daapChi', 'SUNT EXPLICABO DOLO', 'UT ERROR FUGA INCID', 'APERIAM EXERCITATION', 'qenenu@mailinator.com', 'Mr', '$2y$10$7abhEN0B8mj47O8mb1vCCuG9IaFiS3sLWV1Ozb53f7difq2Oa9m.G', '(+225) 01 39 49 23 37', NULL, NULL, 'Ll9Jr8ODtxSEUnEWL5YOsQR4y7v8jjGFKHjmAsyWjEJsEt6bgNt', '955', '958', '5454544456', NULL, '2026-07-06 03:03:08', NULL, 'actif'),
@@ -676,36 +721,45 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   `delete_permission` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_role` (`user_code`,`role_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `user_roles`
 --
 
 INSERT INTO `user_roles` (`id`, `user_code`, `role_code`, `create_permission`, `edit_permission`, `show_permission`, `delete_permission`) VALUES
-(2, '5wBEh2OfI00frxk8ITPf', 'ga1', 1, 1, 1, 1),
-(3, '5wBEh2OfI00frxk8ITPf', 'ga3', 1, 1, 1, 1),
-(4, '5wBEh2OfI00frxk8ITPf', 'gh1', 1, 1, 1, 0),
-(5, '5wBEh2OfI00frxk8ITPf', 'gh2', 1, 0, 1, 0),
-(78, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'ga1', 1, 1, 1, 1),
-(79, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'ga3', 1, 1, 1, 1),
-(86, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'gcom1', 1, 1, 1, 1),
-(90, 'Kjd35lpOuL9vewm5KM4yT', 'sup1', 1, 1, 1, 1),
-(91, 'Kjd35lpOuL9vewm5KM4yT', 'para1', 1, 1, 0, 1),
-(92, 'Kjd35lpOuL9vewm5KM4yT', 'grecp1', 0, 1, 1, 0),
-(96, 'yhveAqqunh', 'sup1', 1, 1, 1, 1),
-(97, 'yhveAqqunh', 'para1', 1, 1, 1, 1),
-(100, 'Xq9daapChi', 'sup1', 1, 1, 1, 1),
-(102, 'Xq9daapChi', 'para1', 1, 0, 1, 0),
-(104, 'Xq9daapChi', 'grecp1', 1, 0, 0, 0),
-(106, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'gh1', 1, 1, 1, 1),
-(107, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'gh2', 1, 1, 1, 1),
-(108, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'grecp1', 1, 1, 1, 1),
-(109, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'para1', 1, 1, 1, 1),
-(110, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'sup1', 1, 1, 1, 1),
-(114, 'yhveAqqunh', 'ga1', 1, 1, 1, 1),
-(115, 'yhveAqqunh', 'gcom1', 1, 1, 1, 1),
-(116, 'yhveAqqunh', 'ga3', 1, 1, 1, 1);
+(1, '5wBEh2OfI00frxk8ITPf', 'super_admin', 1, 1, 1, 1),
+(2, '5wBEh2OfI00frxk8ITPf', 'admin_param', 1, 1, 1, 1),
+(3, '5wBEh2OfI00frxk8ITPf', 'admin_user', 1, 1, 1, 1),
+(4, '5wBEh2OfI00frxk8ITPf', 'compt_caisse', 1, 1, 1, 1),
+(5, '5wBEh2OfI00frxk8ITPf', 'compt_depense', 1, 1, 1, 1),
+(6, '5wBEh2OfI00frxk8ITPf', 'compt_versement', 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `versements_commerciaux`
+--
+
+DROP TABLE IF EXISTS `versements_commerciaux`;
+CREATE TABLE IF NOT EXISTS `versements_commerciaux` (
+  `id_versement` int NOT NULL AUTO_INCREMENT,
+  `code_versement_commercial` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `reference_versement` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `montant_versement` int NOT NULL,
+  `commercial_code` varchar(50) NOT NULL,
+  `periode_versement_debut` date NOT NULL,
+  `periode_versement_fin` date NOT NULL,
+  `statut_versement` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `etablissement_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `user_code` varchar(50) NOT NULL,
+  `created_at_versement` datetime NOT NULL,
+  `zone_code` varchar(50) NOT NULL,
+  `user_validate` varchar(50) NOT NULL,
+  `date_validation` datetime NOT NULL,
+  `commentaire_validation` text NOT NULL,
+  PRIMARY KEY (`id_versement`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
