@@ -194,10 +194,10 @@ class UserController extends MainController
         }
 
         // 🔢 Total
-        $total = $this->userModel->dataTbleCountTotalUsersRow($whereParams);
+        $total = $this->userModel->dataTableCountTotalUsersRow($whereParams);
         // 🔢 Total filtré
 
-        $totalFiltered = $this->userModel->dataTbleCountTotalUsersRow($whereParams, $likeParams);
+        $totalFiltered = $this->userModel->dataTableCountTotalUsersRow($whereParams, $likeParams);
         // 📄 Données
 
         $userList = $this->userModel->DataTableFetchUsersListe($likeParams, $orderBy, $orderDir, $start, $limit);

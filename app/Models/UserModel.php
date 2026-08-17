@@ -205,7 +205,7 @@ class UserModel extends Model
 
 
 
-    public function dataTbleCountTotalUsersRow(array $whereParams, array $likeParams = [])
+    public function dataTableCountTotalUsersRow(array $whereParams, array $likeParams = [])
     {
 
 
@@ -279,7 +279,39 @@ class UserModel extends Model
         return $data['nb'] ?? 0;
     }
 
-    public function DataTableFetchCommercialsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    public function DataTableFetchUsersListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    {
+        $where = "WHERE us.etablissement_code = :etablissement_code";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT us.*, fn.* FROM " . TABLES::USERS . " us 
+        JOIN " . TABLES::FONCTIONS . " fn ON fn.code_fonction = us.fonction_code
+        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+
+        if (!empty($likeParams)) {
+            foreach ($likeParams as $key => $value) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+      public function DataTableFetchCommercialsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
         $where = "WHERE us.etablissement_code = :etablissement_code
                   AND co.user_code IS NOT NULL";
@@ -313,7 +345,6 @@ class UserModel extends Model
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
     public function getProfileWithRelations(string $userCode, string $etablissementCode): array
     {
         $data = [];

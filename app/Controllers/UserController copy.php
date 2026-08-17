@@ -191,10 +191,10 @@ class UserControllergfgf extends MainController
         }
 
         // 🔢 Total
-        $total = $user->dataTbleCountTotalUsersRow($whereParams);
+        $total = $user->dataTableCountTotalUsersRow($whereParams);
         // 🔢 Total filtré
 
-        $totalFiltered = $user->dataTbleCountTotalUsersRow($whereParams, $likeParams);
+        $totalFiltered = $user->dataTableCountTotalUsersRow($whereParams, $likeParams);
         // 📄 Données
 
         $userList = $user->DataTableFetchUsersListe($likeParams, $start, $limit);

@@ -1089,5 +1089,6 @@ class Roles
     const GEST_CAUTION = 'gest_caution';
     const COMM_CLIENT = 'comm_client';
     const COMM_CAUTION = 'comm_caution';
+    
     const COMM_VERSEMENT = 'comm_versement';
 }

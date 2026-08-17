@@ -45,6 +45,7 @@ class TABLES
     public const VERSEMENTS = 'versements';
     public const VERSEMENTS_COMMERCIAUX = 'versements_commerciaux';
     public const ZONES = 'zones';
+    public const ZONE_COMMERCIALS = 'zone_commercials';
     public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
 
@@ -69,7 +70,6 @@ class Rolesss
     const GEST_CAUTION = 'gest_caution';
     const COMM_CLIENT = 'comm_client';
     const COMM_CAUTION = 'comm_caution';
-    const COMM_VERSEMENT = 'comm_versement';
 }
 
 class Groupesss
