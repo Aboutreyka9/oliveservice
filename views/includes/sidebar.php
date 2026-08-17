@@ -45,7 +45,7 @@
 
             <ul class="nav nav-primary">
                 <li class="nav-item">
-                    <a style="background: #db241df1;" class="" href="<?= route('home') ?>">
+                    <a style="background: #db241df1;" class="" href="<?= url('dashboard') ?>">
                         <i style="color: #fff!important;" class="fas fa-home"></i>
                         <p style="color: #fff!important;">TABLEAU DE BORD</p>
                     </a>
