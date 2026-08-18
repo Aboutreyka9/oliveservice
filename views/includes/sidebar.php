@@ -45,42 +45,184 @@
 
             <ul class="nav nav-primary">
                 <li class="nav-item">
-                    <a style="background: #db241df1;" class="" href="<?= route('home') ?>">
+                    <a style="background: #db241df1;" class="" href="<?= url('dashboard') ?>">
                         <i style="color: #fff!important;" class="fas fa-home"></i>
                         <p style="color: #fff!important;">TABLEAU DE BORD</p>
                     </a>
                 </li>
 
-
-                <!-- Groupes::Gestion académique  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
+                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <!-- Groupes::Clients  => -->
 
                 <li class="nav-item">
-                    <a data-toggle="collapse" href="#academique">
-                        <i class="fas fa-pen-square"></i>
+                    <a data-toggle="collapse" href="#clients">
+                        <i class="fas fa-users"></i>
+                        <p class="text-upper">Clients</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="clients">
+                        <ul class="nav nav-collapse">
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMMERCIAL)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('inscriptions') ?>">
+                                    <span class="sub-item">Souscriptions</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('inscriptions/liste') ?>">
+                                    <span class="sub-item">Liste souscriptions</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('clients') ?>">
+                                    <span class="sub-item">Liste clients</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('cautions') ?>">
+                                    <span class="sub-item">Cautions</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <!-- Groupes::Activités  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#activites">
+                        <i class="fas fa-cubes"></i>
                         <p class="text-upper">Activités</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="academique">
+                    <div class="collapse" id="activites">
                         <ul class="nav nav-collapse">
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
                             <li>
                                 <a class="item-link" href="<?= url('packs') ?>">
                                     <span class="sub-item">Packs</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
                             <li>
                                 <a class="item-link" href="<?= url('articles') ?>">
                                     <span class="sub-item">Articles</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
                             <li>
                                 <a class="item-link" href="<?= url('categories-packs') ?>">
-                                    <span class="sub-item">Categories Packs</span>
+                                    <span class="sub-item">Catégories packs</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                           
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMPTABLE) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <!-- Groupes::Finance  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#finance">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <p class="text-upper">Finance</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="finance">
+                        <ul class="nav nav-collapse">
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMPTABLE) || has_groupe(Groupes::COMMERCIAL)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('versements-commerciaux') ?>">
+                                    <span class="sub-item">Versements commerciaux</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('validations') ?>">
+                                    <span class="sub-item">Validations</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('distributions') ?>">
+                                    <span class="sub-item">Distributions</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMPTABLE)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('depenses') ?>">
+                                    <span class="sub-item">Dépenses</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
+                <!-- Groupes::Ressources humaines  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#grh">
+                        <i class="fas fa-user-tie"></i>
+                        <p class="text-upper">Ressources humaines</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="grh">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a class="item-link" href="<?= url('personnel-commercials') ?>">
+                                    <span class="sub-item">Commerciaux</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('recrutements/personnel') ?>">
+                                    <span class="sub-item">Recrutement</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
+                <!-- Groupes::Administration  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#administration">
+                        <i class="fas fa-cog"></i>
+                        <p class="text-upper">Administration</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="administration">
+                        <ul class="nav nav-collapse">
+                            
+                            <li>
+                                <a class="item-link" href="<?= url('services-fonctions') ?>">
+                                    <span class="sub-item">Fonctions & services</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('annees-sessions') ?>">
+                                    <span class="sub-item">Années & Sessions</span>
                                 </a>
                             </li>
                             <li>
@@ -88,279 +230,20 @@
                                     <span class="sub-item">Zones</span>
                                 </a>
                             </li>
-
-                           
-                            <?php //endif; 
-                            ?>
-
-                        </ul>
-                    </div>
-                </li>
-                <?php //endif; 
-                ?>
-
-
-                <!-- Groupes::Étudiants  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
-
-                <li class="nav-item">
-                    <a data-toggle="collapse" href="#etudiants">
-                        <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Clients</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="etudiants">
-                        <ul class="nav nav-collapse">
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('inscriptions') ?>">
-                                    <span class="sub-item">Inscriptions</span>
-                                </a>
-                            </li>
-                             <li>
-                                <a class="item-link" href="<?= url('reinscriptions') ?>">
-                                    <span class="sub-item">Réinscriptions</span>
-                                </a>
-                            </li>
-                             <li>
-                                <a class="item-link" href="<?= url('inscriptions/liste') ?>">
-                                    <span class="sub-item">Liste Inscriptions</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('clients') ?>">
-                                    <span class="sub-item">Liste clients</span>
-                                </a>
-                            </li>
-                           
-                           
-                            
-                            <?php //endif; 
-                            ?>
-
-                        </ul>
-                    </div>
-                </li>
-                <?php //endif; 
-                ?>
-
-        
-                <!-- Groupes::Finance  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
-
-                <li class="nav-item">
-                    <a data-toggle="collapse" href="#finance">
-                        <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Finance </p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="finance">
-                        <ul class="nav nav-collapse">
-                            <!--  Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('frais-de-scolarité') ?>">
-                                    <span class="sub-item"> Frais de scolarité</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('paiements') ?>">
-                                    <span class="sub-item"> Paiements</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('caisse') ?>">
-                                    <span class="sub-item"> Caisse</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 facturation, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('depenses') ?>">
-                                    <span class="sub-item"> Facturation</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 facturation, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('salaires') ?>">
-                                    <span class="sub-item"> Salaires</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('historique-salaires') ?>">
-                                    <span class="sub-item"> Historique salaires</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-
-                        </ul>
-                    </div>
-                </li>
-                <?php //endif; 
-                ?>
-
-                <!-- Groupes::Ressources humaines  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
-
-                <li class="nav-item">
-                    <a data-toggle="collapse" href="#grh">
-                        <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Ressources humaines </p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="grh">
-                        <ul class="nav nav-collapse">
-                            <!--  Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('personnel-comercials') ?>">
-                                    <span class="sub-item"> Commercials</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('recrutements/personnel') ?>">
-                                    <span class="sub-item"> Recrutement</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <!-- <li>
-                                <a class="item-link" href="<?php // url('congés') 
-                                                            ?>">
-                                    <span class="sub-item"> Congés</span>
-                                </a>
-                            </li> -->
-
-                            <?php //endif; 
-                            ?>
-
-                        </ul>
-                    </div>
-                </li>
-                <?php //endif; 
-                ?>
-
-
-                <!-- Groupes::Administration  => -->
-
-                <?php //if(auth()->hasGroupe(Groupes::ADMIN)): 
-                ?>
-
-                <li class="nav-item">
-                    <a data-toggle="collapse" href="#administration">
-                        <i class="fas fa-pen-square"></i>
-                        <p class="text-upper">Administration </p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="administration">
-                        <ul class="nav nav-collapse">
-                            <!--  Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url('utilisateurs') ?>">
-                                    <span class="sub-item"> personnel administratif</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('services-fonctions') ?>">
-                                    <span class="sub-item"> Fonctions & services</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url('annees-sessions') ?>">
-                                    <span class="sub-item"> Années & Sessions</span>
-                                </a>
-                            </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
                             <li>
                                 <a class="item-link" href="<?= url('roles') ?>">
-                                    <span class="sub-item"> Rôles & permissions</span>
+                                    <span class="sub-item">Rôles & permissions</span>
                                 </a>
                             </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
                             <li>
                                 <a class="item-link" href="<?= url('parametres') ?>">
-                                    <span class="sub-item"> Paramètres</span>
+                                    <span class="sub-item">Paramètres</span>
                                 </a>
                             </li>
-
-                            <?php //endif; 
-                            ?>
-                            <!-- 👉 Caissier, Gérant, Admin -->
-                            <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
-                            ?>
-                            <li>
-                                <a class="item-link" href="<?= url("journaux-activités") ?>">
-                                    <span class="sub-item"> Journaux d'activités</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="item-link" href="<?= url("sauvegardes") ?>">
-                                    <span class="sub-item"> Sauvegardes</span>
-                                </a>
-                            </li>
-                            <?php //endif; 
-                            ?>
-
                         </ul>
                     </div>
                 </li>
-                <?php //endif; 
-                ?>
+                <?php endif; ?>
 
             </ul>
 

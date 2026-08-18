@@ -205,7 +205,7 @@ class UserModel extends Model
 
 
 
-    public function dataTbleCountTotalUsersRow(array $whereParams, array $likeParams = [])
+    public function dataTableCountTotalUsersRow(array $whereParams, array $likeParams = [])
     {
 
 
@@ -254,10 +254,33 @@ class UserModel extends Model
     }
 
 
+    public function getCommercialsCountTotal(array $whereParams, array $likeParams = [])
+    {
+        $where = "WHERE us.etablissement_code = :etablissement_code
+                  AND co.user_code IS NOT NULL";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::USERS . " us 
+            JOIN " . TABLES::FONCTIONS . " fn ON fn.code_fonction = us.fonction_code
+            LEFT JOIN " . TABLES::COMMERCIALS . " co ON co.user_code = us.code_user AND co.statut_commercial = :statut $where";
+
+        $stmt = $this->db->prepare($sql);
+        $params = array_merge($whereParams, ['statut' => STATUT_ACTIF], $likeParams);
+        $stmt->execute($params);
+        $data = $stmt->fetch();
+        return $data['nb'] ?? 0;
+    }
+
     public function DataTableFetchUsersListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
-
-
         $where = "WHERE us.etablissement_code = :etablissement_code";
 
         if (!empty($likeParams)) {
@@ -269,30 +292,112 @@ class UserModel extends Model
             $where .= " AND (" . implode(' OR ', $likes) . ")";
         }
 
-
-
         $sql = "SELECT us.*, fn.* FROM " . TABLES::USERS . " us 
-        LEFT JOIN " . TABLES::FONCTIONS . " fn  ON fn.code_fonction = us.fonction_code $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+        JOIN " . TABLES::FONCTIONS . " fn ON fn.code_fonction = us.fonction_code
+        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);
-
         $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
 
-        // Bind les parametreslike
-        $like = [];
         if (!empty($likeParams)) {
-
             foreach ($likeParams as $key => $value) {
-                $like[] = "$key => $value";
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
 
-        // ✅ Bind LIMIT params correctement
         $stmt->bindValue(':start', $start, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+      public function DataTableFetchCommercialsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    {
+        $where = "WHERE us.etablissement_code = :etablissement_code
+                  AND co.user_code IS NOT NULL";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT us.*, fn.* FROM " . TABLES::USERS . " us 
+        LEFT JOIN " . TABLES::FONCTIONS . " fn ON fn.code_fonction = us.fonction_code
+        LEFT JOIN " . TABLES::COMMERCIALS . " co ON co.user_code = us.code_user AND co.statut_commercial = :statut
+        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+        $stmt->bindValue(":statut", STATUT_ACTIF);
+
+        if (!empty($likeParams)) {
+            foreach ($likeParams as $key => $value) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function getProfileWithRelations(string $userCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT u.*, fn.libelle_fonction, sv.libelle_service, et.libelle_etablissement, et.adresse_etablissement, et.telephone_etablissement
+                    FROM " . TABLES::USERS . " u
+                    LEFT JOIN " . TABLES::FONCTIONS . " fn ON fn.code_fonction = u.fonction_code
+                    LEFT JOIN " . TABLES::SERVICES . " sv ON sv.code_service = u.service_code
+                    LEFT JOIN " . TABLES::ETABLISSEMENTS . " et ON et.code_etablissement = u.etablissement_code
+                    WHERE u.code_user = :code_user AND u.etablissement_code = :etablissement_code
+                    LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['code_user' => $userCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getRolesWithPermissions(string $userCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT r.code_role, r.libelle_role, r.description, r.module, r.groupe, ur.create_permission, ur.edit_permission, ur.show_permission, ur.delete_permission
+                    FROM " . TABLES::ROLES . " r
+                    JOIN " . TABLES::USER_ROLES . " ur ON r.code_role = ur.role_code
+                    WHERE ur.user_code = :user_code
+                    ORDER BY r.groupe, r.libelle_role";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['user_code' => $userCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getCommercialByUserCode(string $userCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT co.*, zo.libelle_zone
+                    FROM " . TABLES::COMMERCIALS . " co
+                    LEFT JOIN " . TABLES::ZONES . " zo ON zo.code_zone = co.zone_code
+                    WHERE co.user_code = :user_code AND co.statut_commercial = :statut
+                    LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['user_code' => $userCode, 'statut' => STATUT_ACTIF]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
     }
 }

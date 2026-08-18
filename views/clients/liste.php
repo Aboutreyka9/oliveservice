@@ -1,26 +1,24 @@
-<?= breakcrumb($title, 'fa-users'); ?>
 
-<div class="card mt-2">
+<?= breakcrumb($title, 'fa-chart-bar '); ?>
+
+<div class="card">
     <div class="card-header">
-        <div class="table_row_header">
-            <div class="table_row_header_left">
-                <h4 class="text-upper"><i class="fa fa-list"></i> &nbsp; Liste des clients</h4>
-            </div>
-            <div class="table_row_header_right">
-                <button class="btn btn-primary"><i class="fa fa-print"></i> &nbsp; <span class="text-uppercase">Imprimer</span></button>
-                <button type="button" class="btn btn-info" id="ClientAddModal">
-                    <i class="fa fa-plus-circle"></i> &nbsp; <span class="text-uppercase">Enregistrer client</span>
-                </button>
-            </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" id="btn_client_adddModal" class="btn btn-primary " title="Ajouter client"
+                aria-label="Close"> <i class="fa fa-plus"></i> &nbsp; ENREGISTRER</button>
+                <button  type="button" id="btn_client_adddModa" class="btn btn-dark " title="Ajouter client"
+                aria-label="Close"> <i class="fa fa-print"></i> &nbsp; IMPRIMER</button>
         </div>
     </div>
-
     <div class="card-body">
-        <div class="table-responsive table-responsive-md">
-            <table id="data-table-client" class="table table-striped table-bordered table-hover table-sm table-data">
+
+        <div class="table-responsive bg-light py-3 px-2 border rounded">
+            <!-- .table -->
+            <table id="data-table-client" class="table table-hover my-table">
+                <!-- thead -->
                 <thead class="thead-light">
                     <tr>
-                        <th>#</th>
+                        <th> #</th>
                         <th>Nom & prénoms</th>
                         <th>Contact</th>
                         <th>Genre</th>
@@ -28,38 +26,36 @@
                         <th>Code client</th>
                         <th>Enregistré par</th>
                         <th>Enregistré le</th>
-                        <th width="6%">Actions</th>
+                        <th> Actions</th>
                     </tr>
-                </thead>
-            </table>
-        </div>
+                </thead><!-- /thead -->
+            </table><!-- /.table -->
+        </div><!-- /.table-responsive bg-light py-3 px-2 border rounded -->
     </div>
 </div>
 
-<!-- Modal client -->
-<div class="modal fade" id="client-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="clientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+<!-- Modal categorie_pack-->
+<div class="modal fade" data-backdrop="static" id="client-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="clientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="clientModalLabel">
-                    <i class="fa fa-user-circle"></i> &nbsp; <span class="text-uppercase">Client</span>
-                </h5>
+                <h5 class="modal-title text-dark" id="clientModalLabel"><i class="fa fa-user-circle"></i> &nbsp; <span
+                        class="text-uppercase">Formulaire d'enregistrement</span> </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 data-modal"></div>
+                <div class="data-client-modal">
+
+
                 </div>
             </div>
-            <div class="modal-footer"></div>
+            <!-- .modal-footer -->
+            <div class="modal-footer">
+
+            </div><!-- /.modal-footer -->
         </div>
     </div>
 </div>
-
-<script>
-    $(function() {
-        loadDataTable('data-table-client', '#data-table-client', 'charger_data_clients');
-    });
-</script>

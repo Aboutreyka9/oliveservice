@@ -21,6 +21,7 @@ include __DIR__ . '/app/Core/security.php';
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\CautisationController;
 use App\Controllers\ClientController;
 use App\Controllers\Controller;
 use App\Controllers\ControllerException;
@@ -29,6 +30,9 @@ use App\Controllers\FinanceController;
 use App\Controllers\HomeController;
 use App\Controllers\SettingController;
 use App\Controllers\UserController;
+use App\Controllers\VersementCommercialController;
+use App\Controllers\ValidationController;
+use App\Controllers\DistributionController;
 use App\Core\Router;
 use App\Middlewares\RouteMiddleWare;
 use App\Models\ActiviteModel;
@@ -63,11 +67,11 @@ $router = new Router();
 $router->filter('auth', [RouteMiddleWare::class, 'requireAuth']);
 
 $router->filter('guest', [RouteMiddleWare::class, 'isLogged']);
-// $router->filter('setting', [RouteMiddleWare::class, 'requireSetting']);
-// $router->filter('ghotel', [RouteMiddleWare::class, 'requireGesHotel']);
-// $router->filter('comptable', [RouteMiddleWare::class, 'requireComptable']);
-// $router->filter('reception', [RouteMiddleWare::class, 'requireReception']);
-// $router->filter('admin', [RouteMiddleWare::class, 'requireAdmin']);
+$router->filter('super', [RouteMiddleWare::class, 'requireSuper']);
+$router->filter('admin', [RouteMiddleWare::class, 'requireAdmin']);
+$router->filter('comptable', [RouteMiddleWare::class, 'requireComptable']);
+$router->filter('gestion', [RouteMiddleWare::class, 'requireGestion']);
+$router->filter('commercial', [RouteMiddleWare::class, 'requireCommercial']);
 
 /**
  * ************************************************
@@ -152,32 +156,36 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('dashboard', [HomeController::class, 'acueil']);
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
 
-        $router->get('recrutements/personnel', [UserController::class, 'recrutement']);
-        $router->get('personnel-commercials', [UserController::class, 'enseignants']);
-        $router->get('personnel-administratifs', [UserController::class, 'administratif']);
+        $router->get('recrutements/personnel', [UserController::class, 'recrutement'], ['before' => 'admin|super']);
+        $router->get('personnel-commercials', [UserController::class, 'commercials'], ['before' => 'admin|super']);
+        $router->get('personnel-administratifs', [UserController::class, 'administratif'], ['before' => 'admin|super']);
+        $router->get('utilsateur/profile/{code}', [UserController::class, 'profile'], ['before' => 'auth']);
 
         // <!-- parametrage -->
-        $router->get('services-fonctions', [SettingController::class, 'fonction']);
-        $router->get('annees-sessions', [SettingController::class, 'annee']);
-
-        // <!-- FINNCES -->
-        $router->get('depenses', [FinanceController::class, 'depense']);
-        // $router->get('annees-semestres', [SettingController::class, 'annee']);
+        $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);
+        $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
 
         // <!-- Client -->
-        $router->get('inscriptions', [ClientController::class, 'inscription']);
-        $router->get('inscriptions/liste', [ClientController::class, 'listeInscription']);
-        $router->get('clients', [ClientController::class, 'liste']);
-        $router->get('clients/profile/{code}', [ClientController::class, 'profile']);
-        $router->get('clients/commande', [ClientController::class, 'commande']);
-        // $router->get('annees-semestres', [SettingController::class, 'annee']);
+        $router->get('inscriptions', [ClientController::class, 'inscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('reinscriptions', [ClientController::class, 'reinscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('inscriptions/liste', [ClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('clients', [ClientController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('clients/profile/{code}', [ClientController::class, 'profile'], ['before' => 'auth']);
+        $router->get('clients/commande', [ClientController::class, 'commande'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('cautions', [CautisationController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
 
         // <!-- Activity -->
-        $router->get('zones', [ActiviteController::class, 'zone']);
-        $router->get('packs', [ActiviteController::class, 'pack']);
-        $router->get('detail-pack/{code}', [ActiviteController::class, 'detailPack']);
-        $router->get('categories-packs', [ActiviteController::class, 'categorie']);
-        $router->get('articles', [ActiviteController::class, 'article']);
+        $router->get('zones', [ActiviteController::class, 'zone'], ['before' => 'admin|super|gestion|commercial']);
+        $router->get('packs', [ActiviteController::class, 'pack'], ['before' => 'admin|super']);
+        $router->get('detail-pack/{code}', [ActiviteController::class, 'detailPack'], ['before' => 'admin|super']);
+        $router->get('categories-packs', [ActiviteController::class, 'categorie'], ['before' => 'admin|super']);
+        $router->get('articles', [ActiviteController::class, 'article'], ['before' => 'admin|super']);
+
+        // <!-- Finance -->
+        $router->get('depenses', [FinanceController::class, 'depense'], ['before' => 'comptable|admin|super']);
+        $router->get('versements-commerciaux', [VersementCommercialController::class, 'liste'], ['before' => 'commercial|admin|super|gestion|comptable']);
+        $router->get('validations', [ValidationController::class, 'liste'], ['before' => 'gestion|admin|super']);
+        $router->get('distributions', [DistributionController::class, 'liste'], ['before' => 'gestion|admin|super']);
 
     });
 

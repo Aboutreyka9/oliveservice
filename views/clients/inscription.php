@@ -33,7 +33,7 @@
 </div>
 
 <form method="post" id="frmAddClient">
-    <input type="hidden" name="action" value="btn_add_client">
+    <input type="hidden" name="action" value="btn_add_inscription">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
     <!-- <input type="hidden" name="session_code" id="session_code" value="">
@@ -59,8 +59,7 @@
                         <label for="genre_client" class="form-label">Genre <strong class="text-danger">*</strong></label>
                         <select class="form-control select2" id="genre_client" name="genre_client" required>
                             <option value="">--- CHOISIR ---</option>
-                            <option value="Masculin">Masculin</option>
-                            <option value="Féminin">Féminin</option>
+                           <?= chargerGenre()?>
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">

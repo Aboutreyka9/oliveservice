@@ -182,7 +182,7 @@ class UserModeldd extends Model
         return $data;
     }
 
-    function dataTbleCountTotalUsersRow(array $whereParams, $likeParams = [])
+    function dataTableCountTotalUsersRow(array $whereParams, $likeParams = [])
     {
 
 

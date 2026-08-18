@@ -1,0 +1,182 @@
+<?php
+
+namespace App\Models;
+
+use App\Core\Auth;
+use App\Core\Model;
+use Exception;
+use PDO;
+use TABLES;
+
+class CautisationModel extends Model
+{
+    protected string $table = "cautisation_clients";
+    public string $id = 'id_cautisation_client';
+
+    public function getCautisationsByInscription(string $inscriptionCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+                           se.libelle_session, an.libelle_annee, zo.libelle_zone
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                    JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                    JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
+                    WHERE ins.code_inscription = :inscription_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY c.created_at_cautisation_client DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['inscription_code' => $inscriptionCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getCautisationsByClient(string $clientCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, se.libelle_session, an.libelle_annee
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                    JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                    WHERE ins.client_code = :client_code
+                      AND ins.etablissement_code = :etablissement_code
+                    ORDER BY c.created_at_cautisation_client DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getTotalCautisationByInscription(string $inscriptionCode): float
+    {
+        $sql = "SELECT COALESCE(SUM(montant_cautisation_client), 0) 
+                FROM " . TABLES::CAUTISATION_CLIENTS . " 
+                WHERE inscription_code = :inscription_code 
+                  AND statut_cautisation_client = 'valide'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['inscription_code' => $inscriptionCode]);
+        return (float) $stmt->fetchColumn();
+    }
+
+    public function getPendingCautions(string $etablissementCode, array $filters = []): array
+    {
+        $data = [];
+        try {
+            $where = "WHERE ins.etablissement_code = :etablissement_code AND c.statut_cautisation_client = 'En attente'";
+            $params = ['etablissement_code' => $etablissementCode];
+
+            if (!empty($filters['session_code'])) {
+                $where .= " AND ins.session_code = :session_code";
+                $params['session_code'] = $filters['session_code'];
+            }
+            if (!empty($filters['zone_code'])) {
+                $where .= " AND ins.zone_code = :zone_code";
+                $params['zone_code'] = $filters['zone_code'];
+            }
+            if (!empty($filters['search'])) {
+                $where .= " AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR c.code_cautisation_client LIKE :search)";
+                $params['search'] = '%' . $filters['search'] . '%';
+            }
+
+            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+                           se.libelle_session, an.libelle_annee, zo.libelle_zone,
+                           p.montant_pack as montant_total_pack
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                    JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                    JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
+                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                    $where
+                    ORDER BY c.created_at_cautisation_client DESC";
+
+            $stmt = $this->db->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function dataTableCountTotalCautionsRow(array $whereParams, $likeParams = []): int
+    {
+        $where = "WHERE ins.etablissement_code = :etablissement_code AND c.statut_cautisation_client = 'En attente'";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                $where";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(array_merge($whereParams, $likeParams));
+        return (int) ($stmt->fetch()['nb'] ?? 0);
+    }
+
+    public function DataTableFetchCautionsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10): array
+    {
+        $where = "WHERE ins.etablissement_code = :etablissement_code AND c.statut_cautisation_client = 'En attente'";
+
+        if (!empty($likeParams)) {
+            $likes = [];
+            foreach ($likeParams as $field => $search) {
+                $likes[] = "$field LIKE :$field";
+                $likeParams[$field] = "%$search%";
+            }
+            $where .= " AND (" . implode(' OR ', $likes) . ")";
+        }
+
+        $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+                       se.libelle_session, an.libelle_annee, zo.libelle_zone,
+                       p.montant_pack as montant_total_pack
+                FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
+                LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+
+        if (!empty($likeParams)) {
+            foreach ($likeParams as $key => $value) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+}
