@@ -254,39 +254,26 @@ class ActiviteService
 
 
 
-        $libelle = $this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]);
+        $libelle = $this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_categorie_pack' => $libelle_categorie_pack, 'etablissement_code' => Auth::user('etablissement_code')]);
 
-        if (!empty($libelle) && $libelle['code_zone'] != $code_zone) {
+        if (!empty($libelle) && $libelle['code_categorie_pack'] != $code_categorie_pack) {
 
-            return ['success' => false, 'message' => 'Desolé! Ce libellé de zone existe déjà.'];
+            return ['success' => false, 'message' => 'Desolé! Ce libellé de categorie existe déjà.'];
 
         }
 
+        $data_categorie = [
 
-
-
-
-        $data_zone = [
-
-            'libelle_zone' => strtoupper($libelle_zone),
-
-            'description_zone' => $description_zone,
-
-            'updated_at_zone' => date('Y-m-d H:i:s'),
+            'libelle_categorie_pack' => strtoupper($libelle_categorie_pack),
+            'updated_at_categorie_pack' => date('Y-m-d H:i:s'),
 
         ];
 
-
-
-        if (!$this->activiteModel->update(TABLES::FONCTIONS, 'code_zone', $code_zone, $data_zone)) {
+        if (!$this->activiteModel->update(TABLES::CATEGORIES, 'code_categorie_pack', $code_categorie_pack, $data_categorie)) {
 
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
 
         }
-
-
-
-
 
         return [
 
@@ -1008,23 +995,15 @@ class ActiviteService
 
                     <div class="col-md-12 mb-3">
 
-                        <input type="hidden" value="btn_update_categoriePack" name="action">
+                        <input type="hidden" value="btn_update_categorie_pack" name="action">
 
-                        <input type="hidden" value="' . $categoriePack['code_categoriePack'] . '" name="code_categoriePack">
+                        <input type="hidden" value="' . $categoriePack['code_categorie_pack'] . '" name="code_categorie_pack">
 
                         <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
 
-                        <label for="libelle_categoriePack" class="form-label">Libelle categoriePack <strong class="text-danger">*</strong></label>
+                        <label for="libelle_categorie_pack" class="form-label">Libelle categorie pack <strong class="text-danger">*</strong></label>
 
-                        <input type="text" class="form-control" id="libelle_categoriePack" name="libelle_categoriePack" value="' . $categoriePack['libelle_categoriePack'] . '" required>
-
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-
-                        <label for="description_categoriePack" class="form-label">Description </label>
-
-                        <textarea rows="3" class="form-control" name="description_categoriePack" id="description_categoriePack">' . $categoriePack['description_categoriePack'] . '</textarea>
+                        <input type="text" class="form-control" id="libelle_categorie_pack" name="libelle_categorie_pack" value="' . $categoriePack['libelle_categorie_pack'] . '" required>
 
                     </div>
 
@@ -1036,7 +1015,7 @@ class ActiviteService
 
                     <div class="col-md-12 modal_footer">
 
-                        <button type="submit" class="btn btn-primary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
 
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 

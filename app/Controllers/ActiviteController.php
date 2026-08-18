@@ -714,27 +714,17 @@ class ActiviteController extends MainController
 
         extract($_POST);
 
+        
+        $categorie = $this->activiteModel->getSingleCategoriePackByCode($codecategoriepack);
 
+        if (empty($categorie)) Response::error('Désolé, une erreur est survenue lors du traitement!');
 
-        // $users = getAllusers();
+// echo json_encode(['data' => $categorie]); return;
 
-        $depense = $this->activiteModel->getSingleCategoriePackByCode($codedepense);
-
-
-
-        $typeDepenses = $this->activiteModel->getAllTypeCategoriePacks(Auth::user('etablissement_code'));
-
-
-
-
-
-        if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
-
-
-
-        $output = $this->activiteService->zoneUpdateModalService($depense, $typeDepenses);
+        $output = $this->activiteService->categoriePackUpdateModalService($categorie);
 
         echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
+        return;
 
     }
 
@@ -794,13 +784,7 @@ class ActiviteController extends MainController
 
 
 
-        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
-
-            ->required('date_depense', $date_depense, 'Date depense')
-
-            ->required('montant_depense', $montant_depense, 'Montant depense')
-
-            ->digit('montant_depense', $montant_depense, 'Montant depense');
+        $v->required('libelle_categorie_pack', $libelle_categorie_pack, 'Libelle categorie pack');
 
 
 

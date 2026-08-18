@@ -149,6 +149,20 @@ $alerts = $alerts ?? [];
             </div>
         </div>
     </div>
+
+      <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-success mr-2">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h6><span class="text-muted text-uppercase montan-title">SESSION</span></h6>
+                </div>
+                <h5 class="montan-value"><?= number_format($totals['total_sessionS'] ?? 0) ?></h5>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- DERNIÈRES ACTIVITÉS -->

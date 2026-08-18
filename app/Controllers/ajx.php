@@ -502,7 +502,7 @@ switch ($action) {
 
         break;
 
-    case 'btn_update_categoriePack':
+    case 'btn_update_categorie_pack':
 
         $ajx = new ActiviteController();
 

@@ -3533,7 +3533,7 @@ function modalUpdatedZone(code) {
 
         data: {
 
-            action: 'btn_showmodal_session_update',
+            action: 'btn_showmodal_zone_update',
 
             codesession: code
 
@@ -3911,9 +3911,9 @@ function modalUpdatedCategoriePack(code) {
 
         data: {
 
-            action: 'btn_showmodal_session_update',
+            action: 'btn_showmodal_categoriePack_update',
 
-            codesession: code
+            codecategoriepack: code
 
         },
 
@@ -3934,10 +3934,12 @@ function modalUpdatedCategoriePack(code) {
             $(".loader_backdrop2").css('display', "none");
 
 
-
+            console.log(data);
+            // return;
+            
             if (data.success) {
 
-                $(".data-categoriePack-modal").html(data.data);
+                $(".data-categorie-pack-modal").html(data.data);
 
                 $("#categorie-pack-modal").modal("show");
 
@@ -4291,7 +4293,7 @@ function modalUpdatedArticle(code) {
 
         data: {
 
-            action: 'btn_showmodal_session_update',
+            action: 'btn_showmodal_article_update',
 
             codesession: code
 

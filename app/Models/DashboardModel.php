@@ -24,6 +24,7 @@ class DashboardModel extends Model
             'total_articles' => 0,
             'total_users' => 0,
             'total_zones' => 0,
+            'total_sessions' => 0,
             'total_depenses' => 0,
             'total_cautions' => 0,
             'total_distributions' => 0,
@@ -43,6 +44,7 @@ class DashboardModel extends Model
             $data['total_articles'] = (int) $this->countWhere(TABLES::ARTICLES, ['etablissement_code' => $etablissementCode]);
             $data['total_users'] = (int) $this->countWhere(TABLES::USERS, ['etablissement_code' => $etablissementCode]);
             $data['total_zones'] = (int) $this->countWhere(TABLES::ZONES, ['etablissement_code' => $etablissementCode]);
+            $data['total_sessions'] = (int) $this->countWhere(TABLES::SESSIONS, ['etablissement_code' => $etablissementCode]);
             $data['total_depenses'] = (int) $this->countWhere(TABLES::DEPENSES, ['etablissement_code' => $etablissementCode]);
             $data['total_distributions'] = (int) $this->countWhere(TABLES::DISTRIBUTIONS, ['etablissement_code' => $etablissementCode]);
 
