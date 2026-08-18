@@ -214,11 +214,7 @@
                     </a>
                     <div class="collapse" id="administration">
                         <ul class="nav nav-collapse">
-                            <li>
-                                <a class="item-link" href="<?= url('utilisateurs') ?>">
-                                    <span class="sub-item">Personnel administratif</span>
-                                </a>
-                            </li>
+                            
                             <li>
                                 <a class="item-link" href="<?= url('services-fonctions') ?>">
                                     <span class="sub-item">Fonctions & services</span>

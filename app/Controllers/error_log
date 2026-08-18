@@ -1,0 +1,84 @@
+[17-Aug-2026 19:50:45 Europe/Paris] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':etablissement_code AND p.annee_code = :annee_code' at line 1 in /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php:1154
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php(1154): PDOStatement->execute()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php(1271): App\Models\ActiviteModel->dataTbleCountTotalPAcksRow()
+#2 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(291): App\Controllers\ActiviteController->GetListePack()
+#3 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php on line 1154
+[17-Aug-2026 19:51:02 Europe/Paris] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ':etablissement_code AND p.annee_code = :annee_code' at line 1 in /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php:1154
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php(1154): PDOStatement->execute()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php(1271): App\Models\ActiviteModel->dataTbleCountTotalPAcksRow()
+#2 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(291): App\Controllers\ActiviteController->GetListePack()
+#3 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/ActiviteModel.php on line 1154
+[17-Aug-2026 20:35:02 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:35:24 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:35:40 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:35:55 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:37:21 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:37:58 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:38:55 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 20:39:46 Europe/Paris] PHP Fatal error:  Uncaught Error: Call to undefined method App\Models\ActiviteModel::dataTbleCountTotalDepensesRow() in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php:267
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(207): App\Controllers\ActiviteController->GetListeZone()
+#1 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Controllers/ActiviteController.php on line 267
+[17-Aug-2026 21:28:36 Europe/Paris] PHP Fatal error:  Uncaught TypeError: App\Models\FinanceModel::getSingleDepenseByCode(): Return value must be of type array, false returned in /home/c2841732c/public_html/apps/app/Models/FinanceModel.php:45
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/FinanceController.php(149): App\Models\FinanceModel->getSingleDepenseByCode()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(669): App\Controllers\FinanceController->modalUpdatedDepense()
+#2 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/FinanceModel.php on line 45
+[17-Aug-2026 23:14:29 Europe/Paris] PHP Fatal error:  Uncaught TypeError: App\Models\SettingModel::getSingleSessionByCode(): Return value must be of type array, false returned in /home/c2841732c/public_html/apps/app/Models/SettingModel.php:391
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/SettingController.php(1159): App\Models\SettingModel->getSingleSessionByCode()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(381): App\Controllers\SettingController->modalUpdatedSession()
+#2 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/SettingModel.php on line 391
+[17-Aug-2026 23:14:37 Europe/Paris] PHP Fatal error:  Uncaught TypeError: App\Models\SettingModel::getSingleSessionByCode(): Return value must be of type array, false returned in /home/c2841732c/public_html/apps/app/Models/SettingModel.php:391
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/SettingController.php(1159): App\Models\SettingModel->getSingleSessionByCode()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(381): App\Controllers\SettingController->modalUpdatedSession()
+#2 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/SettingModel.php on line 391
+[17-Aug-2026 23:16:53 Europe/Paris] PHP Fatal error:  Uncaught TypeError: App\Models\SettingModel::getSingleSessionByCode(): Return value must be of type array, false returned in /home/c2841732c/public_html/apps/app/Models/SettingModel.php:391
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/SettingController.php(1159): App\Models\SettingModel->getSingleSessionByCode()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(381): App\Controllers\SettingController->modalUpdatedSession()
+#2 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/SettingModel.php on line 391
+[17-Aug-2026 23:18:11 Europe/Paris] PHP Fatal error:  Uncaught TypeError: App\Models\SettingModel::getSingleSessionByCode(): Return value must be of type array, false returned in /home/c2841732c/public_html/apps/app/Models/SettingModel.php:391
+Stack trace:
+#0 /home/c2841732c/public_html/apps/app/Controllers/SettingController.php(1159): App\Models\SettingModel->getSingleSessionByCode()
+#1 /home/c2841732c/public_html/apps/app/Controllers/ajx.php(381): App\Controllers\SettingController->modalUpdatedSession()
+#2 {main}
+  thrown in /home/c2841732c/public_html/apps/app/Models/SettingModel.php on line 391
