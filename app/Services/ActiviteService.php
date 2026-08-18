@@ -363,43 +363,29 @@ class ActiviteService
 
         extract($post);
 
+        $libelle = $this->activiteModel->getFieldsForParams(TABLES::ARTICLES, ['libelle_article' => $libelle_article, 'etablissement_code' => Auth::user('etablissement_code')]);
 
+        if (!empty($libelle) && $libelle['code_article'] != $code_article) {
 
-
-
-        $libelle = $this->activiteModel->getFieldsForParams(TABLES::CATEGORIES, ['libelle_zone' => $libelle_zone, 'etablissement_code' => Auth::user('etablissement_code')]);
-
-        if (!empty($libelle) && $libelle['code_zone'] != $code_zone) {
-
-            return ['success' => false, 'message' => 'Desolé! Ce libellé de zone existe déjà.'];
+            return ['success' => false, 'message' => 'Desolé! Ce libellé de article existe déjà.'];
 
         }
 
+        $data_article = [
 
+            'libelle_article' => strtoupper($libelle_article),
 
+            'description_article' => $description_article,
 
-
-        $data_zone = [
-
-            'libelle_zone' => strtoupper($libelle_zone),
-
-            'description_zone' => $description_zone,
-
-            'updated_at_zone' => date('Y-m-d H:i:s'),
+            'updated_at_article' => date('Y-m-d H:i:s'),
 
         ];
 
-
-
-        if (!$this->activiteModel->update(TABLES::FONCTIONS, 'code_zone', $code_zone, $data_zone)) {
+        if (!$this->activiteModel->update(TABLES::ARTICLES, 'code_article', $code_article, $data_article)) {
 
             return ['success' => false, 'message' => "Desolé! echec d'operation."];
 
         }
-
-
-
-
 
         return [
 
@@ -1377,7 +1363,7 @@ function chargerDataPacks($packs)
 
                     <div class="col-md-12 modal_footer">
 
-                        <button type="submit" class="btn btn-primary" id="btnSubmitFormCategoriePack"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
+                        <button type="submit" class="btn btn-secondary" id="btnSubmitFormArticle"><i class="fas fa-save"></i> &nbsp;  Enregistrer </button>
 
                         <button type="button" class="btn btn-light dismiss_modal">Close</button>
 

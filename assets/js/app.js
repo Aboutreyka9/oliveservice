@@ -4295,7 +4295,7 @@ function modalUpdatedArticle(code) {
 
             action: 'btn_showmodal_article_update',
 
-            codesession: code
+            codearticle: code
 
         },
 
@@ -4304,6 +4304,7 @@ function modalUpdatedArticle(code) {
         beforeSend: function () {
 
             $(".loader_backdrop2").css('display', "block");
+
 
             // btnReq(".modal_footer", "Traitement...");
 
@@ -4315,6 +4316,7 @@ function modalUpdatedArticle(code) {
 
             $(".loader_backdrop2").css('display', "none");
 
+// console.log(data); return;
 
 
             if (data.success) {
@@ -4385,7 +4387,6 @@ function updatedArticle() {
 
                 btnRes("#btnSubmitFormArticle", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
@@ -4451,15 +4452,15 @@ function changeStatutArticle(code, statut) {
 
                     data: {
 
-                        action: 'change_statut_sessions',
+                        action: 'change_statut_articles',
 
-                        code_session: code,
+                        code_article: code,
 
-                        statut_session: statut
+                        statut_article: statut
 
                     },
 
-                    dataType: 'JSON',
+                    // dataType: 'JSON',
 
                     beforeSend: function () {
 
@@ -4471,7 +4472,8 @@ function changeStatutArticle(code, statut) {
 
                         $(".loader_backdrop2").css('display', "none");
 
-
+                        console.log(data);
+                        
 
                         if (data.success) {
 

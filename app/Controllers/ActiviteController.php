@@ -773,7 +773,6 @@ class ActiviteController extends MainController
 
 
     public function updateCategoriePack()
-
     {
 
         $_POST = sanitizePostData($_POST);
@@ -1012,23 +1011,12 @@ class ActiviteController extends MainController
 
 
 
-        // $users = getAllusers();
 
-        $depense = $this->activiteModel->getSingleArticleByCode($codedepense);
+        $article = $this->activiteModel->getSingleArticleByCode($codearticle);
 
+        if (empty($article)) Response::error('Désolé, une erreur est survenue lors du traitement!');
 
-
-        $typeDepenses = $this->activiteModel->getAllTypeArticles(Auth::user('etablissement_code'));
-
-
-
-
-
-        if (empty($depense) || empty($typeDepenses)) Response::error('Désolé, une erreur est survenue lors du traitement!');
-
-
-
-        $output = $this->activiteService->zoneUpdateModalService($depense, $typeDepenses);
+        $output = $this->activiteService->articleUpdateModalService($article);
 
         echo json_encode(['data' => $output, 'code' => 200, 'message' => 'operation reussie', 'success' => true]);
 
@@ -1088,28 +1076,13 @@ class ActiviteController extends MainController
 
         $v = new Validator();
 
-
-
-        $v->required('libelle_depense', $libelle_depense, 'Libelle depense')
-
-            ->required('date_depense', $date_depense, 'Date depense')
-
-            ->required('montant_depense', $montant_depense, 'Montant depense')
-
-            ->digit('montant_depense', $montant_depense, 'Montant depense');
-
-
-
+        $v->required('libelle_article', $libelle_article, 'Libelle article');
 
 
         if ($v->fails()) Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
 
 
-
         $result = $this->activiteService->updateArticleData($_POST);
-
-
-
 
 
         if (!$result['success']) {
@@ -1118,13 +1091,9 @@ class ActiviteController extends MainController
 
         }
 
-
-
         Response::success($result['message'], []);
 
     }
-
-
 
     public function changeStatutArticle()
 
@@ -1137,14 +1106,16 @@ class ActiviteController extends MainController
         extract($_POST);
 
 
+        var_dump($_POST);
+        return;
 
-        $statut_zone = (isset($statut_zone) && $statut_zone != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
+        $statut_article = (isset($statut_article) && $statut_article != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
 
 
 
 
 
-        if ($this->activiteModel->update(TABLES::ZONES, 'code_zone', $code_zone, ['statut_zone' => $statut_zone])) Response::success('Statut modifié avec succès', []);
+        if ($this->activiteModel->update(TABLES::ARTICLES, 'code_article', $code_article, ['statut_article' => $statut_article])) Response::success('Statut modifié avec succès', []);
 
 
 

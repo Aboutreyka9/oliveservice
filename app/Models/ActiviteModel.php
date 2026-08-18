@@ -672,7 +672,7 @@ class ActiviteModel extends Model
 
         try {
 
-            $sql = "SELECT de.*, DATE(de.periode_depense) AS periode FROM " . TABLES::DEPENSES . " AS de WHERE de.code_depense = :code LIMIT 1";
+            $sql = "SELECT * FROM " . TABLES::ARTICLES . " WHERE code_article = :code LIMIT 1";
 
             $stmt = $this->db->prepare($sql);
 
