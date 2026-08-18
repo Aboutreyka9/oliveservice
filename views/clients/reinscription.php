@@ -45,12 +45,12 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-10 mb-3">
                         <label for="search_client" class="form-label">Code client ou téléphone <strong class="text-danger">*</strong></label>
                         <input type="text" class="form-control" id="search_client" placeholder="Ex: CLI-001 ou 0102030405" required>
                     </div>
-                    <div class="col-md-6 mb-3 d-flex align-items-end">
-                        <button type="button" class="btn btn-primary" id="btn_search_client">
+                    <div class="col-md-2 mb-3 d-flex align-items-end">
+                        <button type="button" class="btn btn-warning" id="btn_search_client">
                             <i class="fas fa-search"></i> &nbsp; Rechercher
                         </button>
                     </div>

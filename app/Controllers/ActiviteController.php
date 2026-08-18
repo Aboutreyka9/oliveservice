@@ -117,11 +117,15 @@ class ActiviteController extends MainController
 
 
     public function detailPack($code)
-
     {
+        $pack = $this->activiteModel->getSinglePAckByCode($code);
+        $articles = $this->activiteModel->getAllPAckArticles($code);
 
-        $this->view('activites/detail_pack_article', ['title' => "Details pack article"]);
-
+        $this->view('activites/detail_pack_article', [
+            'title' => "Détails pack",
+            'pack' => $pack,
+            'articles' => $articles
+        ]);
     }
 
       public function categorie()
@@ -1105,15 +1109,7 @@ class ActiviteController extends MainController
 
         extract($_POST);
 
-
-        var_dump($_POST);
-        return;
-
         $statut_article = (isset($statut_article) && $statut_article != STATUT_INACTIF) ? STATUT_ACTIF : STATUT_INACTIF;
-
-
-
-
 
         if ($this->activiteModel->update(TABLES::ARTICLES, 'code_article', $code_article, ['statut_article' => $statut_article])) Response::success('Statut modifié avec succès', []);
 

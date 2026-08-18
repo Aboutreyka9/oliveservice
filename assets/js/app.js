@@ -4460,7 +4460,7 @@ function changeStatutArticle(code, statut) {
 
                     },
 
-                    // dataType: 'JSON',
+                    dataType: 'JSON',
 
                     beforeSend: function () {
 
