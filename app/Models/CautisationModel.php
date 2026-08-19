@@ -116,9 +116,92 @@ class CautisationModel extends Model
         return $data;
     }
 
-    public function dataTableCountTotalCautionsRow(array $whereParams, $likeParams = []): int
+    public function getStatsCautions(string $etablissementCode, ?string $sessionCode = null, ?string $zoneCode = null, ?string $dateDebut = null, ?string $dateFin = null): array
     {
-        $where = "WHERE ins.etablissement_code = :etablissement_code AND c.statut_cautisation_client = 'En attente'";
+        $data = [
+            'total' => 0,
+            'en_attente' => 0,
+            'valide' => 0,
+            'annule' => 0,
+            'montant_total' => 0,
+            'montant_en_attente' => 0,
+            'montant_valide' => 0,
+            'montant_annule' => 0,
+        ];
+
+        try {
+            $where = "WHERE ins.etablissement_code = :etablissement_code";
+            $params = ['etablissement_code' => $etablissementCode];
+
+            if ($sessionCode) {
+                $where .= " AND ins.session_code = :session_code";
+                $params['session_code'] = $sessionCode;
+            }
+            if ($zoneCode) {
+                $where .= " AND ins.zone_code = :zone_code";
+                $params['zone_code'] = $zoneCode;
+            }
+            if ($dateDebut && $dateFin) {
+                $where .= " AND DATE(c.created_at_cautisation_client) BETWEEN :date_debut AND :date_fin";
+                $params['date_debut'] = $dateDebut;
+                $params['date_fin'] = $dateFin;
+            }
+
+            $sql = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'En attente' THEN 1 ELSE 0 END) as en_attente,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'valide' THEN 1 ELSE 0 END) as valide,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'ennule' THEN 1 ELSE 0 END) as annule,
+                        SUM(c.montant_cautisation_client) as montant_total,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'En attente' THEN c.montant_cautisation_client ELSE 0 END) as montant_en_attente,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'valide' THEN c.montant_cautisation_client ELSE 0 END) as montant_valide,
+                        SUM(CASE WHEN c.statut_cautisation_client = 'ennule' THEN c.montant_cautisation_client ELSE 0 END) as montant_annule
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    $where";
+
+            $stmt = $this->db->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if ($result) {
+                $data = [
+                    'total' => (int) $result['total'],
+                    'en_attente' => (int) $result['en_attente'],
+                    'valide' => (int) $result['valide'],
+                    'annule' => (int) $result['annule'],
+                    'montant_total' => (float) ($result['montant_total'] ?? 0),
+                    'montant_en_attente' => (float) ($result['montant_en_attente'] ?? 0),
+                    'montant_valide' => (float) ($result['montant_valide'] ?? 0),
+                    'montant_annule' => (float) ($result['montant_annule'] ?? 0),
+                ];
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+
+        return $data;
+    }
+
+    public function dataTableCountTotalCautionsRow(array $filters, $likeParams = []): int
+    {
+        $where = "WHERE ins.etablissement_code = :etablissement_code";
+        
+        if (!empty($filters['statut'])) {
+            $where .= " AND c.statut_cautisation_client = :statut";
+        }
+        if (!empty($filters['session_code'])) {
+            $where .= " AND ins.session_code = :session_code";
+        }
+        if (!empty($filters['zone_code'])) {
+            $where .= " AND ins.zone_code = :zone_code";
+        }
+        if (!empty($filters['date_debut']) && !empty($filters['date_fin'])) {
+            $where .= " AND DATE(c.created_at_cautisation_client) BETWEEN :date_debut AND :date_fin";
+        }
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -135,13 +218,48 @@ class CautisationModel extends Model
                 $where";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(array_merge($whereParams, $likeParams));
+        $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+        
+        if (!empty($filters['statut'])) {
+            $stmt->bindValue(":statut", $filters['statut']);
+        }
+        if (!empty($filters['session_code'])) {
+            $stmt->bindValue(":session_code", $filters['session_code']);
+        }
+        if (!empty($filters['zone_code'])) {
+            $stmt->bindValue(":zone_code", $filters['zone_code']);
+        }
+        if (!empty($filters['date_debut']) && !empty($filters['date_fin'])) {
+            $stmt->bindValue(":date_debut", $filters['date_debut']);
+            $stmt->bindValue(":date_fin", $filters['date_fin']);
+        }
+
+        if (!empty($likeParams)) {
+            foreach ($likeParams as $key => $value) {
+                $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->execute();
         return (int) ($stmt->fetch()['nb'] ?? 0);
     }
 
-    public function DataTableFetchCautionsListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10): array
+    public function DataTableFetchCautionsListe(array $filters, array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10): array
     {
-        $where = "WHERE ins.etablissement_code = :etablissement_code AND c.statut_cautisation_client = 'En attente'";
+        $where = "WHERE ins.etablissement_code = :etablissement_code";
+        
+        if (!empty($filters['statut'])) {
+            $where .= " AND c.statut_cautisation_client = :statut";
+        }
+        if (!empty($filters['session_code'])) {
+            $where .= " AND ins.session_code = :session_code";
+        }
+        if (!empty($filters['zone_code'])) {
+            $where .= " AND ins.zone_code = :zone_code";
+        }
+        if (!empty($filters['date_debut']) && !empty($filters['date_fin'])) {
+            $where .= " AND DATE(c.created_at_cautisation_client) BETWEEN :date_debut AND :date_fin";
+        }
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -167,6 +285,20 @@ class CautisationModel extends Model
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(":etablissement_code", Auth::user('etablissement_code'));
+
+        if (!empty($filters['statut'])) {
+            $stmt->bindValue(":statut", $filters['statut']);
+        }
+        if (!empty($filters['session_code'])) {
+            $stmt->bindValue(":session_code", $filters['session_code']);
+        }
+        if (!empty($filters['zone_code'])) {
+            $stmt->bindValue(":zone_code", $filters['zone_code']);
+        }
+        if (!empty($filters['date_debut']) && !empty($filters['date_fin'])) {
+            $stmt->bindValue(":date_debut", $filters['date_debut']);
+            $stmt->bindValue(":date_fin", $filters['date_fin']);
+        }
 
         if (!empty($likeParams)) {
             foreach ($likeParams as $key => $value) {

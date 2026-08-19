@@ -33,7 +33,10 @@ class CautisationController extends MainController
         extract($_POST);
 
         $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+        $filters = [
+            'etablissement_code' => Auth::user('etablissement_code'),
+            'statut' => $_POST['statut'] ?? 'En attente'
+        ];
 
         $limit = (int) ($_POST['length'] ?? 10);
         $start = (int) ($_POST['start'] ?? 0);
@@ -42,28 +45,39 @@ class CautisationController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
 
         $columns = [
-            0 => 'nom_client',
-            1 => 'telephone_client',
-            2 => 'libelle_session',
-            3 => 'montant_cautisation_client',
-            4 => 'created_at_cautisation_client'
+            0 => 'cl.nom_client',
+            1 => 'cl.telephone_client',
+            2 => 'se.libelle_session',
+            3 => 'c.montant_cautisation_client',
+            4 => 'c.created_at_cautisation_client'
         ];
 
-        $orderBy = $columns[$orderColumn] ?? 'created_at_cautisation_client';
+        $orderBy = $columns[$orderColumn] ?? 'c.created_at_cautisation_client';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
         if (!empty($search)) {
             $likeParams = [
-                'nom_client' => $search,
-                'telephone_client' => $search,
-                'libelle_session' => $search,
-                'code_cautisation_client' => $search
+                'cl.nom_client' => $search,
+                'cl.telephone_client' => $search,
+                'se.libelle_session' => $search,
+                'c.code_cautisation_client' => $search
             ];
         }
 
-        $total = $this->cautisationModel->dataTableCountTotalCautionsRow($whereParams, $likeParams);
-        $totalFiltered = $this->cautisationModel->dataTableCountTotalCautionsRow($whereParams, $likeParams);
-        $cautions = $this->cautisationModel->DataTableFetchCautionsListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        if (!empty($_POST['session_code'])) {
+            $filters['session_code'] = $_POST['session_code'];
+        }
+        if (!empty($_POST['zone_code'])) {
+            $filters['zone_code'] = $_POST['zone_code'];
+        }
+        if (!empty($_POST['date_debut']) && !empty($_POST['date_fin'])) {
+            $filters['date_debut'] = $_POST['date_debut'];
+            $filters['date_fin'] = $_POST['date_fin'];
+        }
+
+        $total = $this->cautisationModel->dataTableCountTotalCautionsRow($filters, $likeParams);
+        $totalFiltered = $this->cautisationModel->dataTableCountTotalCautionsRow($filters, $likeParams);
+        $cautions = $this->cautisationModel->DataTableFetchCautionsListe($filters, $likeParams, $orderBy, $orderDir, $start, $limit);
         $data = $this->cautisationService->getCautisationDataService($cautions);
 
         echo json_encode([
@@ -73,6 +87,22 @@ class CautisationController extends MainController
             "data" => $data
         ]);
         return;
+    }
+
+    public function getStats()
+    {
+        $_POST = sanitizePostData($_POST);
+        
+        $etablissementCode = Auth::user('etablissement_code');
+        $stats = $this->cautisationModel->getStatsCautions(
+            $etablissementCode,
+            $_POST['session_code'] ?? null,
+            $_POST['zone_code'] ?? null,
+            $_POST['date_debut'] ?? null,
+            $_POST['date_fin'] ?? null
+        );
+
+        Response::success('', ['stats' => $stats]);
     }
 
     public function addCautisation()

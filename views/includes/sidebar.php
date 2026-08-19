@@ -30,6 +30,13 @@
                                     <span class="link-collapse">Profile</span>
                                 </a>
                             </li>
+                            <?php if (has_groupe(Groupes::ADMIN) || has_groupe(Groupes::ADMIN)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('commerciaux/profile/' . auth()->user('id')) ?>">
+                                    <span class="link-collapse">Mon profil commercial</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
                             <li>
                                 <a class="btn_deconnect" href="javascript:void();">
                                     <span class="link-collapse">Deconnexion</span>

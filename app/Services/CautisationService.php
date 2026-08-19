@@ -78,7 +78,15 @@ class CautisationService
         foreach ($cautions as $c) {
             $i++;
             $totalPaye = $this->cautisationModel->getTotalCautisationByInscription($c['code_inscription']);
-            $reste = max(0, ($c['montant_total_pack'] ?? 0) - $totalPaye);
+            $montantPack = (float) ($c['montant_total_pack'] ?? 0);
+            $reste = max(0, $montantPack - $totalPaye);
+
+            $statutBadge = '<span class="badge badge-warning">En attente</span>';
+            if ($c['statut_cautisation_client'] === 'valide') {
+                $statutBadge = '<span class="badge badge-success">Validé</span>';
+            } elseif ($c['statut_cautisation_client'] === 'ennule') {
+                $statutBadge = '<span class="badge badge-danger">Annulé</span>';
+            }
 
             $actions = '
             <button class="btn btn-light btn-link" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -99,10 +107,12 @@ class CautisationService
                 $c['nom_client'],
                 $c['telephone_client'],
                 $c['libelle_session'],
+                $c['libelle_annee'],
                 $c['libelle_zone'],
                 number_format($c['montant_cautisation_client'], 0, ',', ' ') . ' FCFA',
                 number_format($totalPaye, 0, ',', ' ') . ' FCFA',
                 number_format($reste, 0, ',', ' ') . ' FCFA',
+                $statutBadge,
                 date_formater($c['created_at_cautisation_client'], true),
                 $actions
             ];

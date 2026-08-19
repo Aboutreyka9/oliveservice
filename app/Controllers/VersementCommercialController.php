@@ -33,7 +33,7 @@ class VersementCommercialController extends MainController
         extract($_POST);
 
         $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code')];
+        $filters = ['etablissement_code' => Auth::user('etablissement_code')];
 
         $limit = (int) ($_POST['length'] ?? 10);
         $start = (int) ($_POST['start'] ?? 0);
@@ -62,9 +62,23 @@ class VersementCommercialController extends MainController
             ];
         }
 
-        $total = $this->versementModel->dataTableCountTotalVersementsRow($whereParams, $likeParams);
-        $totalFiltered = $this->versementModel->dataTableCountTotalVersementsRow($whereParams, $likeParams);
-        $versements = $this->versementModel->DataTableFetchVersementsListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        if (!empty($_POST['commercial_code'])) {
+            $filters['commercial_code'] = $_POST['commercial_code'];
+        }
+        if (!empty($_POST['zone_code'])) {
+            $filters['zone_code'] = $_POST['zone_code'];
+        }
+        if (!empty($_POST['statut'])) {
+            $filters['statut'] = $_POST['statut'];
+        }
+        if (!empty($_POST['date_debut']) && !empty($_POST['date_fin'])) {
+            $filters['date_debut'] = $_POST['date_debut'];
+            $filters['date_fin'] = $_POST['date_fin'];
+        }
+
+        $total = $this->versementModel->dataTableCountTotalVersementsRow($filters, $likeParams);
+        $totalFiltered = $this->versementModel->dataTableCountTotalVersementsRow($filters, $likeParams);
+        $versements = $this->versementModel->DataTableFetchVersementsListe($filters, $likeParams, $orderBy, $orderDir, $start, $limit);
         $data = $this->versementService->getVersementDataService($versements);
 
         echo json_encode([
@@ -74,6 +88,29 @@ class VersementCommercialController extends MainController
             "data" => $data
         ]);
         return;
+    }
+
+    public function getStats()
+    {
+        $_POST = sanitizePostData($_POST);
+        
+        $filters = [];
+        if (!empty($_POST['commercial_code'])) {
+            $filters['commercial_code'] = $_POST['commercial_code'];
+        }
+        if (!empty($_POST['zone_code'])) {
+            $filters['zone_code'] = $_POST['zone_code'];
+        }
+        if (!empty($_POST['statut'])) {
+            $filters['statut'] = $_POST['statut'];
+        }
+        if (!empty($_POST['date_debut']) && !empty($_POST['date_fin'])) {
+            $filters['date_debut'] = $_POST['date_debut'];
+            $filters['date_fin'] = $_POST['date_fin'];
+        }
+
+        $stats = $this->versementService->getStats(Auth::user('etablissement_code'), $filters);
+        Response::success('', ['stats' => $stats]);
     }
 
     public function addVersement()

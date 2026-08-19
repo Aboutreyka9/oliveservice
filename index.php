@@ -23,6 +23,7 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Controllers\AuthController;
 use App\Controllers\CautisationController;
 use App\Controllers\ClientController;
+use App\Controllers\CommercialController;
 use App\Controllers\Controller;
 use App\Controllers\ControllerException;
 use App\Controllers\DashboardController;
@@ -160,6 +161,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('personnel-commercials', [UserController::class, 'commercials'], ['before' => 'admin|super']);
         $router->get('personnel-administratifs', [UserController::class, 'administratif'], ['before' => 'admin|super']);
         $router->get('utilsateur/profile/{code}', [UserController::class, 'profile'], ['before' => 'auth']);
+        $router->get('commerciaux/profile/{code}', [CommercialController::class, 'profile'], ['before' => 'auth']);
 
         // <!-- parametrage -->
         $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);

@@ -268,19 +268,19 @@ class ActiviteController extends MainController
 
         // 🔢 Total
 
-        $total = $f->dataTbleCountTotalDepensesRow($whereParams);
+        $total = $activiteService->dataTableCountTotalDepensesRow($whereParams);
 
         // 🔢 Total filtré
 
 
 
-        $totalFiltered = $f->dataTbleCountTotalDepensesRow($whereParams, $likeParams);
+        $totalFiltered = $activiteService->dataaTbleCountTotalDepensesRow($whereParams, $likeParams);
 
         // 📄 Données
 
 
 
-        $depenseList = $f->DataTableFetchDepensesListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $depenseList = $activiteService->DataTaableFetchDepensesListe($likeParams, $orderBy, $orderDir, $start, $limit);
 
         $data = [];
 
@@ -288,7 +288,7 @@ class ActiviteController extends MainController
 
 
 
-        $data = $this->activiteService->depenseDataService($depenseList);
+        $data = $this->activiteService->articleDataService($depenseList);
 
         // Response::success('operation reussie',);
 

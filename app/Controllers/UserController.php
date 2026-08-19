@@ -126,6 +126,7 @@ class UserController extends MainController
             3 => 'prenom_user',
             4 => 'telephone_user',
             5 => 'libelle_fonction',
+            6 => 'profil',
         ];
 
         $orderBy = $columns[$orderColumn] ?? 'libelle_fonction';

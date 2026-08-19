@@ -22,7 +22,7 @@
 
     <div class="wrapper sidebar_minimize">
         <!-- header -->
-        <?php include "includes/navbar.php" ?>
+        <?php  include "includes/navbar.php" ?>
         <!-- end header -->
 
         <!-- Sidebar -->
@@ -130,7 +130,7 @@
 
 
     <!--   Core JS Files   -->
-    <?php include 'includes/script.php' ?>
+    <?php  include 'includes/script.php' ?>
     <!-- QRCode.js (librairie légère pour générer les QR codes côté navigateur) -->
     <script src="<?= ASSETS ?>js/qrcode.min.js"></script>
 

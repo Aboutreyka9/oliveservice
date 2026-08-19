@@ -4,9 +4,9 @@ $end = (new DateTime('today'))->format('Y-m-d');
 $dateD = (new DateTime('first day of this month'))->format('d-m-Y');
 $dateF = (new DateTime('today'))->format('d-m-Y');
 
-$etablissementCode = Auth::user('etablissement_code');
-$anneeCode = Auth::user('annee_code');
-$zoneCode = Auth::user('zone_code');
+$etablissementCode = auth()::user('etablissement_code');
+$anneeCode = auth()::user('annee_code');
+$zoneCode = auth()::user('zone_code');
 
 $stats = [
     'total' => 0,
@@ -55,7 +55,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
                             <select name="zone_code" class="form-control select2">
                                 <option value="">Toutes les zones</option>
                                 <?php
-                                $zones = $clientModel->getFieldsForParams(\App\configs\TABLES::ZONES, ['etablissement_code' => $etablissementCode], [], true);
+                                $zones = $clientModel->getFieldsForParams(TABLES::ZONES, ['etablissement_code' => $etablissementCode], [], true);
                                 foreach ($zones as $zone) {
                                     $selected = selected($zone['code_zone'], $zoneCode);
                                     echo '<option ' . $selected . ' value="' . $zone['code_zone'] . '">' . htmlspecialchars($zone['libelle_zone']) . '</option>';
