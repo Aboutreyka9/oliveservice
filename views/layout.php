@@ -1,3 +1,4 @@
+<?php   $view = isset($viewFile) ? $viewFile : ""; ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -39,7 +40,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <?php include $viewFile; // Charger la vue spécifique 
+                            <?php include $view; // Charger la vue spécifique 
                             ?>
                         </div>
                     </div>

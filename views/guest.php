@@ -1,3 +1,5 @@
+<?php   $view = isset($viewFile) ? $viewFile : ""; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -21,7 +23,7 @@
 
 <body class="bg-login">
   <div class="main-container ">
-    <?php include $viewFile; // Charger la vue spécifique 
+    <?php include $view; // Charger la vue spécifique 
     ?>
   </div>
 
