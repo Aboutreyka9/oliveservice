@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 17 août 2026 à 14:17
+-- Généré le : jeu. 20 août 2026 à 03:39
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `description_article` text,
   `statut_article` enum('actif','inactif') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'actif',
   `created_at_article` timestamp NOT NULL,
+  `updated_at_article` datetime DEFAULT NULL,
   `etablissement_code` varchar(50) DEFAULT NULL,
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_article`),
@@ -80,14 +81,14 @@ CREATE TABLE IF NOT EXISTS `articles` (
 -- Déchargement des données de la table `articles`
 --
 
-INSERT INTO `articles` (`id_article`, `code_article`, `libelle_article`, `description_article`, `statut_article`, `created_at_article`, `etablissement_code`, `user_code`) VALUES
-(1, 'MGUlgKfYtYque', 'Huile', '', 'actif', '2026-08-04 10:34:19', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(2, 'd6IUbns', 'Savon', '', 'actif', '2026-08-04 10:34:30', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(3, 'V5a3XlKXuxJmG2POYGsAPAt4OSQ6', 'Poulet', '', 'actif', '2026-08-04 10:34:39', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(4, 'URFZFVbJ0Pd', 'Marmite', '', 'actif', '2026-08-04 10:34:47', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(5, 'BBjHzzgKfQZTP', 'Sac de riz', '', 'actif', '2026-08-04 10:34:56', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(6, 'tQ0oaE7ppDJ4zETjVl9u', 'boite de sardine', '', 'actif', '2026-08-04 10:35:12', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(7, 'uLzk80G4zBGwJMu7uuY2VEFBDhNWhm', 'pack d&#039;eau', '', 'actif', '2026-08-04 10:35:32', '5454544456', '5wBEh2OfI00frxk8ITPf');
+INSERT INTO `articles` (`id_article`, `code_article`, `libelle_article`, `description_article`, `statut_article`, `created_at_article`, `updated_at_article`, `etablissement_code`, `user_code`) VALUES
+(1, 'MGUlgKfYtYque', 'HUILE', '', 'actif', '2026-08-04 10:34:19', '2026-08-18 16:50:58', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(2, 'd6IUbns', 'Savon', '', 'actif', '2026-08-04 10:34:30', NULL, '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(3, 'V5a3XlKXuxJmG2POYGsAPAt4OSQ6', 'Poulet', '', 'actif', '2026-08-04 10:34:39', NULL, '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(4, 'URFZFVbJ0Pd', 'Marmite', '', 'inactif', '2026-08-04 10:34:47', NULL, '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(5, 'BBjHzzgKfQZTP', 'Sac de riz', '', 'actif', '2026-08-04 10:34:56', NULL, '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(6, 'tQ0oaE7ppDJ4zETjVl9u', 'BOITE DE SARDINE', '', 'actif', '2026-08-04 10:35:12', '2026-08-18 16:58:03', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(7, 'uLzk80G4zBGwJMu7uuY2VEFBDhNWhm', 'pack d&#039;eau', '', 'inactif', '2026-08-04 10:35:32', NULL, '5454544456', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -107,18 +108,21 @@ CREATE TABLE IF NOT EXISTS `categorie_packs` (
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_categorie_pack`),
   UNIQUE KEY `uq_annee_libelle` (`libelle_categorie_pack`,`etablissement_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `categorie_packs`
 --
 
 INSERT INTO `categorie_packs` (`id_categorie_pack`, `libelle_categorie_pack`, `code_categorie_pack`, `etablissement_code`, `created_at_categorie_pack`, `updated_at_categorie_pack`, `statut_categorie_pack`, `user_code`) VALUES
-(1, 'categorie A', '6QIlVfXP0LiXE9tBzHownYLAA324qDi2', '5454544456', '2026-08-01 18:09:24', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(1, 'CATEGORIE AP', '6QIlVfXP0LiXE9tBzHownYLAA324qDi2', '5454544456', '2026-08-01 18:09:24', '2026-08-18 12:35:33', 'actif', '5wBEh2OfI00frxk8ITPf'),
 (2, 'categorie B', 'l36Gc45t', '5454544456', '2026-08-01 18:09:30', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(3, 'CATEGORIE 3', '0o9Wub9H', '5454544456', '2026-08-03 12:29:41', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(3, 'CATEGORIE 3DD F', '0o9Wub9H', '5454544456', '2026-08-03 12:29:41', '2026-08-20 03:03:18', 'actif', '5wBEh2OfI00frxk8ITPf'),
 (4, 'CATEGORIE A6', 'WylIcOZKZQUCJe304', '5454544456', '2026-08-03 12:31:46', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(5, 'CATEGORIE P', 've7D90DQcfhu6k0lpJ1S', '5454544456', '2026-08-03 12:56:06', NULL, 'actif', '5wBEh2OfI00frxk8ITPf');
+(5, 'CATEGORIE P', 've7D90DQcfhu6k0lpJ1S', '5454544456', '2026-08-03 12:56:06', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(6, 'TYSTSTG5', 'LxvP8hri8fpfDTQvg', '5454544456', '2026-08-19 15:48:29', '2026-08-19 15:48:39', 'actif', '5wBEh2OfI00frxk8ITPf'),
+(7, 'CATEGORIE P534', 'gzHZ5M4', '5454544456', '2026-08-19 15:50:47', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(8, 'CATEGORIE PGF', 'BMc16HyuIu2eOOMu9br8', '5454544456', '2026-08-20 03:02:48', NULL, 'actif', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -191,9 +195,18 @@ CREATE TABLE IF NOT EXISTS `commercials` (
   `updated_at_commercial` datetime DEFAULT NULL,
   `user_code` varchar(50) NOT NULL,
   `etablissement_code` varchar(50) NOT NULL,
+  `zone_code` varchar(50) NOT NULL,
   PRIMARY KEY (`id_commercial`),
   UNIQUE KEY `code_enseignant` (`code_commercial`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `commercials`
+--
+
+INSERT INTO `commercials` (`id_commercial`, `code_commercial`, `statut_commercial`, `created_at_commercial`, `updated_at_commercial`, `user_code`, `etablissement_code`, `zone_code`) VALUES
+(1, '5wdBEh', 'actif', '2026-08-19 01:05:12', NULL, '5wBEh2OfI00frxk8ITPf', '5454544456', '6QIlVfXP0LiXE9tBzHownYLAAqDi2'),
+(2, '456ddff', 'actif', '2026-08-19 01:05:12', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '5454544456', '6QIlVfXP0LiXE9tBzHownYLAAqDi2');
 
 -- --------------------------------------------------------
 
@@ -308,13 +321,13 @@ CREATE TABLE IF NOT EXISTS `fonctions` (
 --
 
 INSERT INTO `fonctions` (`id_fonction`, `libelle_fonction`, `code_fonction`, `statut_fonction`, `description_fonction`, `user_code`, `etablissement_code`, `created_at_fonction`, `updated_at_fonction`) VALUES
-(1, 'fonction a', '8875', 'actif', NULL, '123', '5454544456', '2026-07-13 23:32:56', NULL),
+(1, 'fonction a', '8875', 'inactif', NULL, '123', '5454544456', '2026-07-13 23:32:56', NULL),
 (2, 'FONCTION B', '958', 'inactif', 'desc 222', '123', '5454544456', '2026-07-15 23:33:04', '2026-07-16 04:38:06'),
-(5, 'FONCTION C', '545644', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:54:29', NULL),
-(8, 'FONCTION D', 'LYsl3iNLmmrAUiL', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:56:59', '2026-07-16 05:12:37'),
-(9, 'FONCTION E', 'C1OapnqyN8Uf11SlLl', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:57:08', NULL),
-(10, 'FONCTION F', 'KXxGPo0ZktLI4V', 'actif', 'dfdf', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 03:01:01', NULL),
-(11, 'FONCTION G', 'anZU3oVbNt8KhPwwai', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 18:30:25', NULL);
+(5, 'COMMERCIAL', '545644', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:54:29', '2026-08-18 01:30:48'),
+(8, 'GESTIONNAIRE-COMPTABLE', 'LYsl3iNLmmrAUiL', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:56:59', '2026-08-18 01:30:35'),
+(9, 'COMPTABLE', 'C1OapnqyN8Uf11SlLl', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 02:57:08', '2026-08-18 01:30:10'),
+(10, 'GESTIONNAIRE', 'KXxGPo0ZktLI4V', 'actif', 'dfdf', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 03:01:01', '2026-08-18 01:29:56'),
+(11, 'ADMINISTRATEUR', 'anZU3oVbNt8KhPwwai', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 18:30:25', '2026-08-18 01:29:39');
 
 -- --------------------------------------------------------
 
@@ -377,7 +390,7 @@ CREATE TABLE IF NOT EXISTS `packs` (
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_pack`),
   UNIQUE KEY `code_cycle` (`code_pack`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `packs`
@@ -385,16 +398,17 @@ CREATE TABLE IF NOT EXISTS `packs` (
 
 INSERT INTO `packs` (`id_pack`, `code_pack`, `libelle_pack`, `montant_pack`, `annee_code`, `session_code`, `zone_code`, `categorie_pack_code`, `etablissement_code`, `created_at_pack`, `updated_at_pack`, `statut_pack`, `user_code`) VALUES
 (11, 'l4ymf5', 'KJCFHD', 5000, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '6QIlVfXP0LiXE9tBzHownYLAA324qDi2', '5454544456', '2026-08-08 01:42:49', '2026-08-11 11:42:24', 'actif', '5wBEh2OfI00frxk8ITPf'),
-(12, 'itT57K3khk9', 'KJCFHD4', 5000, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-08 01:43:07', '2026-08-11 11:42:45', 'actif', '5wBEh2OfI00frxk8ITPf'),
+(12, 'itT57K3khk9', 'KJCFHD4', 5000, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-08 01:43:07', '2026-08-11 11:42:45', 'inactif', '5wBEh2OfI00frxk8ITPf'),
 (13, 'XMGgOdiDgzQK1', 'KJCFHD', 5000, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-08 01:43:23', '2026-08-10 01:25:57', 'actif', '5wBEh2OfI00frxk8ITPf'),
 (14, 'FNEF8arPTaNxhYUGlGrjhHlN', 'PACK 1', 900, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'WylIcOZKZQUCJe304', '5454544456', '2026-08-08 11:47:30', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
 (15, 'Il1dx', 'PACK 55', 500, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-09 10:52:39', '2026-08-11 11:34:11', 'actif', '5wBEh2OfI00frxk8ITPf'),
 (16, '0cQQ2lb44PX', 'PACK 2', 300, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-09 11:03:01', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(17, 'wv5aMldjjok4ds1k', 'CUM SOLUTA ELIT VEN', 92, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'l36Gc45t', '5454544456', '2026-08-09 22:02:50', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(17, 'wv5aMldjjok4ds1k', 'CUM SOLUTA ELIT VEN', 500, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'l36Gc45t', '5454544456', '2026-08-09 22:02:50', '2026-08-18 17:38:46', 'actif', '5wBEh2OfI00frxk8ITPf'),
 (18, 'dKzkvIgRTCuCc6OFMHL8CsiH', 'DOLORES VELIT QUIDEM', 35, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 've7D90DQcfhu6k0lpJ1S', '5454544456', '2026-08-09 22:04:30', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
 (19, '2fR8BqCBEbQ0b94mWKelXn4HNPSodCN', 'PACK 1', 100, '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '6QIlVfXP0LiXE9tBzHownYLAA324qDi2', '5454544456', '2026-08-09 22:05:28', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
 (20, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'PACK 1', 100, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '0o9Wub9H', '5454544456', '2026-08-09 22:06:19', '2026-08-11 11:38:08', 'actif', '5wBEh2OfI00frxk8ITPf'),
-(21, '4Xghnzv8tQKcVu', 'QUASI DOLOREM OFFICI', 75, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'l36Gc45t', '5454544456', '2026-08-10 01:24:07', NULL, 'actif', '5wBEh2OfI00frxk8ITPf');
+(21, '4Xghnzv8tQKcVu', 'QUASI DOLOREM OFFICI', 75, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'l36Gc45t', '5454544456', '2026-08-10 01:24:07', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(22, '5AZrZNCZvMEmitS2GEHx5qKvueCgK', 'PACK 19', 100, '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', 'WylIcOZKZQUCJe304', '5454544456', '2026-08-20 02:39:14', NULL, 'actif', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -414,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `pack_articles` (
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_pack_article`),
   UNIQUE KEY `unique_pack_article` (`pack_code`,`article_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `pack_articles`
@@ -454,7 +468,12 @@ INSERT INTO `pack_articles` (`id_pack_article`, `quantite_article`, `pack_code`,
 (45, 1, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'uLzk80G4zBGwJMu7uuY2VEFBDhNWhm', '0GklBk07waYoLB6pHwY', '2026-08-11 11:38:08', '5454544456', '5wBEh2OfI00frxk8ITPf'),
 (46, 1, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'V5a3XlKXuxJmG2POYGsAPAt4OSQ6', '0GklBk07waYoLB6pHwY', '2026-08-11 11:38:08', '5454544456', '5wBEh2OfI00frxk8ITPf'),
 (47, 1, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'BBjHzzgKfQZTP', '0GklBk07waYoLB6pHwY', '2026-08-11 11:38:08', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(48, 1, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'd6IUbns', '0GklBk07waYoLB6pHwY', '2026-08-11 11:38:08', '5454544456', '5wBEh2OfI00frxk8ITPf');
+(48, 1, 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', 'd6IUbns', '0GklBk07waYoLB6pHwY', '2026-08-11 11:38:08', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(54, 1, 'wv5aMldjjok4ds1k', 'V5a3XlKXuxJmG2POYGsAPAt4OSQ6', '0GklBk07waYoLB6pHwY', '2026-08-18 17:24:49', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(61, 1, '5AZrZNCZvMEmitS2GEHx5qKvueCgK', 'MGUlgKfYtYque', '0GklBk07waYoLB6pHwY', '2026-08-20 02:39:14', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(62, 1, '5AZrZNCZvMEmitS2GEHx5qKvueCgK', 'BBjHzzgKfQZTP', '0GklBk07waYoLB6pHwY', '2026-08-20 02:39:14', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(63, 1, '5AZrZNCZvMEmitS2GEHx5qKvueCgK', 'V5a3XlKXuxJmG2POYGsAPAt4OSQ6', '0GklBk07waYoLB6pHwY', '2026-08-20 02:39:14', '5454544456', '5wBEh2OfI00frxk8ITPf'),
+(64, 1, '5AZrZNCZvMEmitS2GEHx5qKvueCgK', 'tQ0oaE7ppDJ4zETjVl9u', '0GklBk07waYoLB6pHwY', '2026-08-20 02:39:14', '5454544456', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -534,7 +553,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_role` (`code_role`),
   KEY `groupe` (`groupe`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `roles`
@@ -547,12 +566,13 @@ INSERT INTO `roles` (`id`, `libelle_role`, `code_role`, `module`, `groupe`, `sta
 (4, 'Comptable - Caisse', 'compt_caisse', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion de la caisse et paiements'),
 (5, 'Comptable - Dépenses', 'compt_depense', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion des dépenses'),
 (6, 'Comptable - Versements', 'compt_versement', 'FINANCE', 'COMPTABLE', 'actif', 'Suivi des versements commerciaux'),
-(7, 'Gestionnaire - Validations', 'gest_valid', 'FINANCE', 'GESTION', 'actif', 'Validation des versements et cautions'),
-(8, 'Gestionnaire - Distributions', 'gest_distrib', 'CLIENTS', 'GESTION', 'actif', 'Gestion des distributions articles'),
-(9, 'Gestionnaire - Cautions', 'gest_caution', 'CLIENTS', 'GESTION', 'actif', 'Validation des cautions clients'),
+(7, 'Gestionnaire - Validations', 'gest_valid', 'GESTION', 'GESTION', 'actif', 'Validation des versements et cautions'),
+(8, 'Gestionnaire - Distributions', 'gest_distrib', 'GESTION', 'GESTION', 'actif', 'Gestion des distributions articles'),
+(9, 'Gestionnaire - Cautions', 'gest_caution', 'GESTION', 'GESTION', 'actif', 'Validation des cautions clients'),
 (10, 'Commercial - Clients', 'comm_client', 'CLIENTS', 'COMMERCIAL', 'actif', 'Gestion des clients et souscriptions'),
 (11, 'Commercial - Cautions', 'comm_caution', 'CLIENTS', 'COMMERCIAL', 'actif', 'Enregistrement des paiements cautions'),
-(12, 'Commercial - Versements', 'comm_versement', 'FINANCE', 'COMMERCIAL', 'actif', 'Dépôts de versements au bureau');
+(13, 'Commercial - Versements', 'comm_versement', 'FINANCE', 'COMMERCIAL', 'actif', 'Dépôts de versements au bureau'),
+(14, 'Gestionnaire - Packs', 'gest_packs', 'GESTION', 'GESTION', 'actif', 'Gestion des packs, articles');
 
 -- --------------------------------------------------------
 
@@ -580,11 +600,11 @@ CREATE TABLE IF NOT EXISTS `services` (
 
 INSERT INTO `services` (`id_service`, `libelle_service`, `code_service`, `statut_service`, `description_service`, `user_code`, `etablissement_code`, `created_at_service`, `updated_at_service`) VALUES
 (1, 'service a', '123', 'inactif', NULL, '123', '5454544456', '2026-07-15 23:32:31', NULL),
-(2, 'service 2', '955', 'actif', NULL, '123', '5454544456', '2026-07-15 23:32:38', NULL),
-(3, 'SERVICE C', 'FA02X3L3sfCSuXdmDM54UMFLE', 'actif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:18:39', NULL),
-(4, 'SERVICE D', '6NTz5lQBGmVX7ZLBr0nwB6Xbp4o', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:43:40', NULL),
-(5, 'SERVICE E', 'fUDNX8pBowvYWAFC', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:55:39', NULL),
-(6, 'SERVICE R', 'uGSgaDroZ', 'inactif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:57:55', '2026-07-17 01:09:34');
+(2, 'service 2', '955', 'inactif', NULL, '123', '5454544456', '2026-07-15 23:32:38', NULL),
+(3, 'SERVICE C', 'FA02X3L3sfCSuXdmDM54UMFLE', 'inactif', 'desc', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:18:39', NULL),
+(4, 'MARKETING', '6NTz5lQBGmVX7ZLBr0nwB6Xbp4o', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:43:40', '2026-08-18 01:32:41'),
+(5, 'FINANCE', 'fUDNX8pBowvYWAFC', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:55:39', '2026-08-18 01:32:28'),
+(6, 'ADMINISTRATION', 'uGSgaDroZ', 'actif', '', '5wBEh2OfI00frxk8ITPf', '5454544456', '2026-07-16 21:57:55', '2026-08-18 01:32:01');
 
 -- --------------------------------------------------------
 
@@ -597,6 +617,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `id_session` int NOT NULL AUTO_INCREMENT,
   `code_session` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `libelle_session` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `nombre_jour_session` int NOT NULL,
   `statut_session` enum('actif','inactif','') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `etablissement_code` varchar(50) NOT NULL,
   `annee_code` varchar(50) NOT NULL,
@@ -607,17 +628,19 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_session`),
   UNIQUE KEY `uq_semestre` (`code_session`,`annee_code`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `sessions`
 --
 
-INSERT INTO `sessions` (`id_session`, `code_session`, `libelle_session`, `statut_session`, `etablissement_code`, `annee_code`, `date_debut_session`, `date_fin_session`, `created_at_session`, `updated_at_session`, `user_code`) VALUES
-(1, 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'SESSION 1', 'actif', '5454544456', '0GklBk07waYoLB6pHwY', '2026-07-23', '2026-07-24', '2026-07-23 16:06:33', NULL, '5wBEh2OfI00frxk8ITPf'),
-(2, 'l8rmIqVzNWaRYF6Nb7kuckHC', 'SESSION 2', 'actif', '5454544456', '0GklBk07waYoLB6pHwY', '2026-07-25', '2026-08-27', '2026-07-23 16:07:01', NULL, '5wBEh2OfI00frxk8ITPf'),
-(3, 'TwvwmFiQn8hPkv0a4HKjk3IZTMY', 'SESSION 2', 'actif', '5454544456', 'Lv9LWUf7IdxEny', '2026-05-13', '2026-10-02', '2026-07-23 16:08:14', '2026-07-23 21:45:59', '5wBEh2OfI00frxk8ITPf'),
-(4, 'R0PCytWZghb0', 'SESSION2', 'inactif', '5454544456', 'T2POn4rE', '2026-07-07', '2026-08-01', '2026-07-23 16:08:30', NULL, '5wBEh2OfI00frxk8ITPf');
+INSERT INTO `sessions` (`id_session`, `code_session`, `libelle_session`, `nombre_jour_session`, `statut_session`, `etablissement_code`, `annee_code`, `date_debut_session`, `date_fin_session`, `created_at_session`, `updated_at_session`, `user_code`) VALUES
+(1, 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'SESSION 1', 150, 'actif', '5454544456', '0GklBk07waYoLB6pHwY', '2026-07-23', '2026-07-24', '2026-07-23 16:06:33', '2026-08-20 01:13:29', '5wBEh2OfI00frxk8ITPf'),
+(2, 'l8rmIqVzNWaRYF6Nb7kuckHC', 'SESSION 2', 0, 'actif', '5454544456', '0GklBk07waYoLB6pHwY', '2026-07-25', '2026-08-27', '2026-07-23 16:07:01', NULL, '5wBEh2OfI00frxk8ITPf'),
+(3, 'TwvwmFiQn8hPkv0a4HKjk3IZTMY', 'SESSION 2', 123, 'actif', '5454544456', 'Lv9LWUf7IdxEny', '2026-05-13', '2026-10-02', '2026-07-23 16:08:14', '2026-08-20 01:09:17', '5wBEh2OfI00frxk8ITPf'),
+(4, 'R0PCytWZghb0', 'SESSION2', 0, 'inactif', '5454544456', 'T2POn4rE', '2026-07-07', '2026-08-01', '2026-07-23 16:08:30', NULL, '5wBEh2OfI00frxk8ITPf'),
+(5, 'ltsSNeB9skMjqOBqSqUF', 'SESSION 4', 90, 'actif', '5454544456', '0GklBk07waYoLB6pHwY', '2028-06-01', '2029-07-20', '2026-08-20 01:07:27', '2026-08-20 01:07:55', '5wBEh2OfI00frxk8ITPf'),
+(6, '416ckbQuiauCG2kEAGEFr4AP', 'SESSION 4', 950, 'actif', '5454544456', 'VL0hWQ', '2026-07-30', '2026-08-07', '2026-08-20 01:09:00', NULL, '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -695,14 +718,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id_user`, `code_user`, `matricule_user`, `nom_user`, `prenom_user`, `email_user`, `sexe_user`, `password_user`, `telephone_user`, `photo_user`, `last_connexion`, `token_user`, `service_code`, `fonction_code`, `etablissement_code`, `auth_uid`, `created_at_user`, `updated_at_user`, `statut_user`) VALUES
-(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-17 14:02:31', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
+(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-17 17:16:38', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
 (2, 'yhveAqqunh', 'AUT VOLUPTATEM MINU', 'ID RERUM IUSTO LABOR 2', 'MAXIME EXERCITATION', 'vijasit@mailinator.com', 'Mme', '$2y$10$.CAaqXxLvPBmGENuZQuwgedqy0JMOtud/W5n1wk8v5WFJWzHdknwK', '(+225) 01 82 95 39 55', NULL, NULL, 'FEjrZldQclekdKylyairPzLZr6S6Yxy0rYQrrCkSv9zUU16UP8', '123', '8875', '5454544456', NULL, '2026-07-15 11:41:56', NULL, 'actif'),
 (9, 'JwucjkPg4w', 'EAQUE DUCIMUS VOLUP', 'DOLORES SED VOLUPTAT', 'EUM EARUM UT QUAS ES', 'zoddoudep@m5ailinator.com', 'Mlle', '$2y$10$a8MD50XhdXzJ59bBkZF.y.FxK0bkAgsMnTQlkT0VQjGbnsCh65Dei', '(+225) 01 43 67 81 55', NULL, NULL, 'pYQ20JoEy3dxhgv8pmEJw6cqo7rw6o7bxxJccCRn1VJyecP9V1UAL', '955', '8875', '5454544456', NULL, '2026-07-06 03:04:15', NULL, 'inactif'),
 (8, 'Xq9daapChi', 'SUNT EXPLICABO DOLO', 'UT ERROR FUGA INCID', 'APERIAM EXERCITATION', 'qenenu@mailinator.com', 'Mr', '$2y$10$7abhEN0B8mj47O8mb1vCCuG9IaFiS3sLWV1Ozb53f7difq2Oa9m.G', '(+225) 01 39 49 23 37', NULL, NULL, 'Ll9Jr8ODtxSEUnEWL5YOsQR4y7v8jjGFKHjmAsyWjEJsEt6bgNt', '955', '958', '5454544456', NULL, '2026-07-06 03:03:08', NULL, 'actif'),
 (7, 'wbwyd', 'IURE EXPLICABO AUTE', 'FACILIS AD IN HIC VO 5', 'MOLESTIAE COMMODO NI', 'absano5go9@gmail.com', 'Mr', '$2y$10$iW9t.mb2sgR18q1EzkL0mO03oKiJ8CdEyY7mHv3slr70PVDYeBEIK', '(+225) 01 20 23 26 76', NULL, NULL, 'XNGmKhjcrJ5FoR2ARMP2OEZdfqCAyrCHvKDnDK4SqPHFAqXgv0ciZWAlyEFdlRHje', '955', '958', '5454544456', NULL, '2026-07-15 11:45:01', NULL, 'inactif'),
 (10, 'Kjd35lpOuL9vewm5KM4yT', 'SUSCIPIT DISTINCTIO', 'EST QUI NAM DOLORES', 'QUI CONSEQUATUR AD', 'kemaduxepa@mailinator.com', 'Mlle', '$2y$10$VUh4ezknaDXwIc8fky64UeZRWjKyiXuXYEq.3bNCsIxJMev2l19za', '(+225) 01 55 43 91 85', NULL, NULL, 'urAqo1j0OLsDtprTHKPL4WhLy0rOaERHKL6Am8zhVkWBCsGi8kJojtlM3RLWkKIpPK', NULL, 'C1OapnqyN8Uf11SlLl', '5454544456', NULL, '2026-07-16 05:13:36', NULL, 'actif'),
 (11, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', '54564165', 'TEST', 'TESGGS', 'abs54anogo9@gmail.com', 'Mr', '$2y$10$vBL9TS0RRWJDglM55w47QuqxpkGT223QehFn45CPcoxRqCrWENOsy', '(+225) 05 44 54 56 54', NULL, NULL, '7rvTvGGaIHvudI8ZHHikZVdHFxyWE9B0R0O8qSnj334szE1LfIG0ZlwMIbgAb', NULL, '8875', '5454544456', NULL, '2026-07-14 01:46:23', NULL, 'actif'),
-(12, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '54564777165', 'Tytdg', 'Tesggs', 'absango9@gmail.com', 'Mme', '$2y$10$IOL0FHhuOECqft6iNC4lf.pr.f9cF8bGaRnt6fhifKcHq4AZn1t1.', '(+225) 05 44 45 46 46', NULL, NULL, 'TATRWLXdavgPFUqmrlCpGMozczYaZDtNcu31nfpZy02ZuySWrgeb', NULL, '8875', '5454544456', NULL, '2026-07-14 03:00:35', NULL, 'actif');
+(12, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '54564777165', 'Sanogo', 'Test', 'absango9@gmail.com', 'Mme', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 45 46 46', NULL, NULL, 'TATRWLXdavgPFUqmrlCpGMozczYaZDtNcu31nfpZy02ZuySWrgeb', NULL, '8875', '5454544456', NULL, '2026-07-14 03:00:35', NULL, 'actif');
 
 -- --------------------------------------------------------
 
@@ -721,7 +744,7 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   `delete_permission` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_role` (`user_code`,`role_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `user_roles`
@@ -733,7 +756,13 @@ INSERT INTO `user_roles` (`id`, `user_code`, `role_code`, `create_permission`, `
 (3, '5wBEh2OfI00frxk8ITPf', 'admin_user', 1, 1, 1, 1),
 (4, '5wBEh2OfI00frxk8ITPf', 'compt_caisse', 1, 1, 1, 1),
 (5, '5wBEh2OfI00frxk8ITPf', 'compt_depense', 1, 1, 1, 1),
-(6, '5wBEh2OfI00frxk8ITPf', 'compt_versement', 1, 1, 1, 1);
+(6, '5wBEh2OfI00frxk8ITPf', 'compt_versement', 1, 1, 1, 1),
+(7, '5wBEh2OfI00frxk8ITPf', 'comm_client', 1, 1, 1, 1),
+(8, '5wBEh2OfI00frxk8ITPf', 'comm_caution', 1, 1, 1, 1),
+(9, '5wBEh2OfI00frxk8ITPf', 'comm_versement', 1, 1, 1, 1),
+(10, '5wBEh2OfI00frxk8ITPf', 'gest_valid', 1, 1, 1, 1),
+(11, '5wBEh2OfI00frxk8ITPf', 'gest_distrib', 1, 1, 1, 1),
+(12, '5wBEh2OfI00frxk8ITPf', 'gest_caution', 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 

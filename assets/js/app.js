@@ -3998,7 +3998,6 @@ function updatedCategoriePack() {
 
                 btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
