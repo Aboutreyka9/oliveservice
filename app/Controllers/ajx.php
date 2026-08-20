@@ -581,6 +581,13 @@ switch ($action) {
         $ajx->getListePack();
 
         break;
+    case 'get_nombre_jour_session_pack':
+
+        $ajx = new ActiviteController();
+
+        $ajx->getNombreJourSessionPack();
+
+        break;
 
     case 'change_statut_packs':
 

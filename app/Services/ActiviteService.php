@@ -1505,27 +1505,15 @@ function chargerDataPacks($packs)
 
                 <div class="row mb-3">
 
-                    <div class="col-md-6 mb-3">
-
-                        <input type="hidden" value="btn_add_pack" name="action">
-
-                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
-
-                        <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
-
-                        <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" required>
-
-                    </div>
-
-                    <div class="col-md-6 mb-3">
+                 <div class="col-md-4 mb-3">
 
                        
 
-                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
+                        <label for="libelle_session_pack" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
 
                     
 
-                            <select class="form-control" id="libelle_session"  name="libelle_session" required>
+                            <select class="form-control" id="libelle_session_pack"  name="libelle_session" required>
 
                             <option value="">--- CHOISIR ---</option>
 
@@ -1550,8 +1538,26 @@ function chargerDataPacks($packs)
                         </select>
 
                     </div>
+                    <div class="col-md-4 mb-3">
 
-                    <div class="col-md-6 mb-3">
+                        <input type="hidden" value="btn_add_pack" name="action">
+
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+
+                        <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
+
+                        <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" required>
+
+                    </div>
+                     <div class="col-md-4 mb-3">
+
+                         <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
+
+                        <input type="number" class="form-control" id="montant_pack" name="montant_pack" required>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
 
                        
 
@@ -1586,16 +1592,21 @@ function chargerDataPacks($packs)
                     </div>
 
 
+                    <div class="col-md-4 mb-3">
 
-                    <div class="col-md-6 mb-3">
+                        <label for="" class="form-label">Nombre de jour  </label>
 
-                         <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
-
-                        <input type="number" class="form-control" id="montant_pack" name="montant_pack" required>
+                        <input type="text" disabled class="form-control" id="nombre_jour">
 
                     </div>
 
-                    
+                    <div class="col-md-4 mb-3">
+
+                        <label for="montant_total" class="form-label">Montant total  </label>
+
+                        <input style="color: red; font-weight: bold;" type="text" disabled class="form-control" id="montant_total">
+
+                    </div>
 
                 </div>
 
@@ -1711,31 +1722,15 @@ function chargerDataPacks($packs)
 
                 <div class="row mb-3">
 
-                    <div class="col-md-6 mb-3">
-
-                        <input type="hidden" value="btn_update_pack" name="action">
-
-                        <input type="hidden" value="' . $pack['code_pack'] . '" name="code_pack">
-
-                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
-
-                        <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
-
-                        <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" value="' . $pack['libelle_pack'] . '" required>
-
-                    </div>
+                 <div class="col-md-4 mb-3">
 
 
 
-                    <div class="col-md-6 mb-3">
-
-
-
-                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
+                        <label for="libelle_session_pack" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
 
                     
 
-                            <select class="form-control" id="libelle_session"  name="libelle_session" required>
+                            <select class="form-control" id="libelle_session_pack"  name="libelle_session" required>
 
                             <option value="">--- CHOISIR ---</option>
 
@@ -1755,13 +1750,32 @@ function chargerDataPacks($packs)
 
         $output .= '
 
-     
-
                         </select>
 
                     </div>
+                    <div class="col-md-4 mb-3">
 
-                    <div class="col-md-6 mb-3">
+                        <input type="hidden" value="btn_update_pack" name="action">
+
+                        <input type="hidden" value="' . $pack['code_pack'] . '" name="code_pack">
+
+                        <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
+
+                        <label for="libelle_pack" class="form-label">Libelle pack <strong class="text-danger">*</strong></label>
+
+                        <input type="text" class="form-control" id="libelle_pack" name="libelle_pack" value="' . $pack['libelle_pack'] . '" required>
+
+                    </div>
+
+                      <div class="col-md-4 mb-3">
+
+                         <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
+
+                        <input  value="' . $pack['montant_pack'] . '" type="number" class="form-control" id="montant_pack" name="montant_pack" required>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
 
                        
 
@@ -1795,17 +1809,21 @@ function chargerDataPacks($packs)
 
                     </div>
 
+                    <div class="col-md-4 mb-3">
 
+                        <label for="" class="form-label">Nombre de jour  </label>
 
-                    <div class="col-md-6 mb-3">
-
-                         <label for="montant_pack" class="form-label">Montant  <strong class="text-danger">*</strong></label>
-
-                        <input  value="' . $pack['montant_pack'] . '" type="number" class="form-control" id="montant_pack" name="montant_pack" required>
+                        <input type="text" disabled class="form-control" id="nombre_jour">
 
                     </div>
 
-                    
+                    <div class="col-md-4 mb-3">
+
+                        <label for="montant_total" class="form-label">Montant total  </label>
+
+                        <input  style="color: red; font-weight: bold;" type="text" disabled class="form-control" id="montant_total">
+
+                    </div>
 
                 </div>
 

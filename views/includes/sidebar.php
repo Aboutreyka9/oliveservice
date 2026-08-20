@@ -216,7 +216,7 @@
                 <li class="nav-item">
                     <a data-toggle="collapse" href="#administration">
                         <i class="fas fa-cog"></i>
-                        <p class="text-upper">Administration</p>
+                        <p class="text-upper">Paramètres</p>
                         <span class="caret"></span>
                     </a>
                     <div class="collapse" id="administration">
@@ -244,7 +244,7 @@
                             </li>
                             <li>
                                 <a class="item-link" href="<?= url('parametres') ?>">
-                                    <span class="sub-item">Paramètres</span>
+                                    <span class="sub-item">Compte</span>
                                 </a>
                             </li>
                         </ul>

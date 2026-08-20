@@ -1196,7 +1196,8 @@ class SettingController extends MainController
 
             ->required('debut_session', $debut_session, 'Date debut')->inferieur('debut_session', $debut_session, 'Date debut', $fin_session, 'Date fin')
 
-            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut');
+            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut')
+            ->required('nombre_jour', $nombre_jour, 'Nombre de jour')->digit('nombre_jour', $nombre_jour, 'Nombre de jour');
 
 
 
@@ -1244,7 +1245,8 @@ class SettingController extends MainController
 
             ->required('debut_session', $debut_session, 'Date debut')->inferieur('debut_session', $debut_session, 'Date debut', $fin_session, 'Date fin')
 
-            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut');
+            ->required('fin_session', $fin_session, 'Date fin')->superieur('fin_session', $fin_session, 'Date fin', $debut_session, 'Date debut')
+            ->required('nombre_jour', $nombre_jour, 'Nombre de jour')->digit('nombre_jour', $nombre_jour, 'Nombre de jour');
 
 
 

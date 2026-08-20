@@ -1459,6 +1459,26 @@ class ActiviteController extends MainController
 
 
 
+      public function getNombreJourSessionPack()
+
+    {
+        $_POST = sanitizePostData($_POST);
+
+        extract($_POST);
+
+        if (empty($session_code)) Response::error('Erreur du traitement des données', HttpStatusCode::UNAUTHORIZED);
+
+
+        $result = $this->settingModel->getSingleSessionByCode($session_code);
+
+        if (empty($result)) Response::error('Erreur du traitement des données', HttpStatusCode::UNAUTHORIZED);
+
+        echo json_encode(['success' =>true, 'jour' => $result['nombre_jour_session']]);
+        return;
+
+    }
+
+
     public function changeStatutPack()
 
     {

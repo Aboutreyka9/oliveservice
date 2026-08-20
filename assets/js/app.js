@@ -3177,7 +3177,7 @@ function modalUpdatedSession(code) {
 
             $(".loader_backdrop2").css('display', "none");
 
-
+    
 
             if (data.success) {
 
@@ -3247,7 +3247,6 @@ function updatedSession() {
 
                 btnRes("#btnSubmitFormSession", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
@@ -3755,8 +3754,6 @@ function openModalAddCategoriePack() {
 
         e.preventDefault();
 
-
-
         $.ajax({
 
             method: "POST",
@@ -3970,10 +3967,6 @@ function updatedCategoriePack() {
         e.preventDefault();
 
         var data = $(this).serialize();
-
-
-
-
 
         $.ajax({
 
@@ -4631,7 +4624,7 @@ function pushDataPack(selector) {
 
 
 
-   btn_suprimer_data_pack();
+btn_suprimer_data_pack();
 
     function btn_suprimer_data_pack() {
 
@@ -4691,13 +4684,68 @@ function pushDataPack(selector) {
 
     }
 
+    function calculerMontantTotal() {
+
+
+    const montant = parseFloat($("#montant_pack").val()) || 0;
+    const nombreJour = parseInt($("#nombre_jour").val()) || 0;
+
+    const total = montant * nombreJour;
+
+    $("#montant_total").val(
+        total.toLocaleString("fr-FR")+' FCFA'
+    );
+}
+
+    $(document).on("input", "#montant_pack", function () {
+        calculerMontantTotal();
+    });
+
+    getNombreJourPack();
+
+    function getNombreJourPack() {
+        $(document).on("change", "#libelle_session_pack", function () {
+            var sessionCode = $(this).val();
+            if(sessionCode){
+
+                $.ajax({
+
+                method: "POST",
+
+                url: APP.ajax,
+
+                data: {
+
+                    action: 'get_nombre_jour_session_pack',
+                    session_code: sessionCode
+
+                },
+
+                dataType: "JSON",
+
+                beforeSend: function () {},
+
+                success: function (data) {
+
+                    console.log(data.jour);
+
+                    if (data.success) {
+                        $('#nombre_jour').val(data.jour);
+                        calculerMontantTotal();
+
+                    }
+
+                }
+
+            });
+            }
+        });
+    }
+
+
 
 
 openModalAddPack();
-
-
-
-
 
 function openModalAddPack() {
 
@@ -4769,7 +4817,7 @@ function openModalAddPack() {
 
             }
 
-        })
+        });
 
     });
 
