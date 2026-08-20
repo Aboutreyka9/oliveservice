@@ -581,6 +581,13 @@ switch ($action) {
         $ajx->getListePack();
 
         break;
+    case 'get_nombre_jour_session_pack':
+
+        $ajx = new ActiviteController();
+
+        $ajx->getNombreJourSessionPack();
+
+        break;
 
     case 'change_statut_packs':
 
@@ -822,6 +829,14 @@ switch ($action) {
 
         break;
 
+    case 'get_stats_cautions':
+
+        $ajx = new CautisationController();
+
+        $ajx->getStats();
+
+        break;
+
 
 
     //end Actions pour les cautions
@@ -859,6 +874,14 @@ switch ($action) {
         $ajx = new VersementCommercialController();
 
         $ajx->modalAddVersement();
+
+        break;
+
+    case 'get_stats_versements':
+
+        $ajx = new VersementCommercialController();
+
+        $ajx->getStats();
 
         break;
 

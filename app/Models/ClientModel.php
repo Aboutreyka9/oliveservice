@@ -62,11 +62,7 @@ class ClientModel extends Model
 
     public function DataTableFetchInscriptionListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
-
-
-    
         $where = "WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code";
-
 
         if (!empty($likeParams)) {
             $likes = [];
@@ -77,13 +73,25 @@ class ClientModel extends Model
             $where .= " AND (" . implode(' OR ', $likes) . ")";
         }
 
-
-
-        $sql = "SELECT ins.*, ins.created_at_inscription, ins.statut_inscription,se.libelle_session, cl.nom_client, cl.telephone_client, CONCAT(us.nom_user, ' ', us.prenom_user) AS nom_complet FROM " . TABLES::INSCRIPTIONS . " ins 
-        JOIN " . TABLES::SESSIONS . "  se ON se.code_session = ins.session_code 
-        JOIN " . TABLES::CLIENTS . "  cl ON cl.code_client = ins.client_code 
-        JOIN " . TABLES::USERS . "  us ON us.code_user = ins.user_code 
-        $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
+        $sql = "SELECT ins.*, ins.created_at_inscription, ins.statut_inscription,
+                       se.libelle_session, an.libelle_annee, zo.libelle_zone,
+                       cl.nom_client, cl.telephone_client,
+                       CONCAT(us.nom_user, ' ', us.prenom_user) AS nom_complet,
+                       COALESCE(SUM(pi.pack_code), 0) as nb_packs,
+                       COALESCE(SUM(p.montant_pack), 0) as montant_pack,
+                       COALESCE(SUM(CASE WHEN cc.statut_cautisation_client = 'valide' THEN cc.montant_cautisation_client ELSE 0 END), 0) as montant_paye
+                FROM " . TABLES::INSCRIPTIONS . " ins 
+                JOIN " . TABLES::SESSIONS . "  se ON se.code_session = ins.session_code 
+                JOIN " . TABLES::ANNEES . "  an ON an.code_annee = ins.annee_code
+                JOIN " . TABLES::ZONES . "  zo ON zo.code_zone = ins.zone_code
+                JOIN " . TABLES::CLIENTS . "  cl ON cl.code_client = ins.client_code 
+                JOIN " . TABLES::USERS . "  us ON us.code_user = ins.user_code 
+                LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                LEFT JOIN " . TABLES::CAUTISATION_CLIENTS . " cc ON cc.inscription_code = ins.code_inscription AND cc.statut_cautisation_client = 'valide'
+                $where 
+                GROUP BY ins.code_inscription
+                ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 
         $stmt = $this->db->prepare($sql);
 
@@ -91,17 +99,12 @@ class ClientModel extends Model
         $stmt->bindValue(":zone_code", Auth::user('zone_code'));
         $stmt->bindValue(":annee_code", Auth::user('annee_code'));
 
-        // Bind les parametreslike
-        $like = [];
         if (!empty($likeParams)) {
-
             foreach ($likeParams as $key => $value) {
-                $like[] = "$key => $value";
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
             }
         }
 
-        // ✅ Bind LIMIT params correctement
         $stmt->bindValue(':start', $start, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 
@@ -293,6 +296,73 @@ class ClientModel extends Model
         } catch (Exception $e) {
             die($e->getMessage());
         }
+        return $data;
+    }
+
+    public function getStatsInscriptions(string $etablissementCode, string $anneeCode, ?string $zoneCode = null, ?string $dateDebut = null, ?string $dateFin = null): array
+    {
+        $data = [
+            'total' => 0,
+            'valide' => 0,
+            'en_attente' => 0,
+            'annule' => 0,
+            'montant_total' => 0,
+            'montant_valide' => 0,
+            'montant_en_attente' => 0,
+            'montant_annule' => 0,
+        ];
+
+        try {
+            $where = "WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code";
+            $params = ['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode];
+
+            if ($zoneCode) {
+                $where .= " AND ins.zone_code = :zone_code";
+                $params['zone_code'] = $zoneCode;
+            }
+            if ($dateDebut && $dateFin) {
+                $where .= " AND DATE(ins.created_at_inscription) BETWEEN :date_debut AND :date_fin";
+                $params['date_debut'] = $dateDebut;
+                $params['date_fin'] = $dateFin;
+            }
+
+            $sql = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN ins.statut_inscription = 'valide' THEN 1 ELSE 0 END) as valide,
+                        SUM(CASE WHEN ins.statut_inscription = 'En attente' THEN 1 ELSE 0 END) as en_attente,
+                        SUM(CASE WHEN ins.statut_inscription = 'annule' THEN 1 ELSE 0 END) as annule,
+                        SUM(p.montant_pack) as montant_total,
+                        SUM(CASE WHEN ins.statut_inscription = 'valide' THEN p.montant_pack ELSE 0 END) as montant_valide,
+                        SUM(CASE WHEN ins.statut_inscription = 'En attente' THEN p.montant_pack ELSE 0 END) as montant_en_attente,
+                        SUM(CASE WHEN ins.statut_inscription = 'annule' THEN p.montant_pack ELSE 0 END) as montant_annule
+                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                    $where";
+
+            $stmt = $this->db->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if ($result) {
+                $data = [
+                    'total' => (int) $result['total'],
+                    'valide' => (int) $result['valide'],
+                    'en_attente' => (int) $result['en_attente'],
+                    'annule' => (int) $result['annule'],
+                    'montant_total' => (float) ($result['montant_total'] ?? 0),
+                    'montant_valide' => (float) ($result['montant_valide'] ?? 0),
+                    'montant_en_attente' => (float) ($result['montant_en_attente'] ?? 0),
+                    'montant_annule' => (float) ($result['montant_annule'] ?? 0),
+                ];
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+
         return $data;
     }
 }

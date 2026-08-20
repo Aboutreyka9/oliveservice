@@ -4,7 +4,7 @@ define('root', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']);
 define('ASSETS', root . '/oliveservice/assets/');
 define('LINK', root . '/oliveservice/');
 define('HOME', root . '/oliveservice');
-define('APP_NAME', 'G-EICG');
+define('APP_NAME', 'OLIVE-SERVICE');
 define('TWO_PIP', '/../../');
 define('THREE_PIP', '/../../');
 
@@ -102,7 +102,6 @@ const ARTICLE_CODES = "article_codes";
 // CONST SEXE = ['G','F'];
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-const SEMESTRE_DATA = ['SEMESTRE 1', 'SEMESTRE 2'];
 
 
 const MONTHS = [

@@ -175,70 +175,62 @@ class ClientController extends MainController
 
     public function GetListeInscription()
     {
-
         $_POST = sanitizePostData($_POST);
         extract($_POST);
         $f = new ClientModel();
 
         $likeParams = [];
-        $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code'),'zone_code' => Auth::user('zone_code')];
+        $whereParams = ['etablissement_code' => Auth::user('etablissement_code'), 'annee_code' => Auth::user('annee_code')];
 
+        if (!empty($zone_code)) {
+            $whereParams['zone_code'] = $zone_code;
+        } else {
+            $whereParams['zone_code'] = Auth::user('zone_code');
+        }
 
         $limit  = (int) ($_POST['length'] ?? 10);
         $start  = (int) ($_POST['start'] ?? 0);
         $orderColumn = (int) ($_POST['order'][0]['column'] ?? 0);
         $orderDir    = strtolower($_POST['order'][0]['dir'] ?? 'desc');
         $search = trim($_POST['search']['value'] ?? '');
-        // $search = $_POST['search'] ?? '';
+
         $columns = [
-            0 => 'code_client',
-            1 => 'code_client',
-            2 => 'code_client',
-            3 => 'code_client',
-            4 => 'code_client',
-            5 => 'code_client'
+            0 => 'ins.code_inscription',
+            1 => 'cl.nom_client',
+            2 => 'cl.telephone_client',
+            3 => 'se.libelle_session',
+            4 => 'an.libelle_annee',
+            5 => 'zo.libelle_zone',
+            6 => 'p.montant_pack',
+            7 => 'montant_paye',
+            8 => 'reste_du',
+            9 => 'ins.statut_inscription',
+            10 => 'ins.created_at_inscription'
         ];
-        // $columns = [
-        //     0 => 'libelle_type_depense',
 
-        // ];
-
-        $orderBy = $columns[$orderColumn] ?? 'code_client';
+        $orderBy = $columns[$orderColumn] ?? 'ins.created_at_inscription';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
-
-
-        // 🔎 Recherche
         if (!empty($search)) {
-
-
-            $likeParams = ['code_client' => $search];
-            // $likeParams = ['libelle_type_depense' => $search, 'periode_depense' => $search, 'statut_depense' => $search, 'montant_depense' => $search, 'user_confirm' => $search, 'created_at_confirm' => $search];
-
-            // $likeParams = ['libelle_type_depense' => $search];
+            $likeParams = [
+                'ins.code_inscription' => $search,
+                'cl.nom_client' => $search,
+                'cl.telephone_client' => $search,
+                'se.libelle_session' => $search
+            ];
         }
 
-        // 🔢 Total
-        $total = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams);
-        // 🔢 Total filtré
-
+        $total = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams, $likeParams);
         $totalFiltered = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams, $likeParams);
-        // 📄 Données
-
         $inscriptionList = $this->clientModel->DataTableFetchInscriptionListe($likeParams, $orderBy, $orderDir, $start, $limit);
-        $data = [];
-
-
         $data = $this->clientService->inscriptionDataService($inscriptionList);
-        // Response::success('operation reussie',);
+
         echo json_encode([
-            "draw"            => intval($_POST['draw']),
-            "recordsTotal"    => $total,
+            "draw" => intval($_POST['draw']),
+            "recordsTotal" => $total,
             "recordsFiltered" => $totalFiltered,
-            "data"            => $data
-            // "data"            => $depenseList
+            "data" => $data
         ]);
-        // // echo json_encode(['data' => $total, 'code' => 200]);
         return;
     }
 

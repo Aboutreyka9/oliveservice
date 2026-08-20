@@ -464,6 +464,7 @@ class SettingService
 
             'date_fin_session' => $fin_session,
 
+            'nombre_jour_session' => $nombre_jour,
             'date_debut_session' => $debut_session,
 
             'statut_session' => STATUT_ACTIF,
@@ -529,6 +530,7 @@ class SettingService
             'annee_code' => $libelle_annee,
 
             'libelle_session' => $libelle_session,
+            'nombre_jour_session' => $nombre_jour,
 
             'date_fin_session' => $fin_session,
 
@@ -1360,23 +1362,7 @@ class SettingService
 
                         <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
 
-                        <select class="form-control" id="libelle_session"  name="libelle_session" required>
-
-                        <option value="">--- CHOISIR ---</option>';
-
-
-
-        foreach (SEMESTRE_DATA as $se) {
-
-            $output .= '<option value="' . $se . '">' . $se . '</option>';
-
-        }
-
-
-
-        $output .= '
-
-                        </select>
+                        <input type="text" class="form-control" id="libelle_session" name="libelle_session" required>
 
                     </div>
 
@@ -1397,6 +1383,16 @@ class SettingService
                         <label for="fin_session" class="form-label">Date fin <strong class="text-danger">*</strong></label>
 
                         <input type="date" class="form-control" id="fin_session" name="fin_session" required>
+
+                    </div>
+
+                     <div class="col-md-12 mb-3">
+
+                        
+
+                        <label for="nombre_jour" class="form-label">Nombre de jour <strong class="text-danger">*</strong></label>
+
+                        <input type="number" class="form-control" id="nombre_jour" name="nombre_jour" required>
 
                     </div>
 
@@ -1487,29 +1483,8 @@ class SettingService
                     <div class="col-md-12 mb-3">
 
                        <label for="libelle_session" class="form-label">Libelle session <strong class="text-danger">*</strong></label>
-
-                        <select class="form-control" id="libelle_session"  name="libelle_session" required>
-
-                        <option value="">--- CHOISIR ---</option>';
-
-
-
-        foreach (SEMESTRE_DATA as $se) {
-
-            $output .= '<option ' . selected($se, $session['libelle_session']) . '  value="' . $se . '">' . $se . '</option>';
-
-        }
-
-
-
-        $output .= '
-
-                        </select>
-
+                        <input type="text" class="form-control" id="libelle_session" name="libelle_session" value="' . $session['libelle_session'] . '" required>
                     </div>
-
-
-
                      <div class="col-md-6 mb-3">
 
                         <label for="debut_session" class="form-label">Date debut <strong class="text-danger">*</strong></label>
@@ -1525,6 +1500,14 @@ class SettingService
                         <label for="fin_session" class="form-label">Date fin <strong class="text-danger">*</strong></label>
 
                         <input type="date" class="form-control" id="fin_session" name="fin_session" value="' . $session['date_fin_session'] . '" required>
+
+                    </div>
+
+                     <div class="col-md-12 mb-3">
+
+                        <label for="nombre_jour" class="form-label">Nombre de jour <strong class="text-danger">*</strong></label>
+
+                        <input type="number" class="form-control" id="nombre_jour" name="nombre_jour" value="' . $session['nombre_jour_session'] . '" required>
 
                     </div>
 
@@ -1639,6 +1622,7 @@ class SettingService
                 $etat,
 
                 $session['libelle_session'],
+                $session['nombre_jour_session'],
 
                 $session['libelle_annee'],
 

@@ -58,21 +58,13 @@
                     <div class="tab-pane fade " id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <div class="row pb-4">
                            
-                            <div class="col-md-3 d-flex justify-content-end">
-                                <div class="form-inlign">
-                                    <input type="year" class="form-control">
-                                    <button type="button" id=""
-                                        class="btn btn-info  text-uppercase" title=""
-                                        aria-label="Close"> <i class="fa fa-filter"></i> &nbsp;
-                                        Filter</button>
-                                </div>
+                            <div class="col-md-12 mb-3 d-flex justify-content-end">
+                               
 
-                                <div class="form-inlign">
-                                    <button type="button" id="btn_session_addModal"
-                                        class="btn btn-primary  text-uppercase" title="Ajouter session"
-                                        aria-label="Close"> <i class="fa fa-plus-circle"></i> &nbsp;
-                                        Créer</button>
-                                </div>
+                                <button type="button" id="btn_session_addModal"
+                                    class="btn btn-primary  text-uppercase" title="Ajouter session"
+                                    aria-label="Close"> <i class="fa fa-plus-circle"></i> &nbsp;
+                                    Créer</button>
                             </div>
                             <div class="table-responsive">
                                 <!-- .table -->
@@ -84,6 +76,7 @@
                                             <th> STATUT </th>
                                             <th> ANNEE </th>
                                             <th> LIBELLE </th>
+                                            <th> NB-JOUR </th>
                                             <th> DEBUT </th>
                                             <th> FIN </th>
                                             <th> ENREGISTRER </th>

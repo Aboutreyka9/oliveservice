@@ -120,6 +120,11 @@ class VersementCommercialService
         return $data;
     }
 
+    public function getStats(string $etablissementCode, array $filters = []): array
+    {
+        return $this->versementModel->getStatsVersements($etablissementCode, $filters['commercial_code'] ?? null, $filters['zone_code'] ?? null, $filters['statut'] ?? null, $filters['date_debut'] ?? null, $filters['date_fin'] ?? null);
+    }
+
     public function versementAddModalService(array $commercials, array $zones): string
     {
         $output = '';

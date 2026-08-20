@@ -22,6 +22,7 @@
                         <th>CONTACT</th>
                         <th>FONCTION</th>
                         <th>STATUT</th>
+                        <th>PROFIL</th>
                         <th>OPTION</th>
                     </tr>
                 </thead>

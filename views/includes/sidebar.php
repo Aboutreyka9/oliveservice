@@ -30,6 +30,13 @@
                                     <span class="link-collapse">Profile</span>
                                 </a>
                             </li>
+                            <?php if (has_groupe(Groupes::ADMIN) || has_groupe(Groupes::ADMIN)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('commerciaux/profile/' . auth()->user('id')) ?>">
+                                    <span class="link-collapse">Mon profil commercial</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
                             <li>
                                 <a class="btn_deconnect" href="javascript:void();">
                                     <span class="link-collapse">Deconnexion</span>
@@ -209,7 +216,7 @@
                 <li class="nav-item">
                     <a data-toggle="collapse" href="#administration">
                         <i class="fas fa-cog"></i>
-                        <p class="text-upper">Administration</p>
+                        <p class="text-upper">Paramètres</p>
                         <span class="caret"></span>
                     </a>
                     <div class="collapse" id="administration">
@@ -237,7 +244,7 @@
                             </li>
                             <li>
                                 <a class="item-link" href="<?= url('parametres') ?>">
-                                    <span class="sub-item">Paramètres</span>
+                                    <span class="sub-item">Compte</span>
                                 </a>
                             </li>
                         </ul>

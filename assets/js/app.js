@@ -3177,7 +3177,7 @@ function modalUpdatedSession(code) {
 
             $(".loader_backdrop2").css('display', "none");
 
-
+    
 
             if (data.success) {
 
@@ -3247,7 +3247,6 @@ function updatedSession() {
 
                 btnRes("#btnSubmitFormSession", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
@@ -3755,8 +3754,6 @@ function openModalAddCategoriePack() {
 
         e.preventDefault();
 
-
-
         $.ajax({
 
             method: "POST",
@@ -3971,10 +3968,6 @@ function updatedCategoriePack() {
 
         var data = $(this).serialize();
 
-
-
-
-
         $.ajax({
 
             method: "POST",
@@ -4005,7 +3998,6 @@ function updatedCategoriePack() {
 
                 btnRes("#btnSubmitFormCategoriePack", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
@@ -4295,7 +4287,7 @@ function modalUpdatedArticle(code) {
 
             action: 'btn_showmodal_article_update',
 
-            codesession: code
+            codearticle: code
 
         },
 
@@ -4304,6 +4296,7 @@ function modalUpdatedArticle(code) {
         beforeSend: function () {
 
             $(".loader_backdrop2").css('display', "block");
+
 
             // btnReq(".modal_footer", "Traitement...");
 
@@ -4315,6 +4308,7 @@ function modalUpdatedArticle(code) {
 
             $(".loader_backdrop2").css('display', "none");
 
+// console.log(data); return;
 
 
             if (data.success) {
@@ -4385,7 +4379,6 @@ function updatedArticle() {
 
                 btnRes("#btnSubmitFormArticle", "Enregistrer", "fa-save");
 
-                return
 
                 if (data.success) {
 
@@ -4451,11 +4444,11 @@ function changeStatutArticle(code, statut) {
 
                     data: {
 
-                        action: 'change_statut_sessions',
+                        action: 'change_statut_articles',
 
-                        code_session: code,
+                        code_article: code,
 
-                        statut_session: statut
+                        statut_article: statut
 
                     },
 
@@ -4471,7 +4464,8 @@ function changeStatutArticle(code, statut) {
 
                         $(".loader_backdrop2").css('display', "none");
 
-
+                        console.log(data);
+                        
 
                         if (data.success) {
 
@@ -4629,7 +4623,7 @@ function pushDataPack(selector) {
 
 
 
-   btn_suprimer_data_pack();
+btn_suprimer_data_pack();
 
     function btn_suprimer_data_pack() {
 
@@ -4689,13 +4683,68 @@ function pushDataPack(selector) {
 
     }
 
+    function calculerMontantTotal() {
+
+
+    const montant = parseFloat($("#montant_pack").val()) || 0;
+    const nombreJour = parseInt($("#nombre_jour").val()) || 0;
+
+    const total = montant * nombreJour;
+
+    $("#montant_total").val(
+        total.toLocaleString("fr-FR")+' FCFA'
+    );
+}
+
+    $(document).on("input", "#montant_pack", function () {
+        calculerMontantTotal();
+    });
+
+    getNombreJourPack();
+
+    function getNombreJourPack() {
+        $(document).on("change", "#libelle_session_pack", function () {
+            var sessionCode = $(this).val();
+            if(sessionCode){
+
+                $.ajax({
+
+                method: "POST",
+
+                url: APP.ajax,
+
+                data: {
+
+                    action: 'get_nombre_jour_session_pack',
+                    session_code: sessionCode
+
+                },
+
+                dataType: "JSON",
+
+                beforeSend: function () {},
+
+                success: function (data) {
+
+                    console.log(data.jour);
+
+                    if (data.success) {
+                        $('#nombre_jour').val(data.jour);
+                        calculerMontantTotal();
+
+                    }
+
+                }
+
+            });
+            }
+        });
+    }
+
+
 
 
 openModalAddPack();
-
-
-
-
 
 function openModalAddPack() {
 
@@ -4767,7 +4816,7 @@ function openModalAddPack() {
 
             }
 
-        })
+        });
 
     });
 

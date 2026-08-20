@@ -1,5 +1,5 @@
 {
-    "name": "treyka/ecole",
+    "name": "treyka/olive-service",
     "autoload": {
         "psr-4": {
             "App\\": "app/"

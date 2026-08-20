@@ -428,7 +428,7 @@ class UserService
             </button>
             <div class="dropdown-menu">
 
-        <a class="dropdown-item" href="" data-toggle="tooltip" title="" data-original-title="Voir les détails de la commande">
+        <a class="dropdown-item" href="'.url('utilsateur/profile',['code' => $user['code_user']]).'" data-toggle="tooltip" title="" data-original-title="Voir les détails de la commande">
             <i class="fa fa-eye text-icon-info"></i> &nbsp; &nbsp; Voir details
         </a>
         <button class="dropdown-item " id="Modifier" onclick="modalUpdatedUtilisateurr(\'' . $user['code_user'] . '\')" 
@@ -491,6 +491,9 @@ class UserService
             </button>
             <div class="dropdown-menu">
 
+        <a class="dropdown-item" href="' . url('commerciaux/profile/' . $user['code_user']) . '" data-toggle="tooltip" title="" data-original-title="Voir le profil commercial">
+            <i class="fa fa-user-tie text-icon-primary"></i> &nbsp; &nbsp; Profil commercial
+        </a>
         <a class="dropdown-item" href="" data-toggle="tooltip" title="" data-original-title="Voir les détails de la commande">
             <i class="fa fa-eye text-icon-info"></i> &nbsp; &nbsp; Voir details
         </a>
@@ -529,6 +532,7 @@ class UserService
                 ucfirst($user['prenom_user']),
                 $user['telephone_user'],
                 ucfirst($user['libelle_fonction']),
+                '<a href="' . url('commerciaux/profile/' . $user['code_user']) . '" class="btn btn-primary btn-sm"><i class="fa fa-user-tie"></i> Profil</a>',
                 $actions
             ];
         }

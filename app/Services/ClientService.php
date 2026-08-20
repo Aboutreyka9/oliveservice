@@ -190,7 +190,6 @@ class ClientService
 
     public function inscriptionDataService($inscriptions)
     {
-
         $i = 0;
         $data = [];
 
@@ -199,29 +198,30 @@ class ClientService
 
             $etat = checkStatusInscription($inscription['statut_inscription']);
 
+            $montantPack = (float) ($inscription['montant_pack'] ?? 0);
+            $montantPaye = (float) ($inscription['montant_paye'] ?? 0);
+            $resteDu = max(0, $montantPack - $montantPaye);
+
             $actions = '
             <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-ellipsis-h"></i>
             </button>
             <div class="dropdown-menu">
-
-       ';
+        ';
             if ($inscription['statut_inscription'] == STATUT_INSCRIPTION[0]) {
                 $actions .= '
-
                   <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $inscription['code_inscription'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier inscription">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier inscription </button>
-       
 
                 <button class="dropdown-item " id="" onclick="changeStatutInscription(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_ACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Activer inscription ">
+            data-toggle="tooltip" title="" data-original-title="Valider inscription ">
             <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider inscription </button>
 
              <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Annuler inscription ">
             <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler inscription </button>
-       
+        
         ';
             } else {
                 $actions .= '
@@ -239,10 +239,12 @@ class ClientService
                 $inscription['nom_client'],
                 $inscription['telephone_client'],
                 $inscription['libelle_session'],
-                $inscription['code_inscription'],
-                $inscription['code_inscription'],
+                $inscription['libelle_annee'],
+                $inscription['libelle_zone'],
+                number_format($montantPack, 0, ',', ' ') . ' FCFA',
+                number_format($montantPaye, 0, ',', ' ') . ' FCFA',
+                number_format($resteDu, 0, ',', ' ') . ' FCFA',
                 $etat,
-                $inscription['nom_complet'],
                 date_formater($inscription['created_at_inscription']),
                 $actions
             ];
