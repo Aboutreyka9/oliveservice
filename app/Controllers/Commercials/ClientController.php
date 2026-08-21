@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Commercials;
 
 use App\Core\Auth;
 use App\Models\Factory;
@@ -44,17 +44,17 @@ class ClientController extends MainController
 
     public function resouscription()
     {
-        $this->view('clients/resouscription', ['title' => "Resouscription client"]);
+        $this->view('commercials/clients/resouscription', ['title' => "Resouscription client"]);
     }
 
     public function souscription()
     {
-        $this->view('clients/souscription', ['title' => "Souscription"]);
+        $this->view('commercials/clients/souscription', ['title' => "Souscription"]);
     }   
 
     public function liste()
     {
-        $this->view('clients/liste', ['title' => "Liste des clients"]);
+        $this->view('commercials/clients/liste', ['title' => "Liste des clients"]);
     }
 
     public function profile($code = null)
@@ -75,17 +75,12 @@ class ClientController extends MainController
             }
         }
 
-        $this->view('clients/profile', $data);
-    }
-
-    public function commande()
-    {
-        $this->view('clients/commande', ['title' => "Commandes clients"]);
+        $this->view('commercials/clients/profile', $data);
     }
 
     public function listeInscription()
     {
-        $this->view('clients/liste_souscription', ['title' => "Liste des souscriptions"]);
+        $this->view('commercials/clients/liste_souscription', ['title' => "Liste des souscriptions"]);
     }
 
 

@@ -8,7 +8,6 @@ use App\Controllers\CautisationController;
 
 use App\Controllers\DistributionController;
 
-use App\Controllers\EtudiantController;
 
 use App\Controllers\FinanceController;
 
@@ -636,14 +635,6 @@ switch ($action) {
 
 
     // Debut Actions pour les depenses 
-
-    case 'charger_data_depenses':
-
-        $ajx = new FinanceController();
-
-        $ajx->GetListeDepense();
-
-        break;
 
     case 'charger_data_depenses':
 

@@ -2,7 +2,7 @@
 
 
 
-namespace App\Controllers;
+namespace App\Controllers\Gestionnaires;
 
 
 
