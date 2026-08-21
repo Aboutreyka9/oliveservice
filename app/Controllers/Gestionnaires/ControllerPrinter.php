@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers;
+namespace App\Controllers\Gestionnaires;
 
 use App\Core\Auth;
 use App\Core\MainController;
@@ -7,9 +7,8 @@ use App\Models\Factory;
 use DateTime;
 use Exception;
 
-class ControllerPrinter extends MainController
-{
-    public function print($file)  {
+
+    function print($file)  {
         if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -20,7 +19,7 @@ class ControllerPrinter extends MainController
 
   
 
-    public function download()  {
+    function download()  {
         if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -30,7 +29,7 @@ class ControllerPrinter extends MainController
     }
 
 
-    public function newVersionPdfSave() {
+    function newVersionPdfSave() {
         if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -84,7 +83,7 @@ class ControllerPrinter extends MainController
     
     }
     
-    public function factureData() {
+    function factureData() {
 
         if (!Auth::check()) {
             
@@ -114,7 +113,7 @@ class ControllerPrinter extends MainController
         }
     }
 
-    public function printFacture($code)  {
+    function printFacture($code)  {
         if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -137,7 +136,7 @@ class ControllerPrinter extends MainController
         // return $this->viewPdfPrinter($file );
     }
 
-    public function printVersement($code)  {
+    function printVersement($code)  {
         if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -167,7 +166,7 @@ class ControllerPrinter extends MainController
       
     }
 
-    public function printListeClient($periode)  {
+    function printListeClient($periode)  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -205,7 +204,7 @@ class ControllerPrinter extends MainController
        
     }
 
-    public function printListeReservation($periode)  {
+    function printListeReservation($periode)  {
         
         if (!Auth::check()) {
             
@@ -243,7 +242,7 @@ class ControllerPrinter extends MainController
        
     }
 
-     public function printListeCheckReservation($periode)  {
+     function printListeCheckReservation($periode)  {
         
         if (!Auth::check()) {
             
@@ -283,7 +282,7 @@ class ControllerPrinter extends MainController
     }
 
 
-    public function printListeDepense($periode)  {
+    function printListeDepense($periode)  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -320,7 +319,7 @@ class ControllerPrinter extends MainController
     }
 
 
-    public function printListeSalaire($periode)  {
+    function printListeSalaire($periode)  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -356,7 +355,7 @@ class ControllerPrinter extends MainController
        
     }
 
-     public function printListeVersement($periode)  {
+     function printListeVersement($periode)  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -391,7 +390,7 @@ class ControllerPrinter extends MainController
        
     }
 
-     public function printListeChambres()  {
+     function printListeChambres()  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -414,7 +413,7 @@ class ControllerPrinter extends MainController
        
     }
 
-     public function printListeServices()  {
+     function printListeServices()  {
          if (!Auth::check()) {
             
             exit(http_response_code(405));
@@ -445,5 +444,3 @@ class ControllerPrinter extends MainController
 
 
 
-
-}

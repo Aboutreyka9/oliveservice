@@ -61,7 +61,7 @@ class UserController extends MainController
 
     public function recrutement()
     {
-        $this->view('personnels/recrutement', ['title' => "Liste du personnel"]);
+        $this->view('gestionnaires/users/recrutement', ['title' => "Liste du personnel"]);
     }
 
     public function profile($code)
@@ -80,18 +80,39 @@ class UserController extends MainController
             }
         }
 
-        $this->view('admins/profile', $data);
+        $this->view('gestionaes/users/profile', $data);
     }
 
-    public function administratif()
+     public function profileCommercial($code)
     {
-        $this->view('personnels/liste', ['title' => "Liste des utilisateurs"]);
+        $userCode = $code ?? Auth::user('id');
+        $profileData = [];
+        $profileData = $this->userService->getProfileDataCommercial($userCode);
+
+        if (empty($profileData)) {
+            $this->view('gestionnaires/users/profile_commercial', [
+                'title' => "Profil commercial",
+                'commercial' => [],
+                'stats' => [],
+                'performance' => [],
+                'clients' => [],
+                'versements' => [],
+            ]);
+            return;
+        }
+
+        $this->view('commerciaux/profile', array_merge([
+            'title' => "Profil commercial",
+        ], $profileData));
     }
 
-    public function commercials()
+        public function commercials()
     {
-        $this->view('admins/liste_commercial', ['title' => "Liste des Commerciaux"]);
+        $this->view('gestionnaires/users/liste_commercial', ['title' => "Liste des Commerciaux"]);
     }
+
+
+
 
 
     /**

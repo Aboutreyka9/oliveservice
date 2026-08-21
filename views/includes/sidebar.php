@@ -292,7 +292,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('recrutements/personnel') ?>">
+                                <a class="item-link" href="<?= url('recrutements') ?>">
                                     <span class="sub-item">Recrutement</span>
                                 </a>
                             </li>

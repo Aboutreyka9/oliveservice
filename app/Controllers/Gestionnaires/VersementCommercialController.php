@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Gestionnaires;
 
 use App\Core\Auth;
 use App\Core\MainController;
 use App\Helpers\HttpStatusCode;
 use App\Helpers\Response;
+use App\Helpers\Validator;
 use App\Models\VersementCommercialModel;
 use App\Services\VersementCommercialService;
 use TABLES;
@@ -24,7 +25,7 @@ class VersementCommercialController extends MainController
 
     public function liste()
     {
-        $this->view('versements_commerciaux/liste', ['title' => "Versements commerciaux"]);
+        $this->view('gestionnaires/versements_commerciaux/liste', ['title' => "Versements commerciaux"]);
     }
 
     public function GetListeVersements()

@@ -1,25 +1,14 @@
 <?php
 
 
-
-use App\Controllers\ActiviteController;
-
-use App\Controllers\CautisationController;
-
-use App\Controllers\DistributionController;
-
-
-use App\Controllers\FinanceController;
-
-use App\Controllers\ValidationController;
-
-use App\Controllers\VersementCommercialController;
-
-
+use App\Controllers\Gestionnaires\ActiviteController;
+use App\Controllers\Gestionnaires\CautisationController;
+use App\Controllers\Gestionnaires\DistributionController;
+use App\Controllers\Gestionnaires\FinanceController;
+use App\Controllers\Gestionnaires\ValidationController;
+use App\Controllers\Gestionnaires\VersementCommercialController;
 
 session_name("APP545645465654_SESSION");
-
-
 
 
 
@@ -31,9 +20,9 @@ include __DIR__ . '/../../app/Core/security.php';
 
 use App\Controllers\AuthController;
 
-use App\Controllers\ClientController;
+use App\Controllers\Commercials\ClientController;
 
-use App\Controllers\SettingController;
+use App\Controllers\Gestionnaires\SettingController;
 
 use App\Controllers\UserController;
 

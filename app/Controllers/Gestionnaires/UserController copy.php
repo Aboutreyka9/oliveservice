@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Gestionnaires;
 
 use Roles;
 use App\Core\Gqr;
@@ -18,11 +18,10 @@ use App\Services\UserService;
 use Groupes;
 use TABLES;
 
-class UserControllergfgf extends MainController
-{
+
     private SettingService $settingService;
 
-    public function __construct()
+    function __construct()
     {
          parent::__construct();
         $this->settingService = new SettingService();
@@ -37,7 +36,7 @@ class UserControllergfgf extends MainController
      * --------------------------------------------------------------------------
      */
 
-    public function role()
+    function role()
     {
         $users = [];
         $fc = new UserModel();
@@ -59,7 +58,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function acueil()
+    function acueil()
     {
 
         $result = "";
@@ -87,22 +86,22 @@ class UserControllergfgf extends MainController
         return $this->view('welcome', ["result" => $result, "title", 'title' => "Mon espace"]);
     }
 
-    public function recrutement()
+    function recrutement()
     {
         $this->view('personnels/recrutement', ['title' => "Liste du personnel"]);
     }
 
-    public function enseignants()
+    function enseignants()
     {
         $this->view('personnels/enseignant', ['title' => "Liste des Enseignants"]);
     }
 
-    public function administratif()
+    function administratif()
     {
         $this->view('personnels/liste', ['title' => "Liste des utilisateurs"]);
     }
 
-    public function profileEmploye($code)
+    function profileEmploye($code)
     {
         $code = decrypter($code);
         if (!$code) exit(http_response_code(500));
@@ -115,7 +114,7 @@ class UserControllergfgf extends MainController
         $this->view('admins/profile', ["user" => $user, "activities" => $activities, "fonctions" => $fonctions, 'title' => "Profile employe"]);
     }
 
-    public function myProfile($code)
+    function myProfile($code)
     {
 
         if (!$code || empty($code)) exit(http_response_code(500));
@@ -126,25 +125,25 @@ class UserControllergfgf extends MainController
         $this->view('auth/my_profile', ["user" => $user, 'title' => "Mon Profile"]);
     }
 
-    public  function home()
+     function home()
     {
         return $this->viewGuest('auth/welcome', []);
     }
 
 
 
-    public function register()
+    function register()
     {
         return $this->viewGuest('auth/register', ["title" => "Création de compte"]);
     }
 
 
-    public function fonction()
+    function fonction()
     {
         return $this->view('parametres/fonction', ["title" => "Création de compte"]);
     }
 
-    public function setting()
+    function setting()
     {
         $fc = new Factory();
         $hotel = $fc->find("hotels", "code_hotel", Auth::user("hotel_id"));
@@ -163,7 +162,7 @@ class UserControllergfgf extends MainController
 
 
 
-    public function bGetListeUser()
+    function bGetListeUser()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -214,7 +213,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function modalAddUser()
+    function modalAddUser()
     {
 
         // $users = getAllusers();
@@ -229,7 +228,7 @@ class UserControllergfgf extends MainController
         Response::success('', ['data' => $output]);
     }
 
-       public function modalUpdatedUtilisateurr()
+       function modalUpdatedUtilisateurr()
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
@@ -248,7 +247,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function addUser()
+    function addUser()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -283,7 +282,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function updateUser()
+    function updateUser()
     {
          $_POST = sanitizePostData($_POST);
         extract($_POST);
@@ -308,7 +307,7 @@ class UserControllergfgf extends MainController
 
     }
 
-    public function changeStatutUser()
+    function changeStatutUser()
     {
 
        $_POST = sanitizePostData($_POST);
@@ -327,7 +326,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function disableUser()
+    function disableUser()
     {
 
         $msg['code'] = 400;
@@ -349,7 +348,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function sendMailActivation()
+    function sendMailActivation()
     {
         $msg['code'] = 400;
         extract($_POST);
@@ -398,7 +397,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function openCaisse()
+    function openCaisse()
     {
         $msg['code'] = 400;
         $msg['type'] = "warning";
@@ -424,7 +423,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function closeCaisse()
+    function closeCaisse()
     {
         $msg['code'] = 400;
         $msg['type'] = "warning";
@@ -476,7 +475,7 @@ class UserControllergfgf extends MainController
         return ['montant_attendu' => $montant_attendu, 'facture' => $facture];
     }
 
-    public  function loginUser()
+     function loginUser()
     {
 
         $result = [];
@@ -553,7 +552,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public  function DefaultloginUser()
+     function DefaultloginUser()
     {
 
         $result = [];
@@ -630,7 +629,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function registerUser()
+    function registerUser()
     {
         $msg['code'] = 400;
         $msg['type'] = "warning";
@@ -736,7 +735,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function activationAccount($token)
+    function activationAccount($token)
     {
         $user = new Factory();
         $compte = $user->find("users", "token", $token);
@@ -787,7 +786,7 @@ class UserControllergfgf extends MainController
         }
     }
 
-    public function activationAccountUser($token)
+    function activationAccountUser($token)
     {
         $user = new Factory();
         $compte = $user->find("comptes", "token", $token);
@@ -837,7 +836,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function resetPasswordUser()
+    function resetPasswordUser()
     {
         $result = [];
         $result['code'] = 400;
@@ -888,7 +887,7 @@ class UserControllergfgf extends MainController
         return;
     }
 
-    public function changePasswordUser()
+    function changePasswordUser()
     {
         $msg['code'] = 400;
         $msg['type'] = "warning";
@@ -919,7 +918,7 @@ class UserControllergfgf extends MainController
 
 
 
-    public function deconnexion()
+    function deconnexion()
     {
 
         if (Auth::check()) {
@@ -932,7 +931,7 @@ class UserControllergfgf extends MainController
 
     // ### SEXION FONCTION
 
-    public function modalAddFonction()
+    function modalAddFonction()
     {
 
         $output = "";
@@ -942,7 +941,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function addFonction()
+    function addFonction()
     {
         $msg['code'] = 400;
         $msg['type'] = "warning";
@@ -984,7 +983,7 @@ class UserControllergfgf extends MainController
 
 
 
-    public function modalModifierFonction()
+    function modalModifierFonction()
     {
 
         $_POST = sanitizePostData($_POST);
@@ -998,7 +997,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function modifierFonction()
+    function modifierFonction()
     {
         $msg['code'] = 400;
 
@@ -1045,7 +1044,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function deleteFonction()
+    function deleteFonction()
     {
 
         $msg['code'] = 400;
@@ -1068,7 +1067,7 @@ class UserControllergfgf extends MainController
 
 
 
-    public function loadDataRole()
+    function loadDataRole()
     {
 
         $output = "";
@@ -1115,7 +1114,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function ajouterPermissionRole()
+    function ajouterPermissionRole()
     {
 
         $output = "";
@@ -1160,7 +1159,7 @@ class UserControllergfgf extends MainController
     }
 
 
-    public function modalAddPermission()
+    function modalAddPermission()
     {
 
         $code = $_POST['code_user'];
@@ -1184,7 +1183,7 @@ class UserControllergfgf extends MainController
 
 
 
-    public function resolveTablePermission($UserPermission)
+    function resolveTablePermission($UserPermission)
     {
 
         $permissions = [];
@@ -1204,8 +1203,7 @@ class UserControllergfgf extends MainController
         return $permissions;
     }
 
-    public function checkIfExistRole($user_permissions, $role)
+    function checkIfExistRole($user_permissions, $role)
     {
         return $user_permissions[$role['code_role']] ?? ['create' => 0, 'show' => 0, 'edit' => 0, 'delete' => 0];
     }
-}

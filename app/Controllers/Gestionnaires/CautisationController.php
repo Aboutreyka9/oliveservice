@@ -6,6 +6,7 @@ use App\Core\Auth;
 use App\Core\MainController;
 use App\Helpers\HttpStatusCode;
 use App\Helpers\Response;
+use App\Helpers\Validator;
 use App\Models\CautisationModel;
 use App\Services\CautisationService;
 use TABLES;
@@ -24,7 +25,7 @@ class CautisationController extends MainController
 
     public function liste()
     {
-        $this->view('cautions/liste', ['title' => "Cautions clients"]);
+        $this->view('gestionnaires/cautions/liste', ['title' => "Cautions clients"]);
     }
 
     public function GetListeCautions()
@@ -156,7 +157,7 @@ class CautisationController extends MainController
 
     public function encaisser()
     {
-        $this->view('cautions/encaisser', ['title' => "Encaisser caution"]);
+        $this->view('gestionnaires/cautions/encaisser', ['title' => "Encaisser caution"]);
     }
 
     public function searchClient()
@@ -204,7 +205,7 @@ class CautisationController extends MainController
         }
 
         if ($v->fails()) {
-            Response::error(implode(', ', $v->errors()), HttpStatusCode::UNAUTHORIZED);
+            Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);
         }
 
         $result = $this->cautisationService->encaisserCautisation($_POST);

@@ -1,40 +1,30 @@
 <?php
 
-use App\Controllers\ActiviteController;
-use App\Controllers\EtudiantController;
 // if (session_status() === PHP_SESSION_NONE) {
 session_name("APP545645465654_SESSION");
 session_start();
 include __DIR__ . '/app/Core/security.php';
 
 // }
-// Charger le fichier de configuration une fois en ligne
-
-// declare(strict_types=1);
-// include 'config-production.php';
-// include 'config-production-user.php';
-
-// Activer le rapport d'erreurs (en développement uniquement)
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
 
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\AuthController;
-use App\Controllers\CautisationController;
-use App\Controllers\ClientController;
-use App\Controllers\CommercialController;
-use App\Controllers\Controller;
-use App\Controllers\ControllerException;
-use App\Controllers\DashboardController;
-use App\Controllers\FinanceController;
-use App\Controllers\HomeController;
-use App\Controllers\SettingController;
 use App\Controllers\UserController;
-use App\Controllers\VersementCommercialController;
-use App\Controllers\ValidationController;
-use App\Controllers\DistributionController;
-use App\Controllers\ReportController;
+use App\Controllers\Gestionnaires\ActiviteController;
+use App\Controllers\Gestionnaires\BoutiqueController;
+use App\Controllers\Gestionnaires\CautisationController;
+use App\Controllers\Gestionnaires\ClientController;
+use App\Controllers\Gestionnaires\CommercialController;
+use App\Controllers\Gestionnaires\ControllerException;
+use App\Controllers\Gestionnaires\DistributionController;
+use App\Controllers\Gestionnaires\FinanceController;
+use App\Controllers\Gestionnaires\HomeController;
+use App\Controllers\Gestionnaires\ReportController;
+use App\Controllers\Gestionnaires\SettingController;
+use App\Controllers\Gestionnaires\ValidationController;
+use App\Controllers\Gestionnaires\VersementCommercialController;
+use App\Controllers\Commercials\ClientController as CommercialsClientController;
 use App\Core\Router;
 use App\Middlewares\RouteMiddleWare;
 use App\Models\ActiviteModel;
@@ -158,7 +148,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('dashboard', [HomeController::class, 'acueil']);
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
 
-        $router->get('recrutements/personnel', [UserController::class, 'recrutement'], ['before' => 'admin|super']);
+        $router->get('recrutements', [UserController::class, 'recrutement'], ['before' => 'admin|super']);
         $router->get('personnel-commercials', [UserController::class, 'commercials'], ['before' => 'admin|super']);
         $router->get('personnel-administratifs', [UserController::class, 'administratif'], ['before' => 'admin|super']);
         $router->get('utilsateur/profile/{code}', [UserController::class, 'profile'], ['before' => 'auth']);
@@ -168,13 +158,13 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);
         $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
 
-        // <!-- Client -->
-        $router->get('souscriptions', [ClientController::class, 'souscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('resouscriptions', [ClientController::class, 'resouscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('souscriptions/liste', [ClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('clients', [ClientController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('clients/profile/{code}', [ClientController::class, 'profile'], ['before' => 'auth']);
-        $router->get('clients/commande', [ClientController::class, 'commande'], ['before' => 'commercial|admin|super|gestion']);
+        // <!-- Commercials / Client -->
+        $router->get('souscriptions', [CommercialsClientController::class, 'souscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('resouscriptions', [CommercialsClientController::class, 'resouscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('clients', [CommercialsClientController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('clients/profile/{code}', [CommercialsClientController::class, 'profile'], ['before' => 'auth']);
+        $router->get('clients/commande', [CommercialsClientController::class, 'commande'], ['before' => 'commercial|admin|super|gestion']);
         $router->get('cautions', [CautisationController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
         $router->get('cautions/encaisser', [CautisationController::class, 'encaisser'], ['before' => 'commercial|admin|super|gestion']);
 

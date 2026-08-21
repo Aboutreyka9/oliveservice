@@ -411,6 +411,29 @@ class UserService
         return $output;
     }
 
+        public function getProfileDataCommercial(string $userCode): array
+    {
+        $etablissementCode = Auth::user('etablissement_code');
+        $commercial = $this->userModel->getCommercialByUserCode($userCode, $etablissementCode);
+
+        if (empty($commercial)) {
+            return [];
+        }
+
+        $stats = $this->userModel->getStatsCommercial($userCode, $etablissementCode);
+        $performance = $this->userModel->getPerformanceCommercial($userCode, $etablissementCode);
+        $clients = $this->userModel->getClientsByCommercial($userCode, $etablissementCode);
+        $versements = $this->userModel->getVersementsByCommercial($userCode, $etablissementCode);
+
+        return [
+            'commercial' => $commercial,
+            'stats' => $stats,
+            'performance' => $performance,
+            'clients' => $clients,
+            'versements' => $versements,
+        ];
+    }
+
     public  function userDataService($users)
     {
 

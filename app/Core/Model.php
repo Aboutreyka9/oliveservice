@@ -780,7 +780,7 @@ abstract class Model
     {
         $data = [];
         try {
-            $sql = "SELECT YEAR(boutique_created_at) AS date_started FROM " . TABLES::BOUTIQUES . " bt WHERE bt.code_boutique = :boutique_code LIMIT 1";
+            $sql = "SELECT YEAR(boutique_created_at) AS date_started FROM " . TABLES::ETABLISSEMENTS . " bt WHERE bt.code_boutique = :boutique_code LIMIT 1";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['boutique_code' => $codeBoutique]);
             if ($stmt->rowCount() > 0) {
