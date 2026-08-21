@@ -196,6 +196,9 @@ try {
         <div class="d-flex justify-content-between align-items-center">
             <div class="card-title">Liste des cautions</div>
             <div class="d-flex gap-2">
+                <a href="<?= url('cautions/encaisser') ?>" class="btn btn-success btn-sm" title="Encaisser une caution">
+                    <i class="fa fa-money-bill-wave"></i> &nbsp; Encaisser caution
+                </a>
                 <button type="button" id="btn_cautisation_addModal" class="btn btn-primary btn-sm" title="Ajouter paiement">
                     <i class="fa fa-plus"></i> &nbsp; Enregistrer paiement
                 </button>

@@ -42,15 +42,15 @@ class ClientController extends MainController
 
 
 
-    public function reinscription()
+    public function resouscription()
     {
-        $this->view('clients/reinscription', ['title' => "Réinscription client"]);
+        $this->view('clients/resouscription', ['title' => "Resouscription client"]);
     }
 
-    public function inscription()
+    public function souscription()
     {
-        $this->view('clients/inscription', ['title' => "Inscription"]);
-    }
+        $this->view('clients/souscription', ['title' => "Souscription"]);
+    }   
 
     public function liste()
     {
@@ -62,8 +62,8 @@ class ClientController extends MainController
         $data = [
             'title' => "Profil client",
             'client' => [],
-            'inscriptions' => [],
-            'pack_inscriptions' => [],
+            'souscriptions' => [],
+            'pack_souscriptions' => [],
             'distributions' => [],
             'cautisations' => [],
         ];
@@ -85,7 +85,7 @@ class ClientController extends MainController
 
     public function listeInscription()
     {
-        $this->view('clients/liste_inscription', ['title' => "Liste des inscriptions"]);
+        $this->view('clients/liste_souscription', ['title' => "Liste des souscriptions"]);
     }
 
 
@@ -99,7 +99,7 @@ class ClientController extends MainController
      */
 
 
-    // SEXION Inscription
+    // SEXION Souscription
 
     public function addInscription()
     {
@@ -136,7 +136,7 @@ class ClientController extends MainController
         Response::success($result['message'], []);
     }
 
-    public function addReinscription()
+    public function addResouscription()
     {
         $packs = json_decode($_POST['selected_packs'], true);
         $_POST = sanitizePostData($_POST);
@@ -150,7 +150,7 @@ class ClientController extends MainController
 
         if (empty($packs)) Response::error('Aucun pack selectionné', HttpStatusCode::UNAUTHORIZED);
 
-        $result = $this->clientService->saveReinscriptionData($_POST, $packs);
+        $result = $this->clientService->saveResouscriptionData($_POST, $packs);
 
         if (!$result['success']) {
             Response::error($result['message'], HttpStatusCode::UNAUTHORIZED);

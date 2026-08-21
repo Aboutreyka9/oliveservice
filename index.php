@@ -34,6 +34,7 @@ use App\Controllers\UserController;
 use App\Controllers\VersementCommercialController;
 use App\Controllers\ValidationController;
 use App\Controllers\DistributionController;
+use App\Controllers\ReportController;
 use App\Core\Router;
 use App\Middlewares\RouteMiddleWare;
 use App\Models\ActiviteModel;
@@ -168,13 +169,14 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
 
         // <!-- Client -->
-        $router->get('inscriptions', [ClientController::class, 'inscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('reinscriptions', [ClientController::class, 'reinscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('inscriptions/liste', [ClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('souscriptions', [ClientController::class, 'souscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('resouscriptions', [ClientController::class, 'resouscription'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('souscriptions/liste', [ClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
         $router->get('clients', [ClientController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
         $router->get('clients/profile/{code}', [ClientController::class, 'profile'], ['before' => 'auth']);
         $router->get('clients/commande', [ClientController::class, 'commande'], ['before' => 'commercial|admin|super|gestion']);
         $router->get('cautions', [CautisationController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
+        $router->get('cautions/encaisser', [CautisationController::class, 'encaisser'], ['before' => 'commercial|admin|super|gestion']);
 
         // <!-- Activity -->
         $router->get('zones', [ActiviteController::class, 'zone'], ['before' => 'admin|super|gestion|commercial']);
@@ -188,6 +190,14 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('versements-commerciaux', [VersementCommercialController::class, 'liste'], ['before' => 'commercial|admin|super|gestion|comptable']);
         $router->get('validations', [ValidationController::class, 'liste'], ['before' => 'gestion|admin|super']);
         $router->get('distributions', [DistributionController::class, 'liste'], ['before' => 'gestion|admin|super']);
+
+        // <!-- Reports -->
+        $router->get('rapports', [ReportController::class, 'dashboard'], ['before' => 'auth']);
+        $router->get('rapports/souscriptions', [ReportController::class, 'souscriptions'], ['before' => 'auth']);
+        $router->get('rapports/cautions', [ReportController::class, 'cautions'], ['before' => 'auth']);
+        $router->get('rapports/versements', [ReportController::class, 'versements'], ['before' => 'auth']);
+        $router->get('rapports/distributions', [ReportController::class, 'distributions'], ['before' => 'auth']);
+        $router->get('rapports/finances', [ReportController::class, 'finances'], ['before' => 'auth']);
 
     });
 

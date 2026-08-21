@@ -327,7 +327,7 @@ $router->get('/classes',      [ClasseController::class, 'index']);
 $router->get('/matieres',     [MatiereController::class, 'index']);
 $router->get('/enseignants',  [EnseignantController::class, 'index']);
 $router->get('/etudiants',    [EtudiantController::class, 'index']);
-$router->get('/inscriptions', [InscriptionController::class, 'index']);
+$router->get('/souscriptions', [InscriptionController::class, 'index']);
 $router->get('/paiements',         [PaiementController::class, 'index']);
 $router->get('/emplois-du-temps', [EmploiTempsController::class, 'index']);
 $router->get('/notes',            [NoteController::class, 'index']);

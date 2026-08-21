@@ -104,11 +104,11 @@ class ClientService
 
         return [
             'success' => true,
-            'message' => 'Inscription effectuée avec succès.',
+            'message' => 'Souscription effectuée avec succès.',
         ];
     }
 
-    public function saveReinscriptionData(array $post, array $packs = [])
+    public function saveResouscriptionData(array $post, array $packs = [])
     {
         extract($post);
 
@@ -161,7 +161,7 @@ class ClientService
 
         return [
             'success' => true,
-            'message' => 'Réinscription effectuée avec succès.',
+            'message' => 'Resouscription effectuée avec succès.',
         ];
     }
 
@@ -174,32 +174,32 @@ class ClientService
             return [];
         }
 
-        $inscriptions = $this->clientModel->getInscriptionsByClientCode($clientCode, $etablissementCode);
+        $souscriptions = $this->clientModel->getInscriptionsByClientCode($clientCode, $etablissementCode);
         $packInscriptions = $this->clientModel->getPackInscriptionsByClientCode($clientCode, $etablissementCode);
         $distributions = $this->clientModel->getDistributionsByClientCode($clientCode, $etablissementCode);
         $cautisations = $this->clientModel->getCautisationsByClientCode($clientCode, $etablissementCode);
 
         return [
             'client' => $client,
-            'inscriptions' => $inscriptions,
-            'pack_inscriptions' => $packInscriptions,
+            'souscriptions' => $souscriptions,
+            'pack_souscriptions' => $packInscriptions,
             'distributions' => $distributions,
             'cautisations' => $cautisations,
         ];
     }
 
-    public function inscriptionDataService($inscriptions)
+    public function inscriptionDataService($souscriptions)
     {
         $i = 0;
         $data = [];
 
-        foreach ($inscriptions as $inscription) {
+        foreach ($souscriptions as $souscription) {
             $i++;
 
-            $etat = checkStatusInscription($inscription['statut_inscription']);
+            $etat = checkStatusInscription($souscription['statut_inscription']);
 
-            $montantPack = (float) ($inscription['montant_pack'] ?? 0);
-            $montantPaye = (float) ($inscription['montant_paye'] ?? 0);
+            $montantPack = (float) ($souscription['montant_pack'] ?? 0);
+            $montantPaye = (float) ($souscription['montant_paye'] ?? 0);
             $resteDu = max(0, $montantPack - $montantPaye);
 
             $actions = '
@@ -208,26 +208,26 @@ class ClientService
             </button>
             <div class="dropdown-menu">
         ';
-            if ($inscription['statut_inscription'] == STATUT_INSCRIPTION[0]) {
+            if ($souscription['statut_inscription'] == STATUT_INSCRIPTION[0]) {
                 $actions .= '
-                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $inscription['code_inscription'] . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Modifier inscription">
-        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier inscription </button>
+                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $souscription['code_inscription'] . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Modifier souscription">
+        <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier souscription </button>
 
-                <button class="dropdown-item " id="" onclick="changeStatutInscription(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_ACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Valider inscription ">
-            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider inscription </button>
+                <button class="dropdown-item " id="" onclick="changeStatutInscription(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_ACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Valider souscription ">
+            <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider souscription </button>
 
-             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Annuler inscription ">
-            <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler inscription </button>
+             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Annuler souscription ">
+            <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler souscription </button>
         
         ';
             } else {
                 $actions .= '
-         <button class="dropdown-item " id="" onclick="imprimerInscription(\'' . $inscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
-            data-toggle="tooltip" title="" data-original-title="Imprimer inscription ">
-            <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer inscription </button>
+         <button class="dropdown-item " id="" onclick="imprimerInscription(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+            data-toggle="tooltip" title="" data-original-title="Imprimer souscription ">
+            <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer souscription </button>
         ';
             }
             $actions .= ' </div>
@@ -235,17 +235,17 @@ class ClientService
 
             $data[] = [
                 $i,
-                $inscription['code_inscription'],
-                $inscription['nom_client'],
-                $inscription['telephone_client'],
-                $inscription['libelle_session'],
-                $inscription['libelle_annee'],
-                $inscription['libelle_zone'],
+                $souscription['code_inscription'],
+                $souscription['nom_client'],
+                $souscription['telephone_client'],
+                $souscription['libelle_session'],
+                $souscription['libelle_annee'],
+                $souscription['libelle_zone'],
                 number_format($montantPack, 0, ',', ' ') . ' FCFA',
                 number_format($montantPaye, 0, ',', ' ') . ' FCFA',
                 number_format($resteDu, 0, ',', ' ') . ' FCFA',
                 $etat,
-                date_formater($inscription['created_at_inscription']),
+                date_formater($souscription['created_at_inscription']),
                 $actions
             ];
         }

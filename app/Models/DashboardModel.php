@@ -17,9 +17,9 @@ class DashboardModel extends Model
     {
         $data = [
             'total_clients' => 0,
-            'total_inscriptions' => 0,
-            'total_inscriptions_valide' => 0,
-            'total_inscriptions_annule' => 0,
+            'total_souscriptions' => 0,
+            'total_souscriptions_valide' => 0,
+            'total_souscriptions_annule' => 0,
             'total_packs' => 0,
             'total_articles' => 0,
             'total_users' => 0,
@@ -37,9 +37,9 @@ class DashboardModel extends Model
 
         try {
             $data['total_clients'] = (int) $this->countWhere(TABLES::CLIENTS, ['etablissement_code' => $etablissementCode]);
-            $data['total_inscriptions'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode]);
-            $data['total_inscriptions_valide'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode, 'statut_inscription' => 'valide']);
-            $data['total_inscriptions_annule'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode, 'statut_inscription' => 'annule']);
+            $data['total_souscriptions'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode]);
+            $data['total_souscriptions_valide'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode, 'statut_inscription' => 'valide']);
+            $data['total_souscriptions_annule'] = (int) $this->countWhere(TABLES::INSCRIPTIONS, ['etablissement_code' => $etablissementCode, 'statut_inscription' => 'annule']);
             $data['total_packs'] = (int) $this->countWhere(TABLES::PACKS, ['etablissement_code' => $etablissementCode]);
             $data['total_articles'] = (int) $this->countWhere(TABLES::ARTICLES, ['etablissement_code' => $etablissementCode]);
             $data['total_users'] = (int) $this->countWhere(TABLES::USERS, ['etablissement_code' => $etablissementCode]);
@@ -104,7 +104,7 @@ class DashboardModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT 'inscription' AS type, ins.code_inscription AS code, CONCAT('Inscription ', cl.nom_client) AS libelle, CONCAT(us.nom_user, ' ', us.prenom_user) AS utilisateur, ins.created_at_inscription AS date_activite, ins.statut_inscription AS statut FROM " . TABLES::INSCRIPTIONS . " ins JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code JOIN " . TABLES::USERS . " us ON us.code_user = ins.user_code WHERE ins.etablissement_code = :etablissement_code
+            $sql = "SELECT 'souscription' AS type, ins.code_inscription AS code, CONCAT('Souscription ', cl.nom_client) AS libelle, CONCAT(us.nom_user, ' ', us.prenom_user) AS utilisateur, ins.created_at_inscription AS date_activite, ins.statut_inscription AS statut FROM " . TABLES::INSCRIPTIONS . " ins JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code JOIN " . TABLES::USERS . " us ON us.code_user = ins.user_code WHERE ins.etablissement_code = :etablissement_code
             UNION ALL
             SELECT 'pack' AS type, p.code_pack AS code, p.libelle_pack AS libelle, CONCAT(us.nom_user, ' ', us.prenom_user) AS utilisateur, p.created_at_pack AS date_activite, p.statut_pack AS statut FROM " . TABLES::PACKS . " p JOIN " . TABLES::USERS . " us ON us.code_user = p.user_code WHERE p.etablissement_code = :etablissement_code2
             UNION ALL

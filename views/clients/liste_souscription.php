@@ -30,7 +30,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
         <i class="fas fa-clipboard-list mr-3 me-3" style="font-size:20px;"></i>
         <div>
             <h4 class="mb-0">Liste des souscriptions</h4>
-            <small>Gestion des inscriptions clients</small>
+            <small>Gestion des souscriptions clients</small>
         </div>
     </div>
 </header>
@@ -85,7 +85,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
                         <i class="fas fa-clipboard-list"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Total inscriptions</h6>
+                        <h6 class="montan-title">Total souscriptions</h6>
                         <h5 class="montan-value"><?= number_format($stats['total']) ?></h5>
                     </div>
                 </div>
@@ -160,7 +160,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
         <div class="d-flex justify-content-between align-items-center">
             <div class="card-title">Liste des souscriptions</div>
             <div class="d-flex gap-2">
-                <button type="button" id="btn_inscription_addModal" class="btn btn-primary btn-sm" title="Ajouter inscription">
+                <button type="button" id="btn_inscription_addModal" class="btn btn-primary btn-sm" title="Ajouter souscription">
                     <i class="fa fa-plus"></i> &nbsp; Créer
                 </button>
                 <button type="button" class="btn btn-success btn-sm" title="Imprimer" onclick="imprimerListeInscription()">
@@ -171,11 +171,11 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
     </div>
     <div class="card-body">
         <div class="table-responsive bg-light py-3 px-2 border rounded">
-            <table id="data-table-inscription" class="table table-hover my-table">
+            <table id="data-table-souscription" class="table table-hover my-table">
                 <thead class="thead-light">
                     <tr>
                         <th>#</th>
-                        <th>Code inscription</th>
+                        <th>Code souscription</th>
                         <th>Client</th>
                         <th>Contact</th>
                         <th>Session</th>
@@ -194,8 +194,8 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
     </div>
 </div>
 
-<!-- Modal inscription-->
-<div class="modal fade" data-backdrop="static" id="inscription-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
+<!-- Modal souscription-->
+<div class="modal fade" data-backdrop="static" id="souscription-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="inscriptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -209,7 +209,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
                 </button>
             </div>
             <div class="modal-body">
-                <div class="data-inscription-modal"></div>
+                <div class="data-souscription-modal"></div>
             </div>
             <div class="modal-footer"></div>
         </div>
@@ -218,14 +218,14 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
 
 <script>
 $(function() {
-    $('#data-table-inscription').DataTable({
+    $('#data-table-souscription').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: '<?= LINK ?>ajx.php',
             type: 'POST',
             data: function(d) {
-                d.action = 'charger_data_inscriptions';
+                d.action = 'charger_data_souscriptions';
                 d.date_debut = $('input[name="date_debut"]').val();
                 d.date_fin = $('input[name="date_fin"]').val();
                 d.zone_code = $('select[name="zone_code"]').val();
@@ -256,14 +256,14 @@ $(function() {
 
     $('#btn_inscription_addModal').click(function() {
         $.post('<?= LINK ?>ajx.php', { action: 'btn_showmodal_inscription_add' }, function(html) {
-            $('.data-inscription-modal').html(html.data);
-            $('#inscription-modal').modal('show');
+            $('.data-souscription-modal').html(html.data);
+            $('#souscription-modal').modal('show');
         }, 'json');
     });
 
     $('form').on('submit', function(e) {
         e.preventDefault();
-        $('#data-table-inscription').DataTable().ajax.reload();
+        $('#data-table-souscription').DataTable().ajax.reload();
     });
 });
 
@@ -272,7 +272,7 @@ function imprimerListeInscription() {
     var dateFin = $('input[name="date_fin"]').val();
     var zoneCode = $('select[name="zone_code"]').val();
     
-    var url = '<?= LINK ?>ajx.php?action=imprimer_liste_inscriptions&date_debut=' + dateDebut + '&date_fin=' + dateFin + '&zone_code=' + zoneCode;
+    var url = '<?= LINK ?>ajx.php?action=imprimer_liste_souscriptions&date_debut=' + dateDebut + '&date_fin=' + dateFin + '&zone_code=' + zoneCode;
     window.open(url, '_blank');
 }
 </script>

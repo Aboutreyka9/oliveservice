@@ -2,10 +2,10 @@
 
 <header class="page-title-bar">
     <div class="header-dashboard d-flex align-items-center mb-4">
-        <i class="fas fa-user-plus mr-3 me-3" style="font-size:20px;"></i>
         <div>
-            <h4 class="mb-0">Réinscription client</h4>
-            <small>Réinscrire un client existant pour une nouvelle session</small>
+            <a href="<?= url('souscriptions')?>" class="btn btn-secondary">
+                <i class="fas fa-plus mr-2"></i>  NOUVEAU CLIENT
+            </a>
         </div>
     </div>
 </header>
@@ -32,8 +32,8 @@
     </div>
 </div>
 
-<form method="post" id="frmAddReinscription">
-    <input type="hidden" name="action" value="btn_add_reinscription">
+<form method="post" id="frmAddResouscription">
+    <input type="hidden" name="action" value="btn_add_resouscription">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
 
@@ -195,7 +195,7 @@
                 <button type="button" class="btn btn-light btn-prev" data-step="2">
                     <i class="fas fa-arrow-left mr-2"></i> Précédent
                 </button>
-                <button type="submit" class="btn btn-success" id="btnSubmitFormReinscription">
+                <button type="submit" class="btn btn-success" id="btnSubmitFormResouscription">
                     <i class="fas fa-save"></i> &nbsp; Enregistrer la réinscription
                 </button>
             </div>

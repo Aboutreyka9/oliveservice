@@ -2,10 +2,10 @@
 
 <header class="page-title-bar">
     <div class="header-dashboard d-flex align-items-center mb-4">
-        <i class="fas fa-user-plus mr-3 me-3" style="font-size:20px;"></i>
         <div>
-            <h4 class="mb-0">Inscription client</h4>
-            <small>Enregistrement d'un nouveau client en 3 étapes</small>
+            <a href="<?= url('resouscriptions')?>" class="btn btn-primary">
+                <i class="fas fa-user mr-2"></i> ANCIEN CLIENT
+            </a>
         </div>
     </div>
 </header>
@@ -283,7 +283,7 @@
                     <i class="fas fa-arrow-left mr-2"></i> Précédent
                 </button>
                 <button type="submit" class="btn btn-success" id="btnSubmitFormClient">
-                    <i class="fas fa-save"></i> &nbsp; Enregistrer l'inscription
+                    <i class="fas fa-save"></i> &nbsp; Enregistrer l'souscription
                 </button>
             </div>
         </div>

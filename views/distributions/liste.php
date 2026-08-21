@@ -26,7 +26,7 @@
                         <th>#</th>
                         <th>Code distribution</th>
                         <th>Client</th>
-                        <th>Inscription</th>
+                        <th>Souscription</th>
                         <th>Zone</th>
                         <th>Statut</th>
                         <th>Date</th>

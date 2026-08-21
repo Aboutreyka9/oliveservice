@@ -701,7 +701,7 @@ switch ($action) {
 
     
 
-    //end Actions pour les inscription
+    //end Actions pour les souscription
 
 
 
@@ -731,7 +731,7 @@ switch ($action) {
 
     // Debut Actions pour les clients 
 
-    case 'charger_data_inscriptions':
+    case 'charger_data_souscriptions':
 
         $ajx = new ClientController();
 
@@ -747,11 +747,11 @@ switch ($action) {
 
         break;
 
-    case 'btn_add_reinscription':
+    case 'btn_add_resouscription':
 
         $ajx = new ClientController();
 
-        $ajx->addReinscription();
+        $ajx->addResouscription();
 
         break;
 
@@ -837,7 +837,29 @@ switch ($action) {
 
         break;
 
+    case 'search_client_cautisation':
 
+        $ajx = new CautisationController();
+
+        $ajx->searchClient();
+
+        break;
+
+    case 'get_souscriptions_client':
+
+        $ajx = new CautisationController();
+
+        $ajx->getInscriptionsClient();
+
+        break;
+
+    case 'btn_save_encaissement':
+
+        $ajx = new CautisationController();
+
+        $ajx->saveEncaissement();
+
+        break;
 
     //end Actions pour les cautions
 

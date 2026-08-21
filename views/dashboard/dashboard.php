@@ -103,7 +103,7 @@ $alerts = $alerts ?? [];
                     </div>
                     <h6><span class="text-muted text-uppercase montan-title">INSCRIPTIONS</span></h6>
                 </div>
-                <h5 class="montan-value"><?= number_format($totals['total_inscriptions'] ?? 0) ?></h5>
+                <h5 class="montan-value"><?= number_format($totals['total_souscriptions'] ?? 0) ?></h5>
             </div>
         </div>
     </div>

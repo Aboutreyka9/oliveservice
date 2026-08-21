@@ -1,7 +1,7 @@
 <?php
 $client = $client ?? [];
-$inscriptions = $inscriptions ?? [];
-$packInscriptions = $pack_inscriptions ?? [];
+$souscriptions = $souscriptions ?? [];
+$packInscriptions = $pack_souscriptions ?? [];
 $distributions = $distributions ?? [];
 $cautisations = $cautisations ?? [];
 ?>
@@ -56,8 +56,8 @@ $cautisations = $cautisations ?? [];
                         <i class="fas fa-clipboard-list"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Inscriptions</h6>
-                        <h5 class="montan-value"><?= count($inscriptions) ?></h5>
+                        <h6 class="montan-title">Souscriptions</h6>
+                        <h5 class="montan-value"><?= count($souscriptions) ?></h5>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@ $cautisations = $cautisations ?? [];
 <?php
 $totalPacks = 0;
 $totalPaye = 0;
-foreach ($inscriptions as $ins) {
+foreach ($souscriptions as $ins) {
     foreach ($packInscriptions as $pi) {
         if ($pi['inscription_code'] === $ins['code_inscription']) {
             $totalPacks += $pi['montant_pack'] ?? 0;
@@ -227,11 +227,11 @@ $resteDu = max(0, $totalPacks - $totalPaye);
     <div class="col-md-8">
         <div class="card mb-4">
             <div class="card-header">
-                <h4>Historique des inscriptions</h4>
+                <h4>Historique des souscriptions</h4>
             </div>
             <div class="card-body">
-                <?php if (empty($inscriptions)): ?>
-                    <p class="text-muted text-center py-4">Aucune inscription enregistrée pour ce client.</p>
+                <?php if (empty($souscriptions)): ?>
+                    <p class="text-muted text-center py-4">Aucune souscription enregistrée pour ce client.</p>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
@@ -247,7 +247,7 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($inscriptions as $i => $ins): ?>
+                                <?php foreach ($souscriptions as $i => $ins): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($ins['code_inscription']) ?></td>

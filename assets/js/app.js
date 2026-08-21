@@ -5682,7 +5682,7 @@ function updatedClient() {
 
 
 
-loadDataTable('data-table-inscription', '#data-table-inscription', 'charger_data_inscriptions');
+loadDataTable('data-table-souscription', '#data-table-souscription', 'charger_data_souscriptions');
 
 
 
@@ -5692,9 +5692,9 @@ loadDataTable('data-table-inscription', '#data-table-inscription', 'charger_data
 
 
 
-// Conditionnellement initialiser les étapes : inscription OU réinscription
+// Conditionnellement initialiser les étapes : souscription OU réinscription
 
-if (!$('#frmAddReinscription').length) {
+if (!$('#frmAddResouscription').length) {
 
     allStepInscription()
 
@@ -6702,19 +6702,19 @@ function initPackSelection() {
 
 
 
-/** DEBUT SECTION REINSCRIPTION */
+/** DEBUT SECTION RESOUSCRIPTION */
 
 
 
-if ($('#frmAddReinscription').length) {
+if ($('#frmAddResouscription').length) {
 
-    initReinscriptionSteps();
+    initResouscriptionSteps();
 
 }
 
 
 
-function initReinscriptionSteps() {
+function initResouscriptionSteps() {
 
     $('.btn-next').click(function() {
 
@@ -6822,7 +6822,7 @@ $('#btn_search_client').click(function() {
 
 // Soumission formulaire réinscription
 
-$('#frmAddReinscription').submit(function(e) {
+$('#frmAddResouscription').submit(function(e) {
 
     e.preventDefault();
 
@@ -6862,7 +6862,7 @@ $('#frmAddReinscription').submit(function(e) {
 
         method: 'POST',
 
-        data: formData + '&action=btn_add_reinscription',
+        data: formData + '&action=btn_add_resouscription',
 
         dataType: 'JSON',
 
@@ -6910,7 +6910,7 @@ $('#frmAddReinscription').submit(function(e) {
 
 // Recap réinscription
 
-function updateRecapReinscription() {
+function updateRecapResouscription() {
 
     const nom = $('#found_nom').text();
 
@@ -6982,7 +6982,7 @@ function removePackRecap(packCode) {
 
     updatePackCardsUI();
 
-    updateRecapReinscription();
+    updateRecapResouscription();
 
 }
 
@@ -6998,7 +6998,7 @@ $(document).ready(function() {
 
     $('body').on('click', '#step2 .btn-next', function() {
 
-        updateRecapReinscription();
+        updateRecapResouscription();
 
     });
 
@@ -7006,7 +7006,7 @@ $(document).ready(function() {
 
 
 
-/** FIN SECTION REINSCRIPTION */
+/** FIN SECTION RESOUSCRIPTION */
 
 
 

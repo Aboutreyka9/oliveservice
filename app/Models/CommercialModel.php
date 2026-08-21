@@ -60,7 +60,7 @@ class CommercialModel extends Model
 
             $sql = "SELECT DISTINCT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client,
                            cl.lieu_residence_client, cl.created_at_client,
-                           COUNT(DISTINCT ins.code_inscription) as nb_inscriptions,
+                           COUNT(DISTINCT ins.code_inscription) as nb_souscriptions,
                            MIN(ins.created_at_inscription) as premiere_inscription
                     FROM " . TABLES::CLIENTS . " cl
                     JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.client_code = cl.code_client
@@ -118,7 +118,7 @@ class CommercialModel extends Model
     {
         $data = [
             'total_clients' => 0,
-            'total_inscriptions' => 0,
+            'total_souscriptions' => 0,
             'total_packs' => 0,
             'montant_total_packs' => 0,
             'total_versements' => 0,
@@ -141,7 +141,7 @@ class CommercialModel extends Model
 
             $sql = "SELECT 
                         COUNT(DISTINCT cl.code_client) as total_clients,
-                        COUNT(DISTINCT ins.code_inscription) as total_inscriptions,
+                        COUNT(DISTINCT ins.code_inscription) as total_souscriptions,
                         COUNT(DISTINCT pi.code_pack_inscription) as total_packs,
                         COALESCE(SUM(p.montant_pack), 0) as montant_total_packs
                     FROM " . TABLES::INSCRIPTIONS . " ins
@@ -159,7 +159,7 @@ class CommercialModel extends Model
 
             if ($result) {
                 $data['total_clients'] = (int) $result['total_clients'];
-                $data['total_inscriptions'] = (int) $result['total_inscriptions'];
+                $data['total_souscriptions'] = (int) $result['total_souscriptions'];
                 $data['total_packs'] = (int) $result['total_packs'];
                 $data['montant_total_packs'] = (float) $result['montant_total_packs'];
             }

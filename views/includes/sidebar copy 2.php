@@ -143,13 +143,13 @@
                             <?php //if(auth()->hasRole(Roles::ADMIN_H)): 
                             ?>
                             <li>
-                                <a class="item-link" href="<?= url('inscriptions') ?>">
-                                    <span class="sub-item">Inscriptions</span>
+                                <a class="item-link" href="<?= url('souscriptions') ?>">
+                                    <span class="sub-item">Souscriptions</span>
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('reinscriptions') ?>">
-                                    <span class="sub-item">Réinscriptions</span>
+                                <a class="item-link" href="<?= url('resouscriptions') ?>">
+                                    <span class="sub-item">Résouscriptions</span>
                                 </a>
                             </li>
                              <li>
