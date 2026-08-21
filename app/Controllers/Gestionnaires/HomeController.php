@@ -38,7 +38,7 @@ class HomeController extends MainController
         $activities = $this->dashboardModel->getLastActivities($etablissementCode);
         $alerts = $this->dashboardModel->getAlerts($etablissementCode);
 
-        return $this->view('dashboard/dashboard', [
+        return $this->view('gestionnaires/dashboard/dashboard', [
             'title' => "Mon espace",
             'totals' => $totals,
             'activities' => $activities,
