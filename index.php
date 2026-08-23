@@ -40,7 +40,8 @@ use Phroute\Phroute\Dispatcher;
 
 
 // var_dump(((new ActiviteModel())->getPackBySessionAndCategorie('l8rmIqVzNWaRYF6Nb7kuckHC','6QIlVfXP0LiXE9tBzHownYLAA324qDi2','5454544456','0GklBk07waYoLB6pHwY')));
-// var_dump($_SESSION);
+// var_dump(session_destroy());
+// var_dump(session_destroy());
 // return;
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -142,11 +143,29 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
     $router->get('login', [AuthController::class, 'login'], ['before' => 'guest']);
     $router->get('auth', [AuthController::class, 'googleAuth'], ['before' => 'guest']);
-    // <!-- sexion utilisateur  -->
+
     $router->group(['before' => 'auth', 'prefix' => '/'], function ($router) {
 
-        $router->get('dashboard', [HomeController::class, 'acueil']);
+
+    // ROUTES POUR COMMERCIAL
+    $router->group(['before' => 'commercial', 'prefix' => '/commercial'], function ($router) {
+  // <!-- Commercials / Client -->
+        $router->get('souscriptions', [CommercialsClientController::class, 'souscription']);
+        $router->get('resouscriptions', [CommercialsClientController::class, 'resouscription']);
+        $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeInscription']);
+        $router->get('clients/liste', [CommercialsClientController::class, 'liste']);
+        $router->get('clients/profile/{code}', [CommercialsClientController::class, 'profile'], ['before' => 'auth']);
+        $router->get('cautions', [CautisationController::class, 'liste']);
+        $router->get('cautions/encaisser', [CautisationController::class, 'encaisser']);
+    });
+
+
+    // <!-- sexion utilisateur  -->
+
+        $router->get('dashboard', [HomeController::class, 'acueil'], ['before' => 'auth']);
         $router->get('/', [HomeController::class, 'acueil'], ['before' => 'auth']);
+
+        
 
         $router->get('recrutements', [UserController::class, 'recrutement'], ['before' => 'admin|super']);
         $router->get('personnel-commercials', [UserController::class, 'commercials'], ['before' => 'admin|super']);
@@ -158,15 +177,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);
         $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
 
-        // <!-- Commercials / Client -->
-        $router->get('souscriptions', [CommercialsClientController::class, 'souscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('resouscriptions', [CommercialsClientController::class, 'resouscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeInscription'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('clients', [CommercialsClientController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('clients/profile/{code}', [CommercialsClientController::class, 'profile'], ['before' => 'auth']);
-        $router->get('clients/commande', [CommercialsClientController::class, 'commande'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('cautions', [CautisationController::class, 'liste'], ['before' => 'commercial|admin|super|gestion']);
-        $router->get('cautions/encaisser', [CautisationController::class, 'encaisser'], ['before' => 'commercial|admin|super|gestion']);
+      
 
         // <!-- Activity -->
         $router->get('zones', [ActiviteController::class, 'zone'], ['before' => 'admin|super|gestion|commercial']);
@@ -190,6 +201,8 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('rapports/finances', [ReportController::class, 'finances'], ['before' => 'auth']);
 
     });
+
+    
 
 
 

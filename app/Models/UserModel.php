@@ -103,9 +103,8 @@ class UserModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT fn.libelle_fonction,COALESCE(co.id_commercial,null) AS commercial, COALESCE(an.code_annee,null) AS annee_code , u.* FROM " . TABLES::USERS . " AS u 
+            $sql = "SELECT fn.libelle_fonction, COALESCE(an.code_annee,null) AS annee_code , u.* FROM " . TABLES::USERS . " AS u 
             LEFT JOIN " . TABLES::FONCTIONS . " AS fn ON fn.code_fonction = u.fonction_code
-            LEFT JOIN " . TABLES::COMMERCIALS . " AS co ON co.user_code = u.code_user AND co.statut_commercial = :statut
             LEFT JOIN " . TABLES::ANNEES . " AS an ON an.etablissement_code = u.etablissement_code AND an.statut_annee = :statut_annee
          WHERE {$email} = :email AND statut_user = :statut  LIMIT 1
 
@@ -412,6 +411,7 @@ class UserModel extends Model
     public function getClientsByCommercial(string $commercialUserCode, string $etablissementCode, array $filters = []): array
     {
         $data = [];
+        return [];
         try {
             $where = "WHERE ins.user_code = :user_code AND ins.etablissement_code = :etablissement_code";
             $params = ['user_code' => $commercialUserCode, 'etablissement_code' => $etablissementCode];
@@ -455,6 +455,7 @@ class UserModel extends Model
     public function getVersementsByCommercial(string $commercialUserCode, string $etablissementCode, array $filters = []): array
     {
         $data = [];
+        return [];
         try {
             $where = "WHERE vc.commercial_code = :commercial_code AND vc.etablissement_code = :etablissement_code";
             $params = ['commercial_code' => $commercialUserCode, 'etablissement_code' => $etablissementCode];
@@ -501,6 +502,7 @@ class UserModel extends Model
             'montant_cautions_valides' => 0,
             'montant_cautions_en_attente' => 0,
         ];
+        return $data;
 
         try {
             $params = ['user_code' => $commercialUserCode, 'etablissement_code' => $etablissementCode];
@@ -593,6 +595,7 @@ class UserModel extends Model
             'evolution_clients' => [],
             'evolution_versements' => [],
         ];
+        return $data;
 
         try {
             $versements = $this->getVersementsByCommercial($commercialUserCode, $etablissementCode, $dateDebut && $dateFin ? ['date_debut' => $dateDebut, 'date_fin' => $dateFin] : []);

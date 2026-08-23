@@ -56,7 +56,6 @@ class Auth
             'id'    => $user['code_user'],
             'annee_code'    => $user['annee_code'],
             'zone_code'    => '6QIlVfXP0LiXE9tBzHownYLAAqDi2',
-            'commercial'    =>  $user['commercial'],
             'nom'  => $user['nom_user'] . ' ' . $user['prenom_user'],
             'fonction' => $user['libelle_fonction'],
             "etablissement_code" => $user['etablissement_code'],

@@ -6,19 +6,25 @@ use App\Core\Auth;
 use App\Core\Gqr;
 use App\Core\MainController;
 use App\Models\DashboardModel;
-use App\Models\Factory;
+use App\Models\CautisationModel;
+use App\Models\UserModel;
 use App\Services\Service;
+use Groupes;
 use Roles;
 
 class HomeController extends MainController
 {
 
     private DashboardModel $dashboardModel;
+    private UserModel $userModel;
+    private CautisationModel $cautisationModel;
 
     public function __construct()
     {
         parent::__construct();
         $this->dashboardModel = new DashboardModel();
+        $this->userModel = new UserModel();
+        $this->cautisationModel = new CautisationModel();
     }
 
     /**
@@ -32,6 +38,55 @@ class HomeController extends MainController
 
     public function acueil()
     {
+
+        if(Auth::hasGroupe(Groupes::COMMERCIAL)){
+
+        $userCode = Auth::user('id');
+        $etablissementCode = Auth::user('etablissement_code');
+
+
+        $stats = $this->userModel->getStatsCommercial($userCode, $etablissementCode);
+        $performance = $this->userModel->getPerformanceCommercial($userCode, $etablissementCode);
+
+        $clients = $this->userModel->getClientsByCommercial($userCode, $etablissementCode, [
+            'date_debut' => date('Y-m-d', strtotime('-30 days')),
+            'date_fin' => date('Y-m-d')
+        ]);
+
+        $versements = $this->userModel->getVersementsByCommercial($userCode, $etablissementCode, [
+            'date_debut' => date('Y-m-d', strtotime('-30 days')),
+            'date_fin' => date('Y-m-d')
+        ]);
+
+        $inscriptions = $this->cautisationModel->getInscriptionsActivesByClient(
+            $clients[0]['code_client'] ?? '',
+            $etablissementCode
+        );
+
+        $totalClients = count($clients);
+        $totalInscriptions = $stats['total_insscriptions'] ?? 0;
+        $totalPacks = $stats['total_packs'] ?? 0;
+        $montantPacks = $stats['montant_total_packs'] ?? 0;
+        $versementsValides = $stats['montant_versements_valides'] ?? 0;
+        $versementsEnAttente = $stats['montant_versements_en_attente'] ?? 0;
+        $cautionsValidees = $stats['montant_cautions_valides'] ?? 0;
+        $tauxValidationVersements = $performance['taux_validation_versements'] ?? 0;
+        $tauxValidationCautions = $performance['taux_validation_cautions'] ?? 0;
+
+         return $this->view('commercials/dashboard/dashboard', compact(
+            'versements',
+            'inscriptions',
+            'totalClients',
+            'totalInscriptions',
+            'totalPacks',
+            'montantPacks',
+            'versementsValides',
+            'versementsEnAttente',
+            'cautionsValidees',
+            'tauxValidationVersements',
+            'tauxValidationCautions',
+        ));
+        }
 
         $etablissementCode = Auth::user('etablissement_code');
         $totals = $this->dashboardModel->getTotals($etablissementCode);

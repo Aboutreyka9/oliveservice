@@ -1,27 +1,3 @@
-<?php
-$start = (new DateTime('first day of this month'))->format('Y-m-d');
-$end = (new DateTime('today'))->format('Y-m-d');
-$dateD = (new DateTime('first day of this month'))->format('d-m-Y');
-$dateF = (new DateTime('today'))->format('d-m-Y');
-
-$etablissementCode = auth()::user('etablissement_code');
-$anneeCode = auth()::user('annee_code');
-$zoneCode = auth()::user('zone_code');
-
-$stats = [
-    'total' => 0,
-    'valide' => 0,
-    'en_attente' => 0,
-    'annule' => 0,
-    'montant_total' => 0,
-    'montant_valide' => 0,
-    'montant_en_attente' => 0,
-    'montant_annule' => 0,
-];
-
-$clientModel = new \App\Models\ClientModel();
-$stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zoneCode, $start, $end);
-?>
 
 <?= breakcrumb($title, 'fa-clipboard-list'); ?>
 

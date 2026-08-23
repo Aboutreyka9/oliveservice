@@ -313,31 +313,15 @@ class ClientService
 
             // $etat = checkEtatData($client['statut_client'] ?? STATUT_ACTIF);
 
-            $actions = '
-            <button class="btn btn-light btn-link" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-h"></i>
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="' . url('clients/profile/' . $client['code_client']) . '" data-toggle="tooltip" title="" data-original-title="Voir profil">
-                    <i class="fa fa-eye text-icon-info"></i> &nbsp; Voir profil
-                </a>
-                <button class="dropdown-item" onclick="modalUpdatedClient(\'' . $client['code_client'] . '\')" data-toggle="tooltip" title="" data-original-title="Modifier client">
-                    <i class="fa fa-edit text-icon-primary"></i> &nbsp; Modifier
-                </button>
-                <button class="dropdown-item" onclick="changeStatutClient(\'' . $client['code_client'] . '\',\'' . STATUT_INACTIF . '\')" data-toggle="tooltip" title="" data-original-title="Désactiver client">
-                    <i class="fa fa-times text-icon-danger"></i> &nbsp; Désactiver
-                </button>
-                </div>';
+            $actions = '<a class="btn btn-link" href="' . url('clients/profile/' . $client['code_client']) . '" data-toggle="tooltip" title="" data-original-title="Voir profil">
+                    <i class="fa fa-eye text-icon-primary"></i> 
+                </a>';
 
             $data[] = [
                 $i,
-                // $etat,
                 strtoupper($client['nom_client']),
                 $client['telephone_client'],
                 $client['sexe_client'],
-                $client['lieu_residence_client'],
-                $client['code_client'],
-                $client['user_code'],
                 date_formater($client['created_at_client']),
                 $actions
             ];

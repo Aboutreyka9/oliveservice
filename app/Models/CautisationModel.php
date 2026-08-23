@@ -189,6 +189,7 @@ class CautisationModel extends Model
     public function getInscriptionsActivesByClient(string $clientCode, string $etablissementCode): array
     {
         $data = [];
+        return [];
         try {
             $sql = "SELECT ins.*, cl.nom_client, cl.telephone_client,
                            se.libelle_session, an.libelle_annee, zo.libelle_zone,

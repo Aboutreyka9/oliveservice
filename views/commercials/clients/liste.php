@@ -22,9 +22,6 @@
                         <th>Nom & prénoms</th>
                         <th>Contact</th>
                         <th>Genre</th>
-                        <th>Lieu de résidence</th>
-                        <th>Code client</th>
-                        <th>Enregistré par</th>
                         <th>Enregistré le</th>
                         <th> Actions</th>
                     </tr>

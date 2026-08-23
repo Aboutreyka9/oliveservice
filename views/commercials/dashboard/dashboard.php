@@ -1,67 +1,30 @@
-<?php
-$totals = $totals ?? [];
-$activities = $activities ?? [];
-$alerts = $alerts ?? [];
-?>
 
-<?= breakcrumb($title, 'fa-chart-bar '); ?>
+<?= breakcrumb($title ?? "Tableau de bord commercial", 'fa-chart-line'); ?>
 
 <header class="page-title-bar">
     <div class="header-dashboard d-flex align-items-center mb-4">
         <i class="fas fa-chart-line mr-3 me-3" style="font-size:20px;"></i>
         <div>
-            <h4 class="mb-0">Tableau de bord</h4>
-            <small>Vue globale de l'activité</small>
+            <h4 class="mb-0">Tableau de bord commercial</h4>
+            <small>Vue d'ensemble de votre activité</small>
         </div>
     </div>
 </header>
 
-<!-- ALERTES -->
-<?php if (!empty($alerts)): ?>
-<div class="row mb-4">
-    <div class="col-md-12">
-        <?php foreach ($alerts as $alert): ?>
-            <div class="alert alert-<?= $alert['type'] ?> alert-dismissible fade show" role="alert">
-                <i class="fas <?= $alert['icon'] ?> mr-2"></i>
-                <?= htmlspecialchars($alert['message']) ?>
-                <?php if (!empty($alert['link'])): ?>
-                    <a href="<?= $alert['link'] ?>" class="alert-link ml-2">Voir</a>
-                <?php endif; ?>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-<?php endif; ?>
-
 <!-- STATS CARDS -->
-<div class="row g-3 mb-1">
+<div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="card custom-card-detail">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="icon bg-primary mr-2">
-                        <i class="fas fa-cubes"></i>
+                        <i class="fas fa-users"></i>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">PACKS</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_packs'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-info mr-2">
-                        <i class="fas fa-file-alt"></i>
+                    <div>
+                        <h6 class="montan-title">Clients</h6>
+                        <h5 class="montan-value"><?= number_format($totalClients) ?></h5>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">ARTICLES</span></h6>
                 </div>
-                <h5 class="montan-value"><?= number_format($totals['total_articles'] ?? 0) ?></h5>
             </div>
         </div>
     </div>
@@ -71,11 +34,13 @@ $alerts = $alerts ?? [];
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="icon bg-success mr-2">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">CLIENTS</span></h6>
+                    <div>
+                        <h6 class="montan-title">Inscriptions</h6>
+                        <h5 class="montan-value"><?= number_format($totalInscriptions) ?></h5>
+                    </div>
                 </div>
-                <h5 class="montan-value"><?= number_format($totals['total_clients'] ?? 0) ?></h5>
             </div>
         </div>
     </div>
@@ -85,131 +50,158 @@ $alerts = $alerts ?? [];
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="icon bg-warning mr-2">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Packs</h6>
+                        <h5 class="montan-value"><?= number_format($totalPacks) ?></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-info mr-2">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">DÉPENSES</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_depenses'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-danger mr-2">
-                        <i class="fas fa-clipboard-list"></i>
+                    <div>
+                        <h6 class="montan-title">Montant packs</h6>
+                        <h5 class="montan-value"><?= number_format($montantPacks, 0, ',', ' ') ?> FCFA</h5>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">INSCRIPTIONS</span></h6>
                 </div>
-                <h5 class="montan-value"><?= number_format($totals['total_souscriptions'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-purple mr-2">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <h6><span class="text-muted text-uppercase montan-title">UTILISATEURS</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_users'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-orange mr-2">
-                        <i class="fas fa-hand-holding-usd"></i>
-                    </div>
-                    <h6><span class="text-muted text-uppercase montan-title">CAUTIONS</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_cautions'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-dark mr-2">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h6><span class="text-muted text-uppercase montan-title">ZONES</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_zones'] ?? 0) ?></h5>
-            </div>
-        </div>
-    </div>
-
-      <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-success mr-2">
-                        <i class="fas fa-filter"></i>
-                    </div>
-                    <h6><span class="text-muted text-uppercase montan-title">SESSION</span></h6>
-                </div>
-                <h5 class="montan-value"><?= number_format($totals['total_sessionS'] ?? 0) ?></h5>
             </div>
         </div>
     </div>
 </div>
 
-<!-- DERNIÈRES ACTIVITÉS -->
-<div class="row mt-4">
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-success mr-2">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Versements validés</h6>
+                        <h5 class="montan-value"><?= number_format($versementsValides, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-warning mr-2">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Versements en attente</h6>
+                        <h5 class="montan-value"><?= number_format($versementsEnAttente, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-purple mr-2">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Cautions validées</h6>
+                        <h5 class="montan-value"><?= number_format($cautionsValidees, 0, ',', ' ') ?> FCFA</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PERFORMANCE -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-primary mr-2">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Taux validation versements</h6>
+                        <h5 class="montan-value"><?= number_format($tauxValidationVersements, 2) ?>%</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-success mr-2">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Taux validation cautions</h6>
+                        <h5 class="montan-value"><?= number_format($tauxValidationCautions, 2) ?>%</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CLIENTS RECENTS -->
+<div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="card-title">Dernières activités</div>
+                    <div class="card-title">Clients récents (30 derniers jours)</div>
+                    <a href="<?= url('clients') ?>" class="btn btn-primary btn-sm">Voir tous les clients</a>
                 </div>
             </div>
             <div class="card-body">
-                <?php if (empty($activities)): ?>
-                    <p class="text-muted text-center py-4">Aucune activité enregistrée.</p>
+                <?php if (empty($clients)): ?>
+                    <p class="text-muted text-center py-4">Aucun client trouvé.</p>
                 <?php else: ?>
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover table-bordered">
                             <thead class="thead-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Type</th>
-                                    <th>Libellé</th>
-                                    <th>Utilisateur</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
+                                    <th>Code client</th>
+                                    <th>Nom client</th>
+                                    <th>Contact</th>
+                                    <th>Sexe</th>
+                                    <th>Lieu résidence</th>
+                                    <th>Nb inscriptions</th>
+                                    <th>Première inscription</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($activities as $i => $activity): ?>
-                                    <?php
-                                        $badgeClass = 'bg-primary';
-                                        $statut = $activity['statut'] ?? '';
-                                        if (in_array($statut, ['valide', 'actif', 'Confirmee', 'paye'], true)) {
-                                            $badgeClass = 'bg-success';
-                                        } elseif (in_array($statut, ['annule', 'Annulee', 'ennule'], true)) {
-                                            $badgeClass = 'bg-danger';
-                                        } elseif (in_array($statut, ['En attente', 'solde'], true)) {
-                                            $badgeClass = 'bg-warning';
-                                        }
-                                    ?>
+                                <?php foreach (array_slice($clients, 0, 10) as $i => $client): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
-                                        <td><span class="badge badge-info"><?= htmlspecialchars(ucfirst($activity['type'])) ?></span></td>
-                                        <td><?= htmlspecialchars($activity['libelle']) ?></td>
-                                        <td><?= htmlspecialchars($activity['utilisateur'] ?? '-') ?></td>
-                                        <td><?= !empty($activity['date_activite']) ? date_formater($activity['date_activite'], true) : '-' ?></td>
-                                        <td><span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($statut) ?></span></td>
+                                        <td><span class="badge badge-info"><?= htmlspecialchars($client['code_client']) ?></span></td>
+                                        <td><?= htmlspecialchars($client['nom_client']) ?></td>
+                                        <td><?= htmlspecialchars($client['telephone_client']) ?></td>
+                                        <td><?= htmlspecialchars($client['sexe_client']) ?></td>
+                                        <td><?= htmlspecialchars($client['lieu_residence_client'] ?? '-') ?></td>
+                                        <td><?= number_format($client['nb_inscriptions'] ?? 0) ?></td>
+                                        <td><?= !empty($client['premiere_inscription']) ? date_formater($client['premiere_inscription'], true) : '-' ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
