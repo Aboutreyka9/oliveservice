@@ -59,24 +59,32 @@ class Permissionsss
 
 class Rolesss
 {
-    const SUPER_ADMIN = 'super_admin';
-    const ADMIN_PARAM = 'admin_param';
-    const ADMIN_USER = 'admin_user';
-    const COMPT_CAISSE = 'compt_caisse';
-    const COMPT_DEPENSE = 'compt_depense';
-    const COMPT_VERSEMENT = 'compt_versement';
-    const GEST_VALID = 'gest_valid';
-    const GEST_DISTRIB = 'gest_distrib';
-    const GEST_CAUTION = 'gest_caution';
-    const COMM_CLIENT = 'comm_client';
-    const COMM_CAUTION = 'comm_caution';
+   const SUPER_ADMIN      = 'super_admin';
+
+    const ADMIN_PARAM      = 'admin_param';
+    const ADMIN_USER       = 'admin_user';
+
+    const COMPT_CAISSE     = 'compt_caisse';
+    const COMPT_DEPENSE    = 'compt_depense';
+    const COMPT_VERSEMENT  = 'compt_versement';
+    const COMPT_MASTER     = 'compt_master';
+
+    const GEST_PARAM       = 'gest_param';
+    const GEST_PACKS       = 'gest_packs';
+    const GEST_DISTRIB     = 'gest_distrib';
+    const GEST_COMM        = 'gest_comm';
+    const GEST_CLIENTS     = 'gest_clients';
+
+    const COMM_CLIENT      = 'comm_client';
+    const COMM_COLLECT     = 'comm_collect';
+    const COMM_VERSEMENT   = 'comm_versement';
 }
 
 class Groupesss
 {
-    const SUPER = 'SUPER';
+    const SUPER = 'GLOBAL';
     const ADMIN = 'ADMIN';
-    const COMPTABLE = 'COMPTABLE';
+    const COMPTABLE = 'FINANCE';
     const GESTION = 'GESTION';
     const COMMERCIAL = 'COMMERCIAL';
 }

@@ -121,7 +121,7 @@ class CautisationService
         return $data;
     }
 
-    public function cautisationAddModalService(array $inscriptions = []): string
+    public function cautisationAddModalService(array $souscriptions = []): string
     {
         $output = '';
         $output .= '
@@ -130,12 +130,12 @@ class CautisationService
                 <div class="col-md-12 mb-3">
                     <input type="hidden" value="btn_add_cautisation" name="action">
                     <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
-                    <label for="inscription_code" class="form-label">Inscription <strong class="text-danger">*</strong></label>
+                    <label for="inscription_code" class="form-label">Souscription <strong class="text-danger">*</strong></label>
                     <select class="form-control select2" id="inscription_code" name="inscription_code" required>
                         <option value="">--- CHOISIR ---</option>';
 
-        if (!empty($inscriptions)) {
-            foreach ($inscriptions as $ins) {
+        if (!empty($souscriptions)) {
+            foreach ($souscriptions as $ins) {
                 $label = $ins['nom_client'] . ' - ' . $ins['libelle_session'] . ' (' . $ins['libelle_annee'] . ')';
                 $output .= '<option value="' . $ins['code_inscription'] . '">' . $label . '</option>';
             }
@@ -159,5 +159,56 @@ class CautisationService
             </div>
         </form>';
         return $output;
+    }
+
+    public function encaisserCautisation(array $post): array
+    {
+        extract($post);
+
+        $v = new Validator();
+        $v->required('inscription_code', $inscription_code, 'Souscription')
+          ->required('montant_cautisation', $montant_cautisation, 'Montant')
+          ->digit('montant_cautisation', $montant_cautisation, 'Montant')
+          ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
+
+        if ($mode_calcul === 'jours') {
+            $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
+              ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
+        }
+
+        if ($v->fails()) {
+            return ['success' => false, 'message' => implode(', ', $v->errors())];
+        }
+
+        $code = $this->cautisationModel->generatorCode(TABLES::CAUTISATION_CLIENTS, 'code_cautisation_client');
+
+        $montant = (int) $montant_cautisation;
+        $nombreJours = $mode_calcul === 'jours' ? (int) $nombre_jours_cautisation : null;
+        $montantJournalier = $nombreJours > 0 ? round($montant / $nombreJours) : null;
+
+        $data = [
+            'code_cautisation_client' => $code,
+            'montant_cautisation_client' => $montant,
+            'inscription_code' => $inscription_code,
+            'statut_cautisation_client' => 'En attente',
+            'etablissement_code' => Auth::user('etablissement_code'),
+            'user_code' => Auth::user('id'),
+            'created_at_cautisation_client' => date('Y-m-d H:i:s'),
+            'updated_at_cautisation_client' => date('Y-m-d H:i:s'),
+            'nombre_jours_cautisation' => $nombreJours,
+            'montant_journalier_cautisation' => $montantJournalier,
+            'periode_debut_cautisation' => $periode_debut ?? null,
+            'periode_fin_cautisation' => $periode_fin ?? null,
+            'mode_calcul_cautisation' => $mode_calcul,
+        ];
+
+        if (!$this->cautisationModel->create(TABLES::CAUTISATION_CLIENTS, $data)) {
+            return ['success' => false, 'message' => "Désolé! échec d'opération."];
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Cautisation enregistrée avec succès. En attente de validation.',
+        ];
     }
 }

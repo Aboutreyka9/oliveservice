@@ -1539,31 +1539,14 @@ function daysBetweenDates($dateDebut, $dateFin)
   // Retourner le nombre de jours
   return $intervalle->days + 1;
 }
-function bchargerListeClient()
+function chargerListeClientCommercial()
 {
 
-  $personne = new Personne();
-  $clients = $personne->getFieldsForParams(TABLES::CLIENTS, ['boutique_code' => BOUTIQUE_CODE], [], 'fetchAll', ['nom_client ASC']);
-  if (!empty($clients))
-
-    return personneService()::clientDataService($clients);
 }
 
 function chargerListeClient($start, $end)
 {
 
-
-  $fc = new Factory();
-  $clients = $fc->getAllClient($start, $end);
-  // **
-
-  if (empty($clients)) {
-    echo "<tr>
-        <td colspan='9' class='text-center text-danger'>Aucun client disponible</td> 
-        </tr>";
-    return;
-  }
-  return service()::clientDataForSearching($clients);
 }
 
 function chargerInfoClientReservation($client)
@@ -1656,32 +1639,32 @@ function chargerListeFonction()
     ->select("fonctions")->where('hotel_id', Auth::user('hotel_id'))
     ->where('etat_fonction', '1')->All();
 
-  if (!empty($fonctions)) {
-    $i = 0;
+    if (!empty($fonctions)) {
+      $i = 0;
 
-    foreach ($fonctions as $data) {
-      $i++; ?>
+      foreach ($fonctions as $data) {
+        $i++; ?>
 
-      <tr>
-        <th><?= $i ?></th>
+        <tr>
+          <th><?= $i ?></th>
 
-        <td><?= $data['libelle_fonction'] ?></td>
-        <td>... <span class="desc-show"> <?= $data['description_fonction'] ?></span></td>
-        <td class="table_button">
+          <td><?= $data['libelle_fonction'] ?></td>
+          <td>... <span class="desc-show"> <?= $data['description_fonction'] ?></span></td>
+          <td class="table_button">
 
-          <div class="btn_inligne">
-            <button id="frm_modifier_fonction<?= $i ?>" data-code="<?= crypter($data['code_fonction']) ?>"
-              class="btn btn-primary btn-sm frm_modifier_fonction" title="Modifier"> <i class="fa fa-edit"></i>
-              Modifier</button>
+            <div class="btn_inligne">
+              <button id="frm_modifier_fonction<?= $i ?>" data-code="<?= crypter($data['code_fonction']) ?>"
+                class="btn btn-primary btn-sm frm_modifier_fonction" title="Modifier"> <i class="fa fa-edit"></i>
+                Modifier</button>
 
-            <button id="btn_delete_fonction<?= $i ?>" data-code="<?= crypter($data['code_fonction']) ?>"
-              class="btn btn btn-danger btn-sm btn_delete_fonction" title="Supprimer"> <i class="fa fa-trash"></i>
-              Supprimer</button>
-          </div>
-        </td>
-      </tr>
-  <?php }
-  } else {
+              <button id="btn_delete_fonction<?= $i ?>" data-code="<?= crypter($data['code_fonction']) ?>"
+                class="btn btn btn-danger btn-sm btn_delete_fonction" title="Supprimer"> <i class="fa fa-trash"></i>
+                Supprimer</button>
+            </div>
+          </td>
+        </tr>
+    <?php }
+    } else {
     echo "<tr>
       <td colspan='4' class='text-center text-danger'>Aucune fonction enregistrée</td> </tr>";
   }

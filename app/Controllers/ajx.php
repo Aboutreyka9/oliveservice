@@ -1,26 +1,14 @@
 <?php
 
 
-
-use App\Controllers\ActiviteController;
-
-use App\Controllers\CautisationController;
-
-use App\Controllers\DistributionController;
-
-use App\Controllers\EtudiantController;
-
-use App\Controllers\FinanceController;
-
-use App\Controllers\ValidationController;
-
-use App\Controllers\VersementCommercialController;
-
-
+use App\Controllers\Gestionnaires\ActiviteController;
+use App\Controllers\Gestionnaires\CautisationController;
+use App\Controllers\Gestionnaires\DistributionController;
+use App\Controllers\Gestionnaires\FinanceController;
+use App\Controllers\Gestionnaires\ValidationController;
+use App\Controllers\Gestionnaires\VersementCommercialController;
 
 session_name("APP545645465654_SESSION");
-
-
 
 
 
@@ -32,9 +20,9 @@ include __DIR__ . '/../../app/Core/security.php';
 
 use App\Controllers\AuthController;
 
-use App\Controllers\ClientController;
+use App\Controllers\Commercials\ClientController;
 
-use App\Controllers\SettingController;
+use App\Controllers\Gestionnaires\SettingController;
 
 use App\Controllers\UserController;
 
@@ -645,14 +633,6 @@ switch ($action) {
 
         break;
 
-    case 'charger_data_depenses':
-
-        $ajx = new FinanceController();
-
-        $ajx->GetListeDepense();
-
-        break;
-
     case 'change_statut_depenses':
 
         $ajx = new FinanceController();
@@ -701,7 +681,7 @@ switch ($action) {
 
     
 
-    //end Actions pour les inscription
+    //end Actions pour les souscription
 
 
 
@@ -731,7 +711,7 @@ switch ($action) {
 
     // Debut Actions pour les clients 
 
-    case 'charger_data_inscriptions':
+    case 'charger_data_souscriptions':
 
         $ajx = new ClientController();
 
@@ -747,11 +727,11 @@ switch ($action) {
 
         break;
 
-    case 'btn_add_reinscription':
+    case 'btn_add_resouscription':
 
         $ajx = new ClientController();
 
-        $ajx->addReinscription();
+        $ajx->addResouscription();
 
         break;
 
@@ -837,7 +817,29 @@ switch ($action) {
 
         break;
 
+    case 'search_client_cautisation':
 
+        $ajx = new CautisationController();
+
+        $ajx->searchClient();
+
+        break;
+
+    case 'get_souscriptions_client':
+
+        $ajx = new CautisationController();
+
+        $ajx->getInscriptionsClient();
+
+        break;
+
+    case 'btn_save_encaissement':
+
+        $ajx = new CautisationController();
+
+        $ajx->saveEncaissement();
+
+        break;
 
     //end Actions pour les cautions
 

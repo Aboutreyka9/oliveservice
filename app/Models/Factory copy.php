@@ -7,10 +7,10 @@ use App\Core\Model;
 use Exception;
 use Roles;
 
-class Factory extends Model
-{
+
+
     protected string $table = "hotels";
-    public string $id = 'code_hotel';
+    string $id = 'code_hotel';
 
 
 
@@ -26,7 +26,7 @@ class Factory extends Model
      * @param string $dend End date of the period
      * @return array List of reservations
      */
-    public  function clientDataReservation($codeCient)
+     function clientDataReservation($codeCient)
     {
         $data = [];
         try {
@@ -50,7 +50,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllServicesOfReservationsroom($reservation)
+     function getAllServicesOfReservationsroom($reservation)
     {
         $data = [];
         try {
@@ -72,7 +72,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getVersementUserToPrint($codeVersement)
+     function getVersementUserToPrint($codeVersement)
     {
         $data = [];
         try {
@@ -94,7 +94,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservationsToPrint(string $codeVersement, $etat = 1)
+     function getAllReservationsToPrint(string $codeVersement, $etat = 1)
     {
         $data = [];
 
@@ -120,7 +120,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservationsGroupeTypeChambreToPrint(string $codeVersement, $etat = 1)
+     function getAllReservationsGroupeTypeChambreToPrint(string $codeVersement, $etat = 1)
     {
         $data = [];
 
@@ -144,7 +144,7 @@ class Factory extends Model
         }
         return $data;
     }
-    public  function getAllReservationsGroupeMoyenToPrint(string $codeVersement, $etat = 1)
+     function getAllReservationsGroupeMoyenToPrint(string $codeVersement, $etat = 1)
     {
         $data = [];
 
@@ -167,7 +167,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllServicesGroupeTypeToPrint(string $codeVersement, $etat = 1)
+     function getAllServicesGroupeTypeToPrint(string $codeVersement, $etat = 1)
     {
         $data = [];
 
@@ -191,7 +191,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservations($dstart, $dend, $etat = 2)
+     function getAllReservations($dstart, $dend, $etat = 2)
     {
         $data = [];
         try {
@@ -220,7 +220,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservationsActive($dend, $dstart = null)
+     function getAllReservationsActive($dend, $dstart = null)
     {
         $data = [];
         try {
@@ -267,7 +267,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservationsArrive($dstart, $dend = null)
+     function getAllReservationsArrive($dstart, $dend = null)
     {
         $data = [];
         try {
@@ -313,7 +313,7 @@ class Factory extends Model
         }
         return $data;
     }
-    public  function getAllReservationsCheckIn($date, $etat = 0)
+     function getAllReservationsCheckIn($date, $etat = 0)
     {
         $data = [];
         try {
@@ -339,7 +339,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllReservationsCheckOut($date, $etat = 1)
+     function getAllReservationsCheckOut($date, $etat = 1)
     {
         $data = [];
         try {
@@ -366,7 +366,7 @@ class Factory extends Model
     }
 
 
-    public  function getAllReservationsNonRegler()
+     function getAllReservationsNonRegler()
     {
         $data = [];
         try {
@@ -392,7 +392,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllVersementForUser($user, $etat = 0)
+     function getAllVersementForUser($user, $etat = 0)
     {
         $data = [];
         try {
@@ -416,7 +416,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllVersementUserCaisseDepotComptable($ouverture, $cloture)
+     function getAllVersementUserCaisseDepotComptable($ouverture, $cloture)
     {
         $data = [];
         try {
@@ -443,7 +443,7 @@ class Factory extends Model
     }
 
 
-    public  function getRecapFactureForUserCompte($code_versement)
+     function getRecapFactureForUserCompte($code_versement)
     {
         $data = [];
         try {
@@ -464,7 +464,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getRecapReservationForUserCompte($code_versement, $etat = 1)
+     function getRecapReservationForUserCompte($code_versement, $etat = 1)
     {
         $data = [];
         try {
@@ -482,7 +482,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getRecapServiceForUserCompte($code_versement, $etat = 1)
+     function getRecapServiceForUserCompte($code_versement, $etat = 1)
     {
         $data = [];
         try {
@@ -504,7 +504,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getRecaptReservationForUserCompteEnAttente($code_versement, $etat = 0)
+     function getRecaptReservationForUserCompteEnAttente($code_versement, $etat = 0)
     {
         $data = [];
         try {
@@ -524,7 +524,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getRecapCaisseReservationForUserCompte($code_versement, $etat = 1)
+     function getRecapCaisseReservationForUserCompte($code_versement, $etat = 1)
     {
         $data = [];
         try {
@@ -543,7 +543,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getRecapCaisseServiceForUserCompte($code_versement, $etat = 2)
+     function getRecapCaisseServiceForUserCompte($code_versement, $etat = 2)
     {
         $data = [];
         try {
@@ -565,7 +565,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getHistoriqueVersementUser($userCode)
+     function getHistoriqueVersementUser($userCode)
     {
         $data = [];
         try {
@@ -596,7 +596,7 @@ class Factory extends Model
      */
 
     // depot caisse
-    public  function getTota5577lFactureCaisseComptable($code_versement)
+     function getTota5577lFactureCaisseComptable($code_versement)
     {
         $data = [];
         try {
@@ -617,7 +617,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getTotalFactureStandByCaisseComptable(string $ouverture, string $cloture, $etat = 0)
+     function getTotalFactureStandByCaisseComptable(string $ouverture, string $cloture, $etat = 0)
     {
         $data = [];
         try {
@@ -641,7 +641,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getTotalFactureEncaisseCaisseComptable(string $ouverture, string $cloture, $etat = 1)
+     function getTotalFactureEncaisseCaisseComptable(string $ouverture, string $cloture, $etat = 1)
     {
         $data = [];
         try {
@@ -665,7 +665,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getTotalFactureOpenCaisseComptable(string $ouverture, string $cloture, $etat = 0)
+     function getTotalFactureOpenCaisseComptable(string $ouverture, string $cloture, $etat = 0)
     {
         $data = [];
         try {
@@ -690,7 +690,7 @@ class Factory extends Model
     }
     // bilan caisse
 
-    public  function getTotalDepenseCaisseComptable(string $ouverture, string $cloture, $etat = 1)
+     function getTotalDepenseCaisseComptable(string $ouverture, string $cloture, $etat = 1)
     {
         $data = 0;
         try {
@@ -714,7 +714,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getTotalSalaireCaisseComptable(string $ouverture, string $cloture, $etat = 1)
+     function getTotalSalaireCaisseComptable(string $ouverture, string $cloture, $etat = 1)
     {
         $data = 0;
         try {
@@ -737,7 +737,7 @@ class Factory extends Model
         }
         return $data;
     }
-    public  function getDetailsBilanCaisseComptableReservation(string $ouverture, string $cloture, $etat = 1)
+     function getDetailsBilanCaisseComptableReservation(string $ouverture, string $cloture, $etat = 1)
     {
         $data = [];
         try {
@@ -760,7 +760,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getDeatailsBilanCaisseComptableService(string $ouverture, string $cloture, $etat = 1)
+     function getDeatailsBilanCaisseComptableService(string $ouverture, string $cloture, $etat = 1)
     {
         $data = [];
         try {
@@ -783,7 +783,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getDetailsBilanCaisseComptableReservationNonRegler(string $ouverture, string $cloture, $etat = 0)
+     function getDetailsBilanCaisseComptableReservationNonRegler(string $ouverture, string $cloture, $etat = 0)
     {
         $data = [];
         try {
@@ -810,7 +810,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function CaisseComptableReservationNonRegler($etat = 0)
+     function CaisseComptableReservationNonRegler($etat = 0)
     {
         $data = [];
         try {
@@ -835,7 +835,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function CaisseComptableServiceNonRegler($etat = 0)
+     function CaisseComptableServiceNonRegler($etat = 0)
     {
         $data = [];
         try {
@@ -856,7 +856,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getDetailsBilanCaisseComptableServiceNonRegler(string $ouverture, string $cloture, $etat = 0)
+     function getDetailsBilanCaisseComptableServiceNonRegler(string $ouverture, string $cloture, $etat = 0)
     {
         $data = [];
         try {
@@ -879,7 +879,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getDetailsBilanCaisseComptableReservationEnnuler(string $ouverture, string $cloture, $etat = 0)
+     function getDetailsBilanCaisseComptableReservationEnnuler(string $ouverture, string $cloture, $etat = 0)
     {
         $data = [];
         try {
@@ -906,7 +906,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getDetailsBilanCaisseComptableServiceEnnuler(string $ouverture, string $cloture, $etat = 2)
+     function getDetailsBilanCaisseComptableServiceEnnuler(string $ouverture, string $cloture, $etat = 2)
     {
         $data = [];
         try {
@@ -931,7 +931,7 @@ class Factory extends Model
 
     // detail
 
-    public  function getAllDetailesVersementReservationsForUser($codeCaisse, $etat = 1)
+     function getAllDetailesVersementReservationsForUser($codeCaisse, $etat = 1)
     {
         $data = [];
         try {
@@ -956,7 +956,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllDetailsVersementServicesForUser($codeCaisse, $etat = 1)
+     function getAllDetailsVersementServicesForUser($codeCaisse, $etat = 1)
     {
         $data = [];
         try {
@@ -984,7 +984,7 @@ class Factory extends Model
 
     // SEXION annuler
 
-    public  function getAllDetailesReservationsAnnulers()
+     function getAllDetailesReservationsAnnulers()
     {
         $data = [];
         try {
@@ -1008,7 +1008,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllDetailsServicesAnnulers($etat = 2)
+     function getAllDetailsServicesAnnulers($etat = 2)
     {
         $data = [];
         try {
@@ -1035,7 +1035,7 @@ class Factory extends Model
 
 
     // FIN Sexion annuler
-    public function getAllChambresWithCategorie($etat = 1)
+    function getAllChambresWithCategorie($etat = 1)
     {
         $result = [];
         try {
@@ -1054,7 +1054,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getAllCategoriesChambre($etat = 1)
+    function getAllCategoriesChambre($etat = 1)
     {
         $result = [];
         try {
@@ -1071,7 +1071,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getAllTypeDepense()
+    function getAllTypeDepense()
     {
         $result = [];
         try {
@@ -1090,7 +1090,7 @@ class Factory extends Model
 
 
 
-    public function getAllServices($etat = 1)
+    function getAllServices($etat = 1)
     {
         $result = [];
 
@@ -1115,7 +1115,7 @@ class Factory extends Model
     }
 
 
-    public function verificationAbleChambre($data)
+    function verificationAbleChambre($data)
     {
         $result = [];
 
@@ -1141,7 +1141,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function verificationAbleChambreBeforeReservation($data)
+    function verificationAbleChambreBeforeReservation($data)
     {
         $result = [];
 
@@ -1169,7 +1169,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getDataByCodeReservation($codeResevation)
+    function getDataByCodeReservation($codeResevation)
     {
         $result = [];
 
@@ -1194,7 +1194,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getCountChambreOccuper($today)
+    function getCountChambreOccuper($today)
     {
         $result = 0;
 
@@ -1221,7 +1221,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getAllClient($date_start, $date_end)
+    function getAllClient($date_start, $date_end)
     {
         $result = [];
 
@@ -1255,7 +1255,7 @@ class Factory extends Model
 
 
 
-    public function verifyParam($table, $field, $value)
+    function verifyParam($table, $field, $value)
     {
         $data = [];
 
@@ -1273,7 +1273,7 @@ class Factory extends Model
         return $data;
     }
 
-    public function verifyParam2($table, $field1, $field2, $value1, $value2)
+    function verifyParam2($table, $field1, $field2, $value1, $value2)
     {
         $data = [];
 
@@ -1295,7 +1295,7 @@ class Factory extends Model
     }
 
 
-    public function verifTypechambreLibelle($libelle, $etat = 1)
+    function verifTypechambreLibelle($libelle, $etat = 1)
     {
         $result = [];
         try {
@@ -1313,7 +1313,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function generateCode($table, $field, $prefixe, $length) // $password = $this->validator->generateCode("proprietaire", "password_pro","@", 6 );
+    function generateCode($table, $field, $prefixe, $length) // $password = $this->validator->generateCode("proprietaire", "password_pro","@", 6 );
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $charactersLength = strlen($characters);
@@ -1328,7 +1328,7 @@ class Factory extends Model
         return $prefixe . $randomCode;
     }
 
-    public function verif($table, $field, $value) // function veriviant l'existance d'une ligne par 1 element
+    function verif($table, $field, $value) // function veriviant l'existance d'une ligne par 1 element
     {
         $result = false;
         try {
@@ -1345,7 +1345,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function verifServiceLibelle($libelle, $etat = 1)
+    function verifServiceLibelle($libelle, $etat = 1)
     {
         $result = [];
         try {
@@ -1363,7 +1363,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function getDataFactureServiceForClient($codeReservation, $etat = 0)
+    function getDataFactureServiceForClient($codeReservation, $etat = 0)
     {
         $result = [];
 
@@ -1387,7 +1387,7 @@ class Factory extends Model
         return $result;
     }
 
-    public  function getServicesToPrint(string $codeReservation, $etat = 2)
+     function getServicesToPrint(string $codeReservation, $etat = 2)
     {
         $data = [];
         try {
@@ -1410,7 +1410,7 @@ class Factory extends Model
         return $data;
     }
 
-    public function verifFonctionLibelle($libelle, $etat = 1)
+    function verifFonctionLibelle($libelle, $etat = 1)
     {
         $result = [];
         try {
@@ -1428,7 +1428,7 @@ class Factory extends Model
         return $result;
     }
 
-    public function verifChambreLibelle($libelle, $categorie, $etat = 1)
+    function verifChambreLibelle($libelle, $categorie, $etat = 1)
     {
         $result = [];
         try {
@@ -1448,7 +1448,7 @@ class Factory extends Model
     }
 
 
-    public  function getAllDepenseForSearching($dstart, $dend)
+     function getAllDepenseForSearching($dstart, $dend)
     {
         $data = [];
         try {
@@ -1472,7 +1472,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllDepenseToPrint($dstart, $dend, $etat = 1)
+     function getAllDepenseToPrint($dstart, $dend, $etat = 1)
     {
         $data = [];
         try {
@@ -1496,7 +1496,7 @@ class Factory extends Model
         return $data;
     }
 
-    public function verifSalaireForMonth($user, $month)
+    function verifSalaireForMonth($user, $month)
     {
         $result = [];
         try {
@@ -1518,7 +1518,7 @@ class Factory extends Model
     }
 
 
-    public  function getAllSalaireForSearching($dstart, $dend, $etat = 2, $filter = null)
+     function getAllSalaireForSearching($dstart, $dend, $etat = 2, $filter = null)
     {
         $data = [];
         $sql = "";
@@ -1557,7 +1557,7 @@ class Factory extends Model
         return $data;
     }
 
-    public  function getAllSalaireForUser($code_user)
+     function getAllSalaireForUser($code_user)
     {
         $data = [];
 
@@ -1583,7 +1583,7 @@ class Factory extends Model
     }
 
 
-    public  function bilanAnnuelDashboard($year, $etat = 1)
+     function bilanAnnuelDashboard($year, $etat = 1)
     {
         $data = [];
         try {
@@ -1604,7 +1604,7 @@ class Factory extends Model
     }
 
 
-    public function transactReservationClient(array $client, array $reservation)
+    function transactReservationClient(array $client, array $reservation)
     {
         $this->transaction(function (Model $query) use ($client, $reservation) {
             // Insertion élève
@@ -1617,7 +1617,7 @@ class Factory extends Model
         });
     }
 
-    public function transactReservationConfirme(array $facture, string $reservation)
+    function transactReservationConfirme(array $facture, string $reservation)
     {
         $this->transaction(function (Model $query) use ($facture, $reservation) {
             // Insertion élève
@@ -1631,7 +1631,7 @@ class Factory extends Model
         });
     }
 
-    public function transactReservationService(array $facture, string $reservation)
+    function transactReservationService(array $facture, string $reservation)
     {
         $this->transaction(function (Model $query) use ($facture, $reservation) {
             // Insertion élève
@@ -1645,7 +1645,7 @@ class Factory extends Model
         });
     }
 
-    public function transactRegisterUser(array $hotel, array $fonction, array $user)
+    function transactRegisterUser(array $hotel, array $fonction, array $user)
     {
 
         $this->transaction(function (Model $query) use ($hotel, $fonction, $user) {
@@ -1709,4 +1709,4 @@ class Factory extends Model
         });
         return true;
     }
-}
+

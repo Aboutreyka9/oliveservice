@@ -58,7 +58,43 @@
                     </a>
                 </li>
 
-                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <?php if (has_groupe(Groupes::COMMERCIAL)): ?>
+                <!-- Groupes::Clients  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#souscription">
+                        <i class="fas fa-box"></i>
+                        <p class="text-upper">Souscription</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="souscription">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a class="item-link" href="<?= url('commercial/souscriptions') ?>">
+                                    <span class="sub-item">Souscrire</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('commercial/souscriptions/liste') ?>">
+                                    <span class="sub-item">Liste souscriptions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('commercial/cautions') ?>">
+                                    <span class="sub-item">Cautions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('commercial/cautions/encaisser') ?>">
+                                    <span class="sub-item">Encaisser caution</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+            <?php if (has_groupe(Groupes::COMMERCIAL) || has_groupe(Groupes::GESTION)): ?>
                 <!-- Groupes::Clients  => -->
 
                 <li class="nav-item">
@@ -69,16 +105,43 @@
                     </a>
                     <div class="collapse" id="clients">
                         <ul class="nav nav-collapse">
-                            <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMMERCIAL)): ?>
+                             <?php if (has_role(Roles::COMM_CLIENT)): ?>
+                            
                             <li>
-                                <a class="item-link" href="<?= url('inscriptions') ?>">
-                                    <span class="sub-item">Souscriptions</span>
+                                <a class="item-link" href="<?= url('commercial/clients/liste') ?>">
+                                    <span class="sub-item">Mes clients</span>
                                 </a>
                             </li>
                             <?php endif; ?>
+
+                             <?php if (has_role(Roles::GEST_CLIENTS) || has_role(Roles::GEST_CLIENTS)): ?>
+                            <li>
+                                <a class="item-link" href="<?= url('clients/liste') ?>">
+                                    <span class="sub-item">Liste clients</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+
+                        </ul>
+                    </div>
+                </li>
+                <?php endif; ?>
+
+                 <?php if (has_groupe(Groupes::GESTION)): ?>
+                <!-- Groupes::Clients  => -->
+
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#gestionnaire">
+                        <i class="fas fa-users"></i>
+                        <p class="text-upper">Gestionnaire</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="gestionnaire">
+                        <ul class="nav nav-collapse">
+                           
                             <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
                             <li>
-                                <a class="item-link" href="<?= url('inscriptions/liste') ?>">
+                                <a class="item-link" href="<?= url('souscriptions/liste') ?>">
                                     <span class="sub-item">Liste souscriptions</span>
                                 </a>
                             </li>
@@ -96,13 +159,18 @@
                                     <span class="sub-item">Cautions</span>
                                 </a>
                             </li>
+                            <li>
+                                <a class="item-link" href="<?= url('cautions/encaisser') ?>">
+                                    <span class="sub-item">Encaisser caution</span>
+                                </a>
+                            </li>
                             <?php endif; ?>
                         </ul>
                     </div>
                 </li>
                 <?php endif; ?>
 
-                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <?php if (has_groupe(Groupes::GESTION)): ?>
                 <!-- Groupes::Activités  => -->
 
                 <li class="nav-item">
@@ -140,7 +208,7 @@
                 </li>
                 <?php endif; ?>
 
-                <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN) || has_groupe(Groupes::COMPTABLE) || has_groupe(Groupes::GESTION) || has_groupe(Groupes::COMMERCIAL)): ?>
+                <?php if(has_groupe(Groupes::COMPTABLE)): ?>
                 <!-- Groupes::Finance  => -->
 
                 <li class="nav-item">
@@ -184,6 +252,53 @@
                 </li>
                 <?php endif; ?>
 
+                <?php if(has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
+
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a data-toggle="collapse" href="#reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <p class="text-upper">Rapports & Statistiques</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="reports">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a class="item-link" href="<?= url('rapports') ?>">
+                                    <span class="sub-item">Tableau de bord</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('rapports/souscriptions') ?>">
+                                    <span class="sub-item">Souscriptions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('rapports/cautions') ?>">
+                                    <span class="sub-item">Cautions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('rapports/versements') ?>">
+                                    <span class="sub-item">Versements</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('rapports/distributions') ?>">
+                                    <span class="sub-item">Distributions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item-link" href="<?= url('rapports/finances') ?>">
+                                    <span class="sub-item">Finances</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <?php endif; ?>
+
                 <?php if (has_groupe(Groupes::SUPER) || has_groupe(Groupes::ADMIN)): ?>
                 <!-- Groupes::Ressources humaines  => -->
 
@@ -201,7 +316,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="item-link" href="<?= url('recrutements/personnel') ?>">
+                                <a class="item-link" href="<?= url('recrutements') ?>">
                                     <span class="sub-item">Recrutement</span>
                                 </a>
                             </li>

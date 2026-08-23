@@ -3,7 +3,7 @@
 namespace App\Middlewares;
 
 use App\Core\Auth;
-use App\Core\Groupesss;
+use Groupes;
 
 class RouteMiddleWare
 {
@@ -25,7 +25,7 @@ class RouteMiddleWare
     public static function requireSuper(): void
     {
         self::requireAuth();
-        if (!Auth::hasGroupe(Groupesss::SUPER)) {
+        if (!Auth::hasGroupe(Groupes::SUPER)) {
             self::redirectBack();
         }
         Auth::saveCurrentUrl();
@@ -34,7 +34,7 @@ class RouteMiddleWare
     public static function requireAdmin(): void
     {
         self::requireAuth();
-        if (!Auth::hasGroupe(Groupesss::ADMIN)) {
+        if (!Auth::hasGroupe(Groupes::ADMIN)) {
             self::redirectBack();
         }
         Auth::saveCurrentUrl();
@@ -43,7 +43,7 @@ class RouteMiddleWare
     public static function requireComptable(): void
     {
         self::requireAuth();
-        if (!Auth::hasGroupe(Groupesss::COMPTABLE)) {
+        if (!Auth::hasGroupe(Groupes::COMPTABLE)) {
             self::redirectBack();
         }
         Auth::saveCurrentUrl();
@@ -52,7 +52,7 @@ class RouteMiddleWare
     public static function requireGestion(): void
     {
         self::requireAuth();
-        if (!Auth::hasGroupe(Groupesss::GESTION)) {
+        if (!Auth::hasGroupe(Groupes::GESTION)) {
             self::redirectBack();
         }
         Auth::saveCurrentUrl();
@@ -61,7 +61,7 @@ class RouteMiddleWare
     public static function requireCommercial(): void
     {
         self::requireAuth();
-        if (!Auth::hasGroupe(Groupesss::COMMERCIAL)) {
+        if (!Auth::hasGroupe(Groupes::COMMERCIAL)) {
             self::redirectBack();
         }
         Auth::saveCurrentUrl();
