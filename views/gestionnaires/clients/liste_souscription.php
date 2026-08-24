@@ -1,39 +1,13 @@
+
 <?php
-$start = (new DateTime('first day of this month'))->format('Y-m-d');
-$end = (new DateTime('today'))->format('Y-m-d');
-$dateD = (new DateTime('first day of this month'))->format('d-m-Y');
-$dateF = (new DateTime('today'))->format('d-m-Y');
+    $start = (new DateTime('first day of this month'))->format('Y-m-d');
+    $end = (new DateTime('today'))->format('Y-m-d');
+    $dateD = (new DateTime('first day of this month'))->format('d-m-Y');
+    $dateF = (new DateTime('today'))->format('d-m-Y');
 
-$etablissementCode = auth()::user('etablissement_code');
-$anneeCode = auth()::user('annee_code');
-$zoneCode = auth()::user('zone_code');
-
-$stats = [
-    'total' => 0,
-    'valide' => 0,
-    'en_attente' => 0,
-    'annule' => 0,
-    'montant_total' => 0,
-    'montant_valide' => 0,
-    'montant_en_attente' => 0,
-    'montant_annule' => 0,
-];
-
-$clientModel = new \App\Models\ClientModel();
-$stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zoneCode, $start, $end);
 ?>
 
 <?= breakcrumb($title, 'fa-clipboard-list'); ?>
-
-<header class="page-title-bar">
-    <div class="header-dashboard d-flex align-items-center mb-4">
-        <i class="fas fa-clipboard-list mr-3 me-3" style="font-size:20px;"></i>
-        <div>
-            <h4 class="mb-0">Liste des souscriptions</h4>
-            <small>Gestion des souscriptions clients</small>
-        </div>
-    </div>
-</header>
 
 <!-- FILTRES -->
 <div class="row mb-4">
@@ -54,13 +28,7 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
                             <label class="form-label">Zone</label>
                             <select name="zone_code" class="form-control select2">
                                 <option value="">Toutes les zones</option>
-                                <?php
-                                $zones = $clientModel->getFieldsForParams(TABLES::ZONES, ['etablissement_code' => $etablissementCode], [], true);
-                                foreach ($zones as $zone) {
-                                    $selected = selected($zone['code_zone'], $zoneCode);
-                                    echo '<option ' . $selected . ' value="' . $zone['code_zone'] . '">' . htmlspecialchars($zone['libelle_zone']) . '</option>';
-                                }
-                                ?>
+                              
                             </select>
                         </div>
                         <div class="col-md-3 mb-3 d-flex align-items-end">
@@ -75,84 +43,8 @@ $stats = $clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zon
     </div>
 </div>
 
-<!-- STATS CARDS -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-primary mr-2">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <div>
-                        <h6 class="montan-title">Total souscriptions</h6>
-                        <h5 class="montan-value"><?= number_format($stats['total']) ?></h5>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted">Montant total: <strong><?= number_format($stats['montant_total'], 0, ',', ' ') ?> FCFA</strong></small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-success mr-2">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div>
-                        <h6 class="montan-title">Validées</h6>
-                        <h5 class="montan-value"><?= number_format($stats['valide']) ?></h5>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted">Montant: <strong class="text-success"><?= number_format($stats['montant_valide'], 0, ',', ' ') ?> FCFA</strong></small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-warning mr-2">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div>
-                        <h6 class="montan-title">En attente</h6>
-                        <h5 class="montan-value"><?= number_format($stats['en_attente']) ?></h5>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted">Montant: <strong class="text-warning"><?= number_format($stats['montant_en_attente'], 0, ',', ' ') ?> FCFA</strong></small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card custom-card-detail">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="icon bg-danger mr-2">
-                        <i class="fas fa-times-circle"></i>
-                    </div>
-                    <div>
-                        <h6 class="montan-title">Annulées</h6>
-                        <h5 class="montan-value"><?= number_format($stats['annule']) ?></h5>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted">Montant: <strong class="text-danger"><?= number_format($stats['montant_annule'], 0, ',', ' ') ?> FCFA</strong></small>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- STATS CARDS SOUSCRIPTION COMMERCIAL -->
+<?=    chargerListeClientForComercial($start, $end) ?>
 
 <!-- TABLEAU -->
 <div class="card">

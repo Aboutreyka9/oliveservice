@@ -47,6 +47,42 @@ function generetor($longueur = 8)
     return $chaineAleatoire;
 }
 
+function genererCodeClient(string $nomClient, string $numeroClient): string
+{
+    $nomClient = trim($nomClient);
+
+    // Garder uniquement les chiffres du numéro
+    $numeroClient = preg_replace('/\D/', '', $numeroClient);
+
+    // Deux derniers chiffres du numéro
+    $deuxDerniers = substr($numeroClient, -2);
+    $deuxDerniers = str_pad($deuxDerniers, 2, '0', STR_PAD_LEFT);
+
+    // 1 chiffre aléatoire
+    $random1 = random_int(0, 9);
+
+    // 5 chiffres aléatoires
+    $random2 = random_int(10000, 99999);
+
+    // Deuxième lettre du nom
+    $deuxiemeLettre = strlen($nomClient) >= 2
+        ? strtoupper($nomClient[1])
+        : 'X';
+
+    return "CL-{$deuxDerniers}{$random1}-{$random2}-{$deuxiemeLettre}";
+}
+
+function genererCodeSouscription(): string
+{
+    $annee = date('y');
+    $mois  = date('m');
+
+    $random = random_int(0, 99999);
+    $random = str_pad($random, 5, '0', STR_PAD_LEFT);
+
+    return "SC-{$annee}{$mois}-{$random}";
+}
+
 function loadDataBilanCaisseComptable($detailsReservation, $service, $reservationNonRegler, $serviceNonRegler, $reservationEnnuler, $serviceEnnuler)
 {
 

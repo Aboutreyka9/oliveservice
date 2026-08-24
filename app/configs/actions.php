@@ -6,6 +6,7 @@
 
 use App\Core\Auth;
 use App\Models\Catalogue;
+use App\Models\ClientModel;
 use App\Models\Factory;
 use App\Models\Personne;
 use App\Models\SettingModel;
@@ -1632,6 +1633,234 @@ function chargerInfoChambreReservation($reservation)
 
 ';
 }
+
+function chargerStateSouscriptionForComercial(){
+
+    $stats = (new ClientModel())->getStatsInscriptionsForCommercial(auth()->user('etablissement_code'), auth()->user('annee_code'), auth()->user('zone_code'),auth()->user('id'));
+
+  return '
+    <div class="row g-3 mb-4">
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-danger mr-2">
+                          <i class="fas fa-times-circle"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Annulées</h6>
+                          <h5 class="montan-value">'. ($stats['annule']) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-danger">'. money($stats['montant_annule']) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-warning mr-2">
+                          <i class="fas fa-clock"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Reconduite</h6>
+                          <h5 class="montan-value">'. ($stats['reconduite']) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-warning"> '. money($stats['montant_reconduite']) .'</strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-primary mr-2">
+                          <i class="fas fa-clipboard-list"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">En cour </h6>
+                          <h5 class="montan-value">'. ($stats['valide']) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-primary"> '. money($stats['montant_valide']) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-success mr-2">
+                          <i class="fas fa-check-circle"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Soldée</h6>
+                          <h5 class="montan-value">'. ($stats['solde']) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-success"> '. money($stats['montant_solde']) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    </div>
+  ';
+}
+
+function chargerStateSouscription($dateStart,$dateEnd){
+
+    $stats = (new ClientModel())->getStatsInscriptionsForCommercial(auth()->user('etablissement_code'), auth()->user('annee_code'), auth()->user('zone_code'),auth()->user('id'),$dateStart,$dateEnd);
+    var_dump($stats);
+
+  return '
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-danger mr-2">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Annulées</h6>
+                        <h5 class="montan-value">'. ($stats['annule']) .'</h5>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Montant: <strong class="text-danger">'. money($stats['montant_annule']) .' </strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-warning mr-2">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Reconduite</h6>
+                        <h5 class="montan-value">'. ($stats['reconduite']) .'</h5>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Montant: <strong class="text-warning"> '. money($stats['montant_reconduite']) .'</strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-primary mr-2">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">En cour </h6>
+                        <h5 class="montan-value">'. ($stats['valide']) .'</h5>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Montant: <strong class="text-primary"> '. money($stats['montant_valide']) .' </strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card custom-card-detail">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="icon bg-success mr-2">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h6 class="montan-title">Soldée</h6>
+                        <h5 class="montan-value">'. ($stats['solde']) .'</h5>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted">Montant: <strong class="text-success"> '. money($stats['montant_solde']) .' </strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+
+  
+
+</div>
+  ';
+}
+
+function chargerListeSouscriptionForComercial()
+{
+  $listeSoucriptions = (new ClientModel())->getListeSouscriptionForComercial( auth()->user('etablissement_code'), auth()->user('annee_code'), auth()->user('zone_code'),auth()->user('id'));
+// auth()->user('etablissement_code'), auth()->user('annee_code'), auth()->user('zone_code'),auth()->user('id')
+// var_dump($listeSoucription);
+// return;
+  $output = '';
+
+    if (!empty($listeSoucriptions)) {
+      $i = 0;
+      foreach ($listeSoucriptions as $data) {
+        $i++; 
+
+         $actions = '
+           
+            ';
+
+
+        $output .= '
+        <tr>
+          <th>' . $i . '</th>
+
+          <td>' . $data['code_inscription'] . '</td>
+          <td>' . $data['nom_client'] . '</td>
+          <td>' . $data['telephone_client'] . '</td>
+          <td>' . $data['libelle_session'] . '</td>
+          <td>' . money($data['montant_inscription']) . '</td>
+          <td>' . checkStatusInscription($data['statut_inscription']) . '</td>
+          <td>' . date_formater($data['created_at_inscription']) . '</td>
+          <td">
+           <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <div class="dropdown-menu">
+       
+         <a href="'.url('commercial/inscription-detals',['code' => $data['code_inscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
+            <i class="fa fa-eye text-icon-primary"></i> Voir details </a>
+             </div>
+          </td>
+        </tr>';
+      }
+      return $output;
+    } else {
+      return "<tr>
+        <td colspan='4' class='text-center text-danger'>Aucune fonction enregistrée</td> </tr>";
+    }
+}
+
 
 function chargerListeFonction()
 {

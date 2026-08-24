@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 20 août 2026 à 03:39
+-- Généré le : lun. 24 août 2026 à 04:36
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `annees` (
   `date_debut_annee` date NOT NULL,
   `date_fin_annee` date NOT NULL,
   `code_annee` varchar(50) NOT NULL,
+  `taux_reconduction` float DEFAULT NULL,
   `etablissement_code` varchar(50) NOT NULL,
   `created_at_annee` datetime NOT NULL,
   `updated_at_annee` datetime DEFAULT NULL,
@@ -47,14 +48,14 @@ CREATE TABLE IF NOT EXISTS `annees` (
 -- Déchargement des données de la table `annees`
 --
 
-INSERT INTO `annees` (`id_annee`, `libelle_annee`, `date_debut_annee`, `date_fin_annee`, `code_annee`, `etablissement_code`, `created_at_annee`, `updated_at_annee`, `statut_annee`, `user_code`) VALUES
-(1, '2025-2026', '2026-07-07', '2027-01-07', 'VL0hWQ', '5454544456', '2026-07-22 23:40:46', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(2, '2025- 2026', '2026-07-07', '2027-01-07', 'Lv9LWUf7IdxEny', '5454544456', '2026-07-22 23:41:31', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(3, '2026-2027', '2026-07-07', '2027-01-07', '6DSpC5ev5eJac6ShmSSwUHm4ah1s9baP', '5454544456', '2026-07-23 00:18:51', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(4, '20252026', '2026-07-22', '2027-01-22', '7ObaWc', '5454544456', '2026-07-23 00:21:22', NULL, 'inactif', '5wBEh2OfI00frxk8ITPf'),
-(5, '2022-2023', '2022-01-22', '2023-01-22', 'aP939', '5454544456', '2026-07-23 02:34:31', '2026-07-23 03:52:45', 'inactif', '5wBEh2OfI00frxk8ITPf'),
-(6, '2027-2028', '2026-07-22', '2028-01-22', 'T2POn4rE', '5454544456', '2026-07-23 02:39:31', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
-(7, '2028-2029', '2028-10-04', '2029-10-17', '0GklBk07waYoLB6pHwY', '5454544456', '2026-07-23 03:08:13', '2026-07-23 03:46:31', 'actif', '5wBEh2OfI00frxk8ITPf');
+INSERT INTO `annees` (`id_annee`, `libelle_annee`, `date_debut_annee`, `date_fin_annee`, `code_annee`, `taux_reconduction`, `etablissement_code`, `created_at_annee`, `updated_at_annee`, `statut_annee`, `user_code`) VALUES
+(1, '2025-2026', '2026-07-07', '2027-01-07', 'VL0hWQ', NULL, '5454544456', '2026-07-22 23:40:46', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(2, '2025- 2026', '2026-07-07', '2027-01-07', 'Lv9LWUf7IdxEny', NULL, '5454544456', '2026-07-22 23:41:31', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(3, '2026-2027', '2026-07-07', '2027-01-07', '6DSpC5ev5eJac6ShmSSwUHm4ah1s9baP', NULL, '5454544456', '2026-07-23 00:18:51', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(4, '20252026', '2026-07-22', '2027-01-22', '7ObaWc', NULL, '5454544456', '2026-07-23 00:21:22', NULL, 'inactif', '5wBEh2OfI00frxk8ITPf'),
+(5, '2022-2023', '2022-01-22', '2023-01-22', 'aP939', NULL, '5454544456', '2026-07-23 02:34:31', '2026-07-23 03:52:45', 'inactif', '5wBEh2OfI00frxk8ITPf'),
+(6, '2027-2028', '2026-07-22', '2028-01-22', 'T2POn4rE', NULL, '5454544456', '2026-07-23 02:39:31', NULL, 'actif', '5wBEh2OfI00frxk8ITPf'),
+(7, '2028-2029', '2028-10-04', '2029-10-17', '0GklBk07waYoLB6pHwY', NULL, '5454544456', '2026-07-23 03:08:13', '2026-07-23 03:46:31', 'actif', '5wBEh2OfI00frxk8ITPf');
 
 -- --------------------------------------------------------
 
@@ -169,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `etablissement_code` varchar(50) NOT NULL,
   PRIMARY KEY (`id_client`),
   UNIQUE KEY `code_etudiant` (`code_client`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `clients`
@@ -178,7 +179,16 @@ CREATE TABLE IF NOT EXISTS `clients` (
 INSERT INTO `clients` (`id_client`, `code_client`, `nom_client`, `sexe_client`, `lieu_residence_client`, `profession_client`, `telephone_client`, `email_client`, `photo_client`, `password_client`, `numero_cni`, `created_at_client`, `updated_at_client`, `user_code`, `zone_code`, `etablissement_code`) VALUES
 (9, 'wyopxuIweBV8GjQ3omFoXe4', 'Test kolo', 'Mlle', 'Cupidatat deserunt a', 'Mane', '(+225) 01 44 42 39 72', NULL, NULL, NULL, NULL, '2026-08-14 12:21:09', '2026-08-16 08:41:42', '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
 (10, 'wE2rKMLnr8Cpou32QYzai6ED', 'Ut est dolore aut n', 'Masculin', 'Aliquam similique ma', 'Ipsam molestiae dolo', '(+225) 01 71 65 26 95', 'jacicasu@mailinator.com', NULL, NULL, NULL, '2026-08-14 12:28:15', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
-(11, 'OM30bC7UHKbwG0CjDT', 'Quia quia earum quis', 'Masculin', 'Sed ad voluptas ulla', 'Qui sint elit unde', '(+225) 01 27 77 58 40', 'fokul@mailinator.com', NULL, NULL, NULL, '2026-08-14 12:29:32', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456');
+(11, 'OM30bC7UHKbwG0CjDT', 'Quia quia earum quis', 'Masculin', 'Sed ad voluptas ulla', 'Qui sint elit unde', '(+225) 01 27 77 58 40', 'fokul@mailinator.com', NULL, NULL, NULL, '2026-08-14 12:29:32', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(12, 'vuKfOlOpMRyNiRWU89IEKHPZC', 'Est dolor iste fuga', 'Mme', 'Molestiae ipsum cons', 'Ipsam consectetur q', '(+225) 01 75 99 71 47', 'gekenugo@mailinator.com', NULL, NULL, NULL, '2026-08-21 00:15:43', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(13, 'XNyMisDlaLZN9MK', 'Earum sed pariatur', 'Mlle', 'Non nisi tempor moll', 'Quia est sed deserun', '(+225) 01 23 43 29 67', 'xiqox@mailinator.com', NULL, NULL, NULL, '2026-08-21 00:16:14', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(14, '5U5VYuxKeCy3EcB7r8WXp3yU', 'Dolore provident oc', 'Mlle', 'Veritatis magnam tem', 'Corporis quis blandi', '(+225) 01 39 39 78 63', 'naje@mailinator.com', NULL, NULL, NULL, '2026-08-21 01:08:09', NULL, '5wBEh2OfI00frxk8ITPf', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(15, 'PUk2mXLUzx', 'Unde in eum similiqu', 'Mlle', 'Sint consectetur ut', 'Aut in dolorem odio', '(+225) 01 18 96 48 57', 'canena@mailinator.com', NULL, NULL, NULL, '2026-08-24 01:11:54', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(16, 'doCvmWauKaRva5CCQqa889OwQAq6', 'Cumque nesciunt et', 'Mr', 'Voluptatem modi dict', 'Adipisicing laborum', '(+225) 01 28 86 99 50', 'jikugexehy@mailinator.com', NULL, NULL, NULL, '2026-08-24 01:12:22', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(17, 'vk9nbowRCMpO1GuuEYVGwBsE', 'Qui maiores placeat', 'Mme', 'Debitis velit corpor', 'Obcaecati exercitati', '(+225) 01 86 79 55 13', 'qojohupeh@mailinator.com', NULL, NULL, NULL, '2026-08-24 01:12:46', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(18, 'A0Y7ltuS7DIjEg', 'Quisquam minim et qu', 'Mme', 'Cillum reprehenderit', 'Libero quae expedita', '(+225) 01 32 25 01 96', 'qucuku@mailinator.com', NULL, NULL, NULL, '2026-08-24 01:15:51', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(19, 'xbz4LINGC8y3qe0xHtr8Eyk9b', 'Eum dolores sequi ut', 'Mme', 'Quaerat sunt dolor o', 'Aut consequatur Ver', '(+225) 01 31 69 31 24', 'qeqy@mailinator.com', NULL, NULL, NULL, '2026-08-24 01:16:32', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456'),
+(20, 'CL-836-70883-N', 'Unde et labore rerum', 'Mlle', 'Accusantium ullamco', 'Excepteur neque dolo', '(+225) 01 64 99 36 83', 'pinipyd@mailinator.com', NULL, NULL, NULL, '2026-08-24 03:21:48', NULL, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456');
 
 -- --------------------------------------------------------
 
@@ -347,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   `user_code` varchar(50) NOT NULL,
   `created_at_inscription` datetime NOT NULL,
   `updated_at_inscription` datetime DEFAULT NULL,
-  `statut_inscription` enum('valide','solde','annule','reconduit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `statut_inscription` enum('valide','solde','annule','reconduite') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id_inscription`),
   UNIQUE KEY `uq_inscription` (`client_code`,`annee_code`),
   KEY `user_code` (`user_code`),
@@ -355,17 +365,16 @@ CREATE TABLE IF NOT EXISTS `inscriptions` (
   KEY `zone_code` (`zone_code`),
   KEY `etablissement_code` (`etablissement_code`),
   KEY `code_inscription` (`code_inscription`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `inscriptions`
 --
 
 INSERT INTO `inscriptions` (`id_inscription`, `code_inscription`, `client_code`, `zone_code`, `etablissement_code`, `annee_code`, `session_code`, `user_code`, `created_at_inscription`, `updated_at_inscription`, `statut_inscription`) VALUES
-(10, 'IZH94NvZA24MgPaeNvxHTaL', 'lopBd5aRL3H', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:17:58', NULL, 'valide'),
-(11, 'aF4DpbPrR72MqzBcKTU56', 'wyopxuIweBV8GjQ3omFoXe4', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:21:09', NULL, 'valide'),
-(12, 'JefTHmBKIuN', 'wE2rKMLnr8Cpou32QYzai6ED', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:28:15', NULL, 'valide'),
-(13, 'vV3ghTnI5WaB1', 'OM30bC7UHKbwG0CjDT', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', '5wBEh2OfI00frxk8ITPf', '2026-08-14 12:29:32', NULL, 'valide');
+(1, 'dMZ1CzuPfB', 'A0Y7ltuS7DIjEg', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 01:15:51', NULL, 'valide'),
+(2, '1jnSvF3AtBil9zRYgep3bpdxZay', 'xbz4LINGC8y3qe0xHtr8Eyk9b', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 01:16:32', NULL, 'valide'),
+(3, 'SC-2608-15907', 'CL-836-70883-N', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 03:21:48', NULL, 'valide');
 
 -- --------------------------------------------------------
 
@@ -492,24 +501,24 @@ CREATE TABLE IF NOT EXISTS `pack_inscriptions` (
   `etablissement_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `user_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id_pack_inscription`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `pack_inscriptions`
 --
 
 INSERT INTO `pack_inscriptions` (`id_pack_inscription`, `inscription_code`, `pack_code`, `annee_code`, `statut_pack_inscription`, `created_at_pack_inscription`, `etablissement_code`, `user_code`) VALUES
-(10, 'aF4DpbPrR72MqzBcKTU56', 'itT57K3khk9', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(11, 'aF4DpbPrR72MqzBcKTU56', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(12, 'aF4DpbPrR72MqzBcKTU56', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:21:09', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(13, 'JefTHmBKIuN', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(14, 'JefTHmBKIuN', 'itT57K3khk9', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(15, 'JefTHmBKIuN', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(16, 'JefTHmBKIuN', 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:28:15', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(17, 'vV3ghTnI5WaB1', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(18, 'vV3ghTnI5WaB1', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(19, 'vV3ghTnI5WaB1', 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf'),
-(20, 'vV3ghTnI5WaB1', 'FNEF8arPTaNxhYUGlGrjhHlN', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-14 12:29:32', '5454544456', '5wBEh2OfI00frxk8ITPf');
+(1, 'dMZ1CzuPfB', '5AZrZNCZvMEmitS2GEHx5qKvueCgK', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:15:51', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(2, 'dMZ1CzuPfB', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:15:51', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(3, '1jnSvF3AtBil9zRYgep3bpdxZay', 'l4ymf5', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(4, '1jnSvF3AtBil9zRYgep3bpdxZay', '2fR8BqCBEbQ0b94mWKelXn4HNPSodCN', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(5, '1jnSvF3AtBil9zRYgep3bpdxZay', 'wv5aMldjjok4ds1k', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(6, '1jnSvF3AtBil9zRYgep3bpdxZay', 'Il1dx', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(7, '1jnSvF3AtBil9zRYgep3bpdxZay', '0cQQ2lb44PX', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(8, '1jnSvF3AtBil9zRYgep3bpdxZay', 'dKzkvIgRTCuCc6OFMHL8CsiH', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(9, 'SC-2608-15907', 'XMGgOdiDgzQK1', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 03:21:48', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(10, 'SC-2608-15907', 'FXtY9QdsO0RxbDrnwP9YsgwLNM3ApKAG', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 03:21:48', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
+(11, 'SC-2608-15907', 'FNEF8arPTaNxhYUGlGrjhHlN', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 03:21:48', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG');
 
 -- --------------------------------------------------------
 
@@ -543,36 +552,38 @@ CREATE TABLE IF NOT EXISTS `paiements` (
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id_role` int NOT NULL AUTO_INCREMENT,
   `libelle_role` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `code_role` varchar(50) NOT NULL,
   `module` varchar(50) NOT NULL,
   `groupe` varchar(50) NOT NULL,
   `statut_role` enum('actif','inactif','null','') NOT NULL DEFAULT 'actif',
   `description` text,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id_role`),
   UNIQUE KEY `code_role` (`code_role`),
   KEY `groupe` (`groupe`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `roles`
 --
 
-INSERT INTO `roles` (`id`, `libelle_role`, `code_role`, `module`, `groupe`, `statut_role`, `description`) VALUES
-(1, 'Super administrateur', 'super_admin', 'GLOBAL', 'SUPER', 'actif', 'Accès total à tous les modules'),
+INSERT INTO `roles` (`id_role`, `libelle_role`, `code_role`, `module`, `groupe`, `statut_role`, `description`) VALUES
+(1, 'Super administrateur', 'super_admin', 'GLOBAL', 'GLOBAL', 'actif', 'Accès total à tous les modules'),
 (2, 'Administration - Paramétrage', 'admin_param', 'ADMIN', 'ADMIN', 'actif', 'Gestion des paramètres globaux'),
 (3, 'Administration - Utilisateurs', 'admin_user', 'ADMIN', 'ADMIN', 'actif', 'Gestion des utilisateurs et rôles'),
-(4, 'Comptable - Caisse', 'compt_caisse', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion de la caisse et paiements'),
-(5, 'Comptable - Dépenses', 'compt_depense', 'FINANCE', 'COMPTABLE', 'actif', 'Gestion des dépenses'),
-(6, 'Comptable - Versements', 'compt_versement', 'FINANCE', 'COMPTABLE', 'actif', 'Suivi des versements commerciaux'),
-(7, 'Gestionnaire - Validations', 'gest_valid', 'GESTION', 'GESTION', 'actif', 'Validation des versements et cautions'),
-(8, 'Gestionnaire - Distributions', 'gest_distrib', 'GESTION', 'GESTION', 'actif', 'Gestion des distributions articles'),
-(9, 'Gestionnaire - Cautions', 'gest_caution', 'GESTION', 'GESTION', 'actif', 'Validation des cautions clients'),
-(10, 'Commercial - Clients', 'comm_client', 'CLIENTS', 'COMMERCIAL', 'actif', 'Gestion des clients et souscriptions'),
-(11, 'Commercial - Cautions', 'comm_caution', 'CLIENTS', 'COMMERCIAL', 'actif', 'Enregistrement des paiements cautions'),
-(13, 'Commercial - Versements', 'comm_versement', 'FINANCE', 'COMMERCIAL', 'actif', 'Dépôts de versements au bureau'),
-(14, 'Gestionnaire - Packs', 'gest_packs', 'GESTION', 'GESTION', 'actif', 'Gestion des packs, articles');
+(4, 'Comptable - Caisse', 'compt_caisse', 'FINANCE', 'FINANCE', 'actif', 'Gestion de la caisse et paiements'),
+(5, 'Comptable - Dépenses', 'compt_depense', 'FINANCE', 'FINANCE', 'actif', 'Gestion des dépenses'),
+(6, 'Comptable - Versements', 'compt_versement', 'FINANCE', 'FINANCE', 'actif', 'Gestion des versements'),
+(7, 'Comptable - master', 'compt_master', 'FINANCE', 'FINANCE', 'actif', 'Suivi, validation des versements et depenses'),
+(8, 'Gestionnaire - paramètres', 'gest_param', 'GESTION', 'GESTION', 'actif', 'Gestion des paramètres annees et session'),
+(9, 'Gestionnaire - Packs', 'gest_packs', 'GESTION', 'GESTION', 'actif', 'Gestion des packs, articles et categories'),
+(10, 'Gestionnaire - Distributions', 'gest_distrib', 'GESTION', 'GESTION', 'actif', 'Gestion des distributions articles'),
+(11, 'Gestionnaire - Commercial', 'gest_comm', 'GESTION', 'GESTION', 'actif', 'Gestion de suivi des commerciaux'),
+(12, 'Gestionnaire - clients', 'gest_clients', 'GESTION', 'GESTION', 'actif', 'Gestion de suivi des clients'),
+(13, 'Commercial - Clients', 'comm_client', 'COMMERCIAL', 'COMMERCIAL', 'actif', 'Gestion des clients et souscriptions'),
+(14, 'Commercial - Collection', 'comm_collect', 'COMMERCIAL', 'COMMERCIAL', 'actif', 'Enregistrement des paiements de cotisations'),
+(15, 'Commercial - Versements', 'comm_versement', 'COMMERCIAL', 'COMMERCIAL', 'actif', 'Dépôts de versements au bureau');
 
 -- --------------------------------------------------------
 
@@ -718,14 +729,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id_user`, `code_user`, `matricule_user`, `nom_user`, `prenom_user`, `email_user`, `sexe_user`, `password_user`, `telephone_user`, `photo_user`, `last_connexion`, `token_user`, `service_code`, `fonction_code`, `etablissement_code`, `auth_uid`, `created_at_user`, `updated_at_user`, `statut_user`) VALUES
-(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-17 17:16:38', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
+(1, '5wBEh2OfI00frxk8ITPf', '54564777165', 'Admin', 'Admin', 'admin@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 56 45 64', NULL, '2026-08-24 00:00:46', NULL, '123', '8875', '5454544456', NULL, '2026-07-15 11:48:46', NULL, 'actif'),
 (2, 'yhveAqqunh', 'AUT VOLUPTATEM MINU', 'ID RERUM IUSTO LABOR 2', 'MAXIME EXERCITATION', 'vijasit@mailinator.com', 'Mme', '$2y$10$.CAaqXxLvPBmGENuZQuwgedqy0JMOtud/W5n1wk8v5WFJWzHdknwK', '(+225) 01 82 95 39 55', NULL, NULL, 'FEjrZldQclekdKylyairPzLZr6S6Yxy0rYQrrCkSv9zUU16UP8', '123', '8875', '5454544456', NULL, '2026-07-15 11:41:56', NULL, 'actif'),
 (9, 'JwucjkPg4w', 'EAQUE DUCIMUS VOLUP', 'DOLORES SED VOLUPTAT', 'EUM EARUM UT QUAS ES', 'zoddoudep@m5ailinator.com', 'Mlle', '$2y$10$a8MD50XhdXzJ59bBkZF.y.FxK0bkAgsMnTQlkT0VQjGbnsCh65Dei', '(+225) 01 43 67 81 55', NULL, NULL, 'pYQ20JoEy3dxhgv8pmEJw6cqo7rw6o7bxxJccCRn1VJyecP9V1UAL', '955', '8875', '5454544456', NULL, '2026-07-06 03:04:15', NULL, 'inactif'),
 (8, 'Xq9daapChi', 'SUNT EXPLICABO DOLO', 'UT ERROR FUGA INCID', 'APERIAM EXERCITATION', 'qenenu@mailinator.com', 'Mr', '$2y$10$7abhEN0B8mj47O8mb1vCCuG9IaFiS3sLWV1Ozb53f7difq2Oa9m.G', '(+225) 01 39 49 23 37', NULL, NULL, 'Ll9Jr8ODtxSEUnEWL5YOsQR4y7v8jjGFKHjmAsyWjEJsEt6bgNt', '955', '958', '5454544456', NULL, '2026-07-06 03:03:08', NULL, 'actif'),
 (7, 'wbwyd', 'IURE EXPLICABO AUTE', 'FACILIS AD IN HIC VO 5', 'MOLESTIAE COMMODO NI', 'absano5go9@gmail.com', 'Mr', '$2y$10$iW9t.mb2sgR18q1EzkL0mO03oKiJ8CdEyY7mHv3slr70PVDYeBEIK', '(+225) 01 20 23 26 76', NULL, NULL, 'XNGmKhjcrJ5FoR2ARMP2OEZdfqCAyrCHvKDnDK4SqPHFAqXgv0ciZWAlyEFdlRHje', '955', '958', '5454544456', NULL, '2026-07-15 11:45:01', NULL, 'inactif'),
-(10, 'Kjd35lpOuL9vewm5KM4yT', 'SUSCIPIT DISTINCTIO', 'EST QUI NAM DOLORES', 'QUI CONSEQUATUR AD', 'kemaduxepa@mailinator.com', 'Mlle', '$2y$10$VUh4ezknaDXwIc8fky64UeZRWjKyiXuXYEq.3bNCsIxJMev2l19za', '(+225) 01 55 43 91 85', NULL, NULL, 'urAqo1j0OLsDtprTHKPL4WhLy0rOaERHKL6Am8zhVkWBCsGi8kJojtlM3RLWkKIpPK', NULL, 'C1OapnqyN8Uf11SlLl', '5454544456', NULL, '2026-07-16 05:13:36', NULL, 'actif'),
-(11, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', '54564165', 'TEST', 'TESGGS', 'abs54anogo9@gmail.com', 'Mr', '$2y$10$vBL9TS0RRWJDglM55w47QuqxpkGT223QehFn45CPcoxRqCrWENOsy', '(+225) 05 44 54 56 54', NULL, NULL, '7rvTvGGaIHvudI8ZHHikZVdHFxyWE9B0R0O8qSnj334szE1LfIG0ZlwMIbgAb', NULL, '8875', '5454544456', NULL, '2026-07-14 01:46:23', NULL, 'actif'),
-(12, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '54564777165', 'Sanogo', 'Test', 'absango9@gmail.com', 'Mme', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 45 46 46', NULL, NULL, 'TATRWLXdavgPFUqmrlCpGMozczYaZDtNcu31nfpZy02ZuySWrgeb', NULL, '8875', '5454544456', NULL, '2026-07-14 03:00:35', NULL, 'actif');
+(10, 'Kjd35lpOuL9vewm5KM4yT', 'SUSCIPIT DISTINCTIO', 'Gestion', 'Test', 'gestion@mailinator.com', 'Mlle', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 01 55 43 91 85', NULL, '2026-08-23 02:30:26', 'urAqo1j0OLsDtprTHKPL4WhLy0rOaERHKL6Am8zhVkWBCsGi8kJojtlM3RLWkKIpPK', NULL, 'C1OapnqyN8Uf11SlLl', '5454544456', NULL, '2026-07-16 05:13:36', NULL, 'actif'),
+(11, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', '54564165', 'Comptable', 'Test', 'comptable@gmail.com', 'Mr', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 54 56 54', NULL, '2026-08-23 02:29:18', '7rvTvGGaIHvudI8ZHHikZVdHFxyWE9B0R0O8qSnj334szE1LfIG0ZlwMIbgAb', NULL, '8875', '5454544456', NULL, '2026-07-14 01:46:23', NULL, 'actif'),
+(12, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '54564777165', 'Commercial', 'Test', 'commercial@gmail.com', 'Mme', '$2y$10$ik1kUCxvYJcPL2qhdMH.Iur04TxFgoDh8IhvA1vRgeT8Pfn5pl1AG', '(+225) 05 44 45 46 46', NULL, '2026-08-24 00:01:28', 'TATRWLXdavgPFUqmrlCpGMozczYaZDtNcu31nfpZy02ZuySWrgeb', NULL, '8875', '5454544456', NULL, '2026-07-14 03:00:35', NULL, 'actif');
 
 -- --------------------------------------------------------
 
@@ -744,25 +755,28 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   `delete_permission` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_role` (`user_code`,`role_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `user_roles`
 --
 
 INSERT INTO `user_roles` (`id`, `user_code`, `role_code`, `create_permission`, `edit_permission`, `show_permission`, `delete_permission`) VALUES
-(1, '5wBEh2OfI00frxk8ITPf', 'super_admin', 1, 1, 1, 1),
-(2, '5wBEh2OfI00frxk8ITPf', 'admin_param', 1, 1, 1, 1),
-(3, '5wBEh2OfI00frxk8ITPf', 'admin_user', 1, 1, 1, 1),
-(4, '5wBEh2OfI00frxk8ITPf', 'compt_caisse', 1, 1, 1, 1),
-(5, '5wBEh2OfI00frxk8ITPf', 'compt_depense', 1, 1, 1, 1),
-(6, '5wBEh2OfI00frxk8ITPf', 'compt_versement', 1, 1, 1, 1),
-(7, '5wBEh2OfI00frxk8ITPf', 'comm_client', 1, 1, 1, 1),
-(8, '5wBEh2OfI00frxk8ITPf', 'comm_caution', 1, 1, 1, 1),
-(9, '5wBEh2OfI00frxk8ITPf', 'comm_versement', 1, 1, 1, 1),
-(10, '5wBEh2OfI00frxk8ITPf', 'gest_valid', 1, 1, 1, 1),
-(11, '5wBEh2OfI00frxk8ITPf', 'gest_distrib', 1, 1, 1, 1),
-(12, '5wBEh2OfI00frxk8ITPf', 'gest_caution', 1, 1, 1, 1);
+(1, '5wBEh2OfI00frxk8ITPf', 'admin_param', 1, 1, 1, 1),
+(2, '5wBEh2OfI00frxk8ITPf', 'admin_user', 1, 1, 1, 1),
+(3, '5wBEh2OfI00frxk8ITPf', 'super_admin', 1, 1, 1, 1),
+(4, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', 'comm_client', 1, 1, 1, 1),
+(5, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', 'comm_collect', 1, 1, 1, 1),
+(6, 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', 'comm_versement', 1, 1, 1, 1),
+(7, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'compt_caisse', 1, 1, 1, 1),
+(8, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'compt_depense', 1, 1, 1, 1),
+(9, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'compt_versement', 1, 1, 1, 1),
+(10, 'NoMUxkgt7GNJo7prXxhatXsIVqK5', 'compt_master', 1, 1, 1, 1),
+(11, 'Kjd35lpOuL9vewm5KM4yT', 'gest_param', 1, 1, 1, 1),
+(12, 'Kjd35lpOuL9vewm5KM4yT', 'gest_packs', 1, 1, 1, 1),
+(13, 'Kjd35lpOuL9vewm5KM4yT', 'gest_distrib', 1, 1, 1, 1),
+(14, 'Kjd35lpOuL9vewm5KM4yT', 'gest_comm', 1, 1, 1, 1),
+(15, 'Kjd35lpOuL9vewm5KM4yT', 'gest_clients', 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -789,6 +803,32 @@ CREATE TABLE IF NOT EXISTS `versements_commerciaux` (
   `commentaire_validation` text NOT NULL,
   PRIMARY KEY (`id_versement`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Doublure de structure pour la vue `vue_inscription_total_pack`
+-- (Voir ci-dessous la vue réelle)
+--
+DROP VIEW IF EXISTS `vue_inscription_total_pack`;
+CREATE TABLE IF NOT EXISTS `vue_inscription_total_pack` (
+`annee_code` varchar(50)
+,`client_code` varchar(50)
+,`code_client` varchar(50)
+,`code_inscription` varchar(50)
+,`created_at_inscription` datetime
+,`etablissement_code` varchar(50)
+,`id_inscription` int
+,`montant_inscription` decimal(32,0)
+,`nom_client` varchar(100)
+,`nombre_pack` bigint
+,`session_code` varchar(50)
+,`statut_inscription` enum('valide','solde','annule','reconduite')
+,`telephone_client` varchar(50)
+,`updated_at_inscription` datetime
+,`user_code` varchar(50)
+,`zone_code` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -861,6 +901,16 @@ CREATE TABLE IF NOT EXISTS `zone_commercials` (
   PRIMARY KEY (`id_zone_commercial`),
   UNIQUE KEY `uq_enseignant_matiere` (`commercial_code`,`zone_code`,`etablissement_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la vue `vue_inscription_total_pack`
+--
+DROP TABLE IF EXISTS `vue_inscription_total_pack`;
+
+DROP VIEW IF EXISTS `vue_inscription_total_pack`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_inscription_total_pack`  AS SELECT `ins`.`id_inscription` AS `id_inscription`, `ins`.`code_inscription` AS `code_inscription`, `ins`.`client_code` AS `client_code`, `ins`.`zone_code` AS `zone_code`, `ins`.`etablissement_code` AS `etablissement_code`, `ins`.`annee_code` AS `annee_code`, `ins`.`session_code` AS `session_code`, `ins`.`user_code` AS `user_code`, `ins`.`created_at_inscription` AS `created_at_inscription`, `ins`.`updated_at_inscription` AS `updated_at_inscription`, `ins`.`statut_inscription` AS `statut_inscription`, `cl`.`nom_client` AS `nom_client`, `cl`.`telephone_client` AS `telephone_client`, `cl`.`code_client` AS `code_client`, count(`pi`.`id_pack_inscription`) AS `nombre_pack`, sum(`pa`.`montant_pack`) AS `montant_inscription` FROM (((`inscriptions` `ins` join `pack_inscriptions` `pi` on((`pi`.`inscription_code` = `ins`.`code_inscription`))) join `packs` `pa` on((`pa`.`code_pack` = `pi`.`pack_code`))) join `clients` `cl` on((`cl`.`code_client` = `ins`.`client_code`))) GROUP BY `ins`.`code_inscription` ;
 
 -- --------------------------------------------------------
 

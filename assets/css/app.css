@@ -509,6 +509,12 @@ input::-o-outer-spin-button {
     justify-content: space-between !important;
 }
 
+.my-flex{
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .session-container:hover {
     border: 1px solid #3eb8d6;
     border-radius: 10px;

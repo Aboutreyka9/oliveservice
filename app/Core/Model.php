@@ -859,4 +859,25 @@ abstract class Model
         }
         return $code;
     }
+
+      public function generatorCodeClient(string $table, string $field,string $nom,$telephone)
+    {
+        $code =genererCodeClient($nom,$telephone);
+
+
+        if (!empty($this->find($table, $field, $code))) {
+            $this->generatorCodeClient($table, $field,$nom,$telephone);
+        }
+        return $code;
+    }
+
+      public function generatorCodeSouscription(string $table, string $field)
+    {
+         $code =genererCodeSouscription();
+
+        if (!empty($this->find($table, $field, $code))) {
+            $this->generatorCodeSouscription($table, $field);
+        }
+        return $code;
+    }
 }

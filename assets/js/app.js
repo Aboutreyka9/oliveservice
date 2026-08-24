@@ -5682,13 +5682,7 @@ function updatedClient() {
 
 
 
-loadDataTable('data-table-souscription', '#data-table-souscription', 'charger_data_souscriptions');
-
-
-
-
-
-
+// loadDataTable('data-table-souscription', '#data-table-souscription-commercial', 'charger_data_souscriptions');
 
 
 

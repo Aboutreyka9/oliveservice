@@ -60,7 +60,34 @@ class ClientModel extends Model
     }
 
 
-    public function DataTableFetchInscriptionListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
+    public function getListeSouscriptionForComercial($etablissement,$annee,$zone,$user)
+    {
+
+        $sql = "SELECT ins.*,
+                       se.libelle_session,
+                       cl.nom_client, cl.telephone_client
+                FROM " . TABLES::VUE_TOTAL_INSCRIPTION_PACK . " ins 
+                JOIN " . TABLES::SESSIONS . "  se ON se.code_session = ins.session_code 
+                JOIN " . TABLES::CLIENTS . "  cl ON cl.code_client = ins.client_code 
+                JOIN " . TABLES::USERS . "  us ON us.code_user = ins.user_code 
+                WHERE ins.etablissement_code = :etablissement_code AND 
+                      ins.annee_code = :annee_code AND 
+                      ins.zone_code = :zone_code AND 
+                      ins.user_code = :user_code
+                ORDER BY ins.created_at_inscription DESC ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(":etablissement_code",$etablissement);
+        $stmt->bindValue(":zone_code", $zone);
+        $stmt->bindValue(":annee_code", $annee);
+        $stmt->bindValue(":user_code", $user);
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+        public function DataTableFetchInscriptionListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
         $where = "WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code";
 
@@ -299,65 +326,64 @@ class ClientModel extends Model
         return $data;
     }
 
-    public function getStatsInscriptions(string $etablissementCode, string $anneeCode, ?string $zoneCode = null, ?string $dateDebut = null, ?string $dateFin = null): array
+    public function getStatsInscriptionsForCommercial(string $etablissementCode, string $anneeCode, string $zoneCode, $userCode ): array
     {
-        $data = [
-            'total' => 0,
-            'valide' => 0,
-            'en_attente' => 0,
-            'annule' => 0,
-            'montant_total' => 0,
-            'montant_valide' => 0,
-            'montant_en_attente' => 0,
-            'montant_annule' => 0,
-        ];
 
         try {
-            $where = "WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code";
-            $params = ['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode];
-
-            if ($zoneCode) {
-                $where .= " AND ins.zone_code = :zone_code";
-                $params['zone_code'] = $zoneCode;
-            }
-            if ($dateDebut && $dateFin) {
-                $where .= " AND DATE(ins.created_at_inscription) BETWEEN :date_debut AND :date_fin";
-                $params['date_debut'] = $dateDebut;
-                $params['date_fin'] = $dateFin;
-            }
-
             $sql = "SELECT 
                         COUNT(*) as total,
-                        SUM(CASE WHEN ins.statut_inscription = 'valide' THEN 1 ELSE 0 END) as valide,
-                        SUM(CASE WHEN ins.statut_inscription = 'En attente' THEN 1 ELSE 0 END) as en_attente,
-                        SUM(CASE WHEN ins.statut_inscription = 'annule' THEN 1 ELSE 0 END) as annule,
-                        SUM(p.montant_pack) as montant_total,
-                        SUM(CASE WHEN ins.statut_inscription = 'valide' THEN p.montant_pack ELSE 0 END) as montant_valide,
-                        SUM(CASE WHEN ins.statut_inscription = 'En attente' THEN p.montant_pack ELSE 0 END) as montant_en_attente,
-                        SUM(CASE WHEN ins.statut_inscription = 'annule' THEN p.montant_pack ELSE 0 END) as montant_annule
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN 1 ELSE 0 END), 0) as valide,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN 1 ELSE 0 END), 0) as solde,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN 1 ELSE 0 END), 0) as reconduite,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN 1 ELSE 0 END), 0) as annule,
+                        COALESCE(SUM(p.montant_pack), 0) as montant_total,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN p.montant_pack ELSE 0 END), 0) as montant_valide,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN p.montant_pack ELSE 0 END), 0) as montant_solde,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN p.montant_pack ELSE 0 END), 0) as montant_reconduite,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN p.montant_pack ELSE 0 END), 0) as montant_annule
                     FROM " . TABLES::INSCRIPTIONS . " ins
                     LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
                     LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
-                    $where";
+                    WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code AND ins.user_code = :user_code GROUP BY ins.code_inscription";
 
             $stmt = $this->db->prepare($sql);
-            foreach ($params as $key => $value) {
-                $stmt->bindValue(":$key", $value);
-            }
-            $stmt->execute();
-            $result = $stmt->fetch();
 
-            if ($result) {
-                $data = [
-                    'total' => (int) $result['total'],
-                    'valide' => (int) $result['valide'],
-                    'en_attente' => (int) $result['en_attente'],
-                    'annule' => (int) $result['annule'],
-                    'montant_total' => (float) ($result['montant_total'] ?? 0),
-                    'montant_valide' => (float) ($result['montant_valide'] ?? 0),
-                    'montant_en_attente' => (float) ($result['montant_en_attente'] ?? 0),
-                    'montant_annule' => (float) ($result['montant_annule'] ?? 0),
-                ];
+            $stmt->execute(['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode, 'zone_code' => $zoneCode, 'user_code' => $userCode]);
+            if($stmt->rowCount() > 0){
+                $data = $stmt->fetch();
+            }
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+
+        return $data;
+    }
+
+      public function getStatsInscriptions(string $etablissementCode, string $anneeCode, string $zoneCode, string $dateDebut, string $dateFin ): array
+    {
+
+        try {
+            $sql = "SELECT 
+                        COUNT(*) as total,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN 1 ELSE 0 END), 0) as valide,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN 1 ELSE 0 END), 0) as solde,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN 1 ELSE 0 END), 0) as reconduite,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN 1 ELSE 0 END), 0) as annule,
+                        COALESCE(SUM(p.montant_pack), 0) as montant_total,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN p.montant_pack ELSE 0 END), 0) as montant_valide,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN p.montant_pack ELSE 0 END), 0) as montant_solde,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN p.montant_pack ELSE 0 END), 0) as montant_reconduite,
+                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN p.montant_pack ELSE 0 END), 0) as montant_annule
+                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                    WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code AND DATE(ins.created_at_inscription) BETWEEN :date_debut AND :date_fin GROUP BY ins.code_inscription";
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->execute(['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode, 'zone_code' => $zoneCode, 'date_debut' => $dateDebut, 'date_fin' => $dateFin]);
+            if($stmt->rowCount() > 0){
+                $data = $stmt->fetch();
             }
         } catch (Exception $e) {
             die($e->getMessage());

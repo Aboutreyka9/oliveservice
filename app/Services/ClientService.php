@@ -36,8 +36,8 @@ class ClientService
         }
 
         
-        $code_client = $this->clientModel->generatorCode(TABLES::CLIENTS, 'code_client');
-        $code_inscription = $this->clientModel->generatorCode(TABLES::INSCRIPTIONS, 'code_inscription');
+        $code_client = $this->clientModel->generatorCodeClient(TABLES::CLIENTS, 'code_client',$nom_client,$telephone_client);
+        $code_inscription = $this->clientModel->generatorCodeSouscription(TABLES::INSCRIPTIONS, 'code_inscription');
 
         $etablissement_code = Auth::user('etablissement_code');
         $user_code = Auth::user('id');
@@ -239,11 +239,7 @@ class ClientService
                 $souscription['nom_client'],
                 $souscription['telephone_client'],
                 $souscription['libelle_session'],
-                $souscription['libelle_annee'],
-                $souscription['libelle_zone'],
                 number_format($montantPack, 0, ',', ' ') . ' FCFA',
-                number_format($montantPaye, 0, ',', ' ') . ' FCFA',
-                number_format($resteDu, 0, ',', ' ') . ' FCFA',
                 $etat,
                 date_formater($souscription['created_at_inscription']),
                 $actions
