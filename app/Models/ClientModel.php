@@ -396,12 +396,17 @@ class ClientModel extends Model
         $data = [];
         try {
             $sql = "SELECT pi.*, p.libelle_pack, p.montant_pack, p.code_pack,
-                           pa.quantite_article, pa.article_code, a.libelle_article
+                           pa.quantite_article, pa.article_code, 
+                           a.libelle_article, a.description_article,
+                           cp.libelle_categorie_pack,
+                           se.libelle_session
                     FROM " . TABLES::PACK_INSCRIPTIONS . " pi
                     JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                     LEFT JOIN " . TABLES::PACK_ARTICLES . " pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
                     LEFT JOIN " . TABLES::ARTICLES . " a ON a.code_article = pa.article_code
+                    LEFT JOIN " . TABLES::CATEGORIES . " cp ON cp.code_categorie_pack = p.categorie_pack_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     WHERE ins.code_inscription = :inscription_code
                     ORDER BY pi.created_at_pack_inscription DESC";
             $stmt = $this->db->prepare($sql);

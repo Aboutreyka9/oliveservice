@@ -170,12 +170,10 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                     <th>Montant</th>
                                     <th>Article</th>
                                     <th>Qté</th>
-                                    <th>Statut</th>
-                                    <th>Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($packs as $i => $pc): ?>
+                                <?php $test = [];  foreach ($test as $i => $pc): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td>
@@ -186,7 +184,6 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                         <td><?= htmlspecialchars($pc['libelle_article'] ?? '-') ?></td>
                                         <td class="text-center"><?= $pc['quantite_article'] ?? '-' ?></td>
                                         <td><?= checkStatusInscription($pc['statut_pack_inscription'], ['En attente', 'valide', 'rejeté']) ?></td>
-                                        <td><?= date_formater($pc['created_at_pack_inscription'] ?? null, true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -259,6 +256,64 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                         <td><?= htmlspecialchars($d['code_distribution']) ?></td>
                                         <td><?= checkStatusInscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($d['created_at_distribution'], true) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Articles -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">Articles de l'inscription</h4>
+            </div>
+            <div class="card-body">
+                <?php if (empty($packs)): ?>
+                    <p class="text-muted text-center py-4">Aucun article associé à cette inscription.</p>
+                <?php else: ?>
+                    <?php
+                    $articles = [];
+                    foreach ($packs as $pc) {
+                        $articles[] = [
+                            'libelle_article' => $pc['libelle_article'] ?? '-',
+                            'description_article' => $pc['description_article'] ?? '',
+                            'libelle_categorie_pack' => $pc['libelle_categorie_pack'] ?? '-',
+                            'libelle_session' => $inscription['libelle_session'] ?? '-',
+                            'quantite_article' => $pc['quantite_article'] ?? 0,
+                        ];
+                    }
+                    $articlesUniques = [];
+                    foreach ($articles as $art) {
+                        $key = $art['libelle_article'] . '|' . $art['description_article'] . '|' . $art['libelle_categorie_pack'];
+                        $articlesUniques[$key] = $art;
+                    }
+                    ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Libellé article</th>
+                                    <th>Description</th>
+                                    <th>Catégorie</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach (array_values($articlesUniques) as $i => $article): ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= htmlspecialchars($article['libelle_article']) ?></td>
+                                        <td><?= htmlspecialchars($article['description_article'] ?: '-') ?></td>
+                                        <td><?= htmlspecialchars($article['libelle_categorie_pack']) ?></td>
+                                        <td><?= htmlspecialchars($article['libelle_session']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
