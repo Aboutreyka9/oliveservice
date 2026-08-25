@@ -5678,17 +5678,48 @@ function updatedClient() {
 
 /** DEBUT SECTION INSCRIPTION */
 
+// liste souscription
+    chargerListeSouscriptionComercial() ;
+
+ function chargerListeSouscriptionComercial() {
+        $(document).on("change", "#session_filter_commercial", function () {
+            var sessionCode = $(this).val();
+
+                $.ajax({
+
+                method: "POST",
+
+                url: APP.ajax,
+
+                data: {
+
+                    action: 'charger_souscription_commercial_for_session',
+                    session_code: sessionCode
+
+                },
+
+                dataType: "JSON",
+
+                beforeSend: function () {},
+
+                success: function (data) {
+
+                    console.log(data);
+
+                    if (data.success) {
+                        $('#tbody-souscription-commercial').html(data.data);
+                        $('#sexion_stats_soucription_commercial').html(data.stats);
+
+                    }
+
+                }
+
+            });
+        });
+    }
 
 
-
-
-loadDataTable('data-table-souscription', '#data-table-souscription', 'charger_data_souscriptions');
-
-
-
-
-
-
+// loadDataTable('data-table-souscription', '#data-table-souscription-commercial', 'charger_data_souscriptions');
 
 
 
@@ -7007,6 +7038,7 @@ $(document).ready(function() {
 
 
 /** FIN SECTION RESOUSCRIPTION */
+
 
 
 

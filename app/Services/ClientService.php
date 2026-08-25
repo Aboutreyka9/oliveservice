@@ -36,8 +36,8 @@ class ClientService
         }
 
         
-        $code_client = $this->clientModel->generatorCode(TABLES::CLIENTS, 'code_client');
-        $code_inscription = $this->clientModel->generatorCode(TABLES::INSCRIPTIONS, 'code_inscription');
+        $code_client = $this->clientModel->generatorCodeClient(TABLES::CLIENTS, 'code_client',$nom_client,$telephone_client);
+        $code_inscription = $this->clientModel->generatorCodeSouscription(TABLES::INSCRIPTIONS, 'code_inscription');
 
         $etablissement_code = Auth::user('etablissement_code');
         $user_code = Auth::user('id');
@@ -188,6 +188,28 @@ class ClientService
         ];
     }
 
+    public function getInscriptionDetailData(string $inscriptionCode): array
+    {
+        $etablissementCode = Auth::user('etablissement_code');
+
+        $inscription = $this->clientModel->getInscriptionDetail($inscriptionCode, $etablissementCode);
+
+        if (empty($inscription)) {
+            return [];
+        }
+
+        $packs = $this->clientModel->getPackArticlesByInscription($inscriptionCode);
+        $cautions = $this->clientModel->getCautionsByInscription($inscriptionCode);
+        $distributions = $this->clientModel->getDistributionsByInscription($inscriptionCode);
+
+        return [
+            'inscription' => $inscription,
+            'packs' => $packs,
+            'cautions' => $cautions,
+            'distributions' => $distributions,
+        ];
+    }
+
     public function inscriptionDataService($souscriptions)
     {
         $i = 0;
@@ -230,6 +252,9 @@ class ClientService
             <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer souscription </button>
         ';
             }
+            $actions .= '<a class="dropdown-item" href="' . url('souscriptions/detail/' . $souscription['code_inscription']) . '" data-toggle="tooltip" title="" data-original-title="Détails inscription">
+                <i class="fa fa-eye text-icon-info"></i> &nbsp; Détails inscription
+            </a>';
             $actions .= ' </div>
             ';
 
@@ -239,11 +264,7 @@ class ClientService
                 $souscription['nom_client'],
                 $souscription['telephone_client'],
                 $souscription['libelle_session'],
-                $souscription['libelle_annee'],
-                $souscription['libelle_zone'],
                 number_format($montantPack, 0, ',', ' ') . ' FCFA',
-                number_format($montantPaye, 0, ',', ' ') . ' FCFA',
-                number_format($resteDu, 0, ',', ' ') . ' FCFA',
                 $etat,
                 date_formater($souscription['created_at_inscription']),
                 $actions
@@ -254,6 +275,125 @@ class ClientService
     }
 
 
+    public function inscriptionListeForCommercial(array $listeSoucriptions){
+        $output = '';
+
+        if (!empty($listeSoucriptions)) {
+        $i = 0;
+        foreach ($listeSoucriptions as $data) {
+            $i++; 
+
+            $output .= '
+            <tr>
+            <td>' . $i . '</td>
+            <td>' . $data['code_inscription'] . '</td>
+            <td>' . $data['nom_client'] . '</td>
+            <td>' . $data['telephone_client'] . '</td>
+            <td>' . $data['libelle_session'] . '</td>
+            <td>' . money($data['montant_inscription']) . '</td>
+            <td>' . checkStatusInscription($data['statut_inscription']) . '</td>
+            <td>' . date_formater($data['created_at_inscription']) . '</td>
+            <td>
+            <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu">
+        
+            <a href="'.url('commercial/inscription-detals',['code' => $data['code_inscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
+                <i class="fa fa-eye text-icon-primary"></i> Voir details </a>
+                </div>
+            </td>
+            </tr>';
+        }
+        return $output;
+        } else {
+        return "<tr>
+            <td colspan='9' class='text-center'>Aucune données disponible</td> </tr>";
+        }
+    }
+
+    function StatsSouscriptionCommercial($stats)  {
+         return '
+
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-danger mr-2">
+                          <i class="fas fa-times-circle"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Annulées</h6>
+                          <h5 class="montan-value">'. ($stats['annule']??0) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-danger">'. money($stats['montant_annule']??0) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-warning mr-2">
+                          <i class="fas fa-clock"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Reconduite</h6>
+                          <h5 class="montan-value">'. ($stats['reconduite']??0) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-warning"> '. money($stats['montant_reconduite']??0) .'</strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-primary mr-2">
+                          <i class="fas fa-clipboard-list"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">En cour </h6>
+                          <h5 class="montan-value">'. ($stats['valide']??0) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-primary"> '. money($stats['montant_valide']??0) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-md-3">
+          <div class="card custom-card-detail">
+              <div class="card-body">
+                  <div class="d-flex align-items-center">
+                      <div class="icon bg-success mr-2">
+                          <i class="fas fa-check-circle"></i>
+                      </div>
+                      <div>
+                          <h6 class="montan-title">Soldée</h6>
+                          <h5 class="montan-value">'. ($stats['solde']??0) .'</h5>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <small class="text-muted">Montant: <strong class="text-success"> '. money($stats['montant_solde']??0) .' </strong></small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  ';
+    }
 
     /**
      * ------------------------------------------------------------------------

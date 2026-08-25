@@ -49,27 +49,7 @@ class ClientController extends MainController
 
     public function souscription()
     {
-        $start = (new DateTime('first day of this month'))->format('Y-m-d');
-        $end = (new DateTime('today'))->format('Y-m-d');
-        $dateD = (new DateTime('first day of this month'))->format('d-m-Y');
-        $dateF = (new DateTime('today'))->format('d-m-Y');
-
-        $etablissementCode = auth()::user('etablissement_code');
-        $anneeCode = auth()::user('annee_code');
-        $zoneCode = auth()::user('zone_code');
-
-        $stats = [
-            'total' => 0,
-            'valide' => 0,
-            'en_attente' => 0,
-            'annule' => 0,
-            'montant_total' => 0,
-            'montant_valide' => 0,
-            'montant_en_attente' => 0,
-            'montant_annule' => 0,
-        ];
-
-        $stats = $this->clientModel->getStatsInscriptions($etablissementCode, $anneeCode, $zoneCode, $start, $end);
+       
 
         $this->view('commercials/clients/souscription', ['title' => "Souscription"]);
     }   
@@ -98,6 +78,26 @@ class ClientController extends MainController
         }
 
         $this->view('commercials/clients/profile', $data);
+    }
+
+    public function inscriptionDetail($code = null)
+    {
+        $data = [
+            'title' => "Détails de l'inscription",
+            'inscription' => [],
+            'packs' => [],
+            'cautions' => [],
+            'distributions' => [],
+        ];
+
+        if ($code) {
+            $detailData = $this->clientService->getInscriptionDetailData($code);
+            if (!empty($detailData)) {
+                $data = array_merge($data, $detailData);
+            }
+        }
+
+        $this->view('commercials/clients/inscription_detail', $data);
     }
 
     public function listeInscription()
@@ -251,6 +251,20 @@ class ClientController extends MainController
         return;
     }
 
+      public function get_liste_souscription_commercial_for_session()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $listeSoucriptions = $this->clientModel->getListeSouscriptionForComercial(Auth::user('etablissement_code'), Auth::user('annee_code'), Auth::user('zone_code'),Auth::user('id'),$session_code);
+        $stats = $this->clientModel->getStatsSouscriptionsForCommercial(Auth::user('etablissement_code'), Auth::user('annee_code'), Auth::user('zone_code'),Auth::user('id'),$session_code);
+
+        $data_stats = $this->clientService->StatsSouscriptionCommercial($stats);
+        $output = $this->clientService->inscriptionListeForCommercial($listeSoucriptions);
+
+        echo json_encode(['success' => true,'data' => $output,"stats" => $data_stats]);
+        return;
+    }
     // SEXION CLIENT
 
        public function GetListeClient()
