@@ -484,4 +484,27 @@ class ClientModel extends Model
 
         return $data;
     }
+
+        public function searchClients(string $search, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client, cl.lieu_residence_client
+                    FROM " . TABLES::CLIENTS . " cl
+                    JOIN " . TABLES::INSCRIPTIONS . " ins
+                    WHERE ins.client_code = cl.code_client AND cl.etablissement_code = :etablissement_code
+                      AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR cl.code_client LIKE :search OR ins.code_inscription LIKE :search)
+                      GROUP BY ins.code_inscription
+                    ORDER BY cl.nom_client ASC
+                    LIMIT 20";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":etablissement_code", $etablissementCode);
+            $stmt->bindValue(":search", "%$search%", PDO::PARAM_STR);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
 }

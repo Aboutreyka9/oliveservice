@@ -1,8 +1,8 @@
 <?php
 
 
+use App\Controllers\Commercials\CautisationController;
 use App\Controllers\Gestionnaires\ActiviteController;
-use App\Controllers\Gestionnaires\CautisationController;
 use App\Controllers\Gestionnaires\DistributionController;
 use App\Controllers\Gestionnaires\FinanceController;
 use App\Controllers\Gestionnaires\ValidationController;
@@ -21,7 +21,6 @@ include __DIR__ . '/../../app/Core/security.php';
 use App\Controllers\AuthController;
 
 use App\Controllers\Commercials\ClientController;
-
 use App\Controllers\Gestionnaires\SettingController;
 
 use App\Controllers\UserController;

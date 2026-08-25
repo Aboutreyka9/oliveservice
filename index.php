@@ -1,5 +1,7 @@
 <?php
 
+use App\Controllers\Commercials\CautisationController;
+
 // if (session_status() === PHP_SESSION_NONE) {
 session_name("APP545645465654_SESSION");
 session_start();
@@ -12,9 +14,6 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\Gestionnaires\ActiviteController;
-use App\Controllers\Gestionnaires\BoutiqueController;
-use App\Controllers\Gestionnaires\CautisationController;
-use App\Controllers\Gestionnaires\ClientController;
 use App\Controllers\Gestionnaires\CommercialController;
 use App\Controllers\Gestionnaires\ControllerException;
 use App\Controllers\Gestionnaires\DistributionController;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Gestionnaires;
+namespace App\Controllers\Commercials;
 
 use App\Core\Auth;
 use App\Core\MainController;
@@ -8,17 +8,20 @@ use App\Helpers\HttpStatusCode;
 use App\Helpers\Response;
 use App\Helpers\Validator;
 use App\Models\CautisationModel;
+use App\Models\ClientModel;
 use App\Services\CautisationService;
 use TABLES;
 
 class CautisationController extends MainController
 {
     private CautisationModel $cautisationModel;
+    private ClientModel $clientModel;
     private CautisationService $cautisationService;
 
     public function __construct()
     {
         parent::__construct();
+        $this->clientModel = new ClientModel();
         $this->cautisationModel = new CautisationModel();
         $this->cautisationService = new CautisationService();
     }
@@ -157,7 +160,7 @@ class CautisationController extends MainController
 
     public function encaisser()
     {
-        $this->view('gestionnaires/cautions/encaisser', ['title' => "Encaisser caution"]);
+        $this->view('commercials/cautions/encaisser', ['title' => "Encaisser caution"]);
     }
 
     public function searchClient()
@@ -170,7 +173,7 @@ class CautisationController extends MainController
             Response::error('Veuillez saisir un terme de recherche');
         }
 
-        $clients = $this->cautisationModel->searchClients($search, $etablissementCode);
+        $clients = $this->clientModel->searchClients($search, $etablissementCode);
         Response::success('', ['clients' => $clients]);
     }
 
