@@ -11,8 +11,9 @@
 
                      <div class="col-md-3 mb-3">
                     <label class="form-label">Session</label>
-                    <select id="session" class="form-control select2">
+                    <select id="session_filter_commercial" class="form-control select2">
                         <option value="">-- CHOISIR --</option>
+                        <?= chargerSessions() ?>
                         
                     </select>
                     <!-- <button type="button" id="" class="btn btn-link btn-primary"> <i class="fas fa-filter"></i></button> -->
@@ -30,18 +31,21 @@
 </div>
 
 <!-- STATS CARDS SOUSCRIPTION COMMERCIAL -->
-<?=    chargerStateSouscriptionForComercial() ?>
+     <div class="row g-3 mb-4" id="sexion_stats_soucription_commercial">
+        <?=    chargerStateSouscriptionForComercial() ?>
+    </div>
+
 
 <!-- TABLEAU -->
 <div class="card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <div class="card-title">Liste des souscriptions</div>
-            <div class="d-flex gap-2">
-                <button type="button" id="btn_inscription_addModal" class="btn btn-primary btn-sm" title="Ajouter souscription">
+            <div class="d-flex gap-4">
+                <a href="<?= url('commercial/souscriptions')?>" type="button" id="btn_inscription_addModal" class="btn btn-primary mr-2" title="Ajouter souscription">
                     <i class="fa fa-plus"></i> &nbsp; Créer
-                </button>
-                <button type="button" class="btn btn-success btn-sm" title="Imprimer" onclick="imprimerListeInscription()">
+                </a>
+                <button type="button" class="btn btn-warning " title="Imprimer" onclick="imprimerListeInscription()">
                     <i class="fa fa-print"></i> &nbsp; Imprimer
                 </button>
             </div>
@@ -64,7 +68,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-souscription-commercial">
-                    <?=    chargerListeSouscriptionForComercial() ?>
+                    <?= chargerListeSouscriptionForComercial() ?>
                     
                 </tbody>
             </table>

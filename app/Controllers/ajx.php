@@ -718,6 +718,13 @@ switch ($action) {
         $ajx->GetListeInscription();
 
         break;
+    case 'charger_souscription_commercial_for_session':
+
+        $ajx = new ClientController();
+
+        $ajx->get_liste_souscription_commercial_for_session();
+
+        break;
 
     case 'btn_add_inscription':
 

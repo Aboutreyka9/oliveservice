@@ -80,6 +80,26 @@ class ClientController extends MainController
         $this->view('commercials/clients/profile', $data);
     }
 
+    public function inscriptionDetail($code = null)
+    {
+        $data = [
+            'title' => "Détails de l'inscription",
+            'inscription' => [],
+            'packs' => [],
+            'cautions' => [],
+            'distributions' => [],
+        ];
+
+        if ($code) {
+            $detailData = $this->clientService->getInscriptionDetailData($code);
+            if (!empty($detailData)) {
+                $data = array_merge($data, $detailData);
+            }
+        }
+
+        $this->view('commercials/clients/inscription_detail', $data);
+    }
+
     public function listeInscription()
     {
         $this->view('commercials/clients/liste_souscription', ['title' => "Liste des souscriptions"]);
@@ -231,6 +251,20 @@ class ClientController extends MainController
         return;
     }
 
+      public function get_liste_souscription_commercial_for_session()
+    {
+        $_POST = sanitizePostData($_POST);
+        extract($_POST);
+
+        $listeSoucriptions = $this->clientModel->getListeSouscriptionForComercial(Auth::user('etablissement_code'), Auth::user('annee_code'), Auth::user('zone_code'),Auth::user('id'),$session_code);
+        $stats = $this->clientModel->getStatsSouscriptionsForCommercial(Auth::user('etablissement_code'), Auth::user('annee_code'), Auth::user('zone_code'),Auth::user('id'),$session_code);
+
+        $data_stats = $this->clientService->StatsSouscriptionCommercial($stats);
+        $output = $this->clientService->inscriptionListeForCommercial($listeSoucriptions);
+
+        echo json_encode(['success' => true,'data' => $output,"stats" => $data_stats]);
+        return;
+    }
     // SEXION CLIENT
 
        public function GetListeClient()

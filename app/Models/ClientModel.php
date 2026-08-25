@@ -59,33 +59,37 @@ class ClientModel extends Model
         return $data['nb'] ?? 0;
     }
 
+    public function getListeSouscriptionForComercial(string $etablissement,string $annee,string $zone,string $user,?string $session = null
+    ) {
+        $sql = "SELECT ins.*,se.libelle_session,cl.nom_client,cl.telephone_client
+                FROM " . TABLES::VUE_TOTAL_INSCRIPTION_PACK . " ins
+                JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                JOIN " . TABLES::USERS . " us ON us.code_user = ins.user_code
+                WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code AND ins.user_code = :user_code";
 
-    public function getListeSouscriptionForComercial($etablissement,$annee,$zone,$user)
-    {
+        // Filtre session facultatif
+        if (!empty($session)) {
+            $sql .= " AND ins.session_code = :session_code";
+        }
 
-        $sql = "SELECT ins.*,
-                       se.libelle_session,
-                       cl.nom_client, cl.telephone_client
-                FROM " . TABLES::VUE_TOTAL_INSCRIPTION_PACK . " ins 
-                JOIN " . TABLES::SESSIONS . "  se ON se.code_session = ins.session_code 
-                JOIN " . TABLES::CLIENTS . "  cl ON cl.code_client = ins.client_code 
-                JOIN " . TABLES::USERS . "  us ON us.code_user = ins.user_code 
-                WHERE ins.etablissement_code = :etablissement_code AND 
-                      ins.annee_code = :annee_code AND 
-                      ins.zone_code = :zone_code AND 
-                      ins.user_code = :user_code
-                ORDER BY ins.created_at_inscription DESC ";
+        $sql .= " ORDER BY ins.created_at_inscription DESC";
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindValue(":etablissement_code",$etablissement);
-        $stmt->bindValue(":zone_code", $zone);
-        $stmt->bindValue(":annee_code", $annee);
-        $stmt->bindValue(":user_code", $user);
+        $stmt->bindValue(':etablissement_code', $etablissement);
+        $stmt->bindValue(':annee_code', $annee);
+        $stmt->bindValue(':zone_code', $zone);
+        $stmt->bindValue(':user_code', $user);
+
+        if (!empty($session)) {
+            $stmt->bindValue(':session_code', $session);
+        }
 
         $stmt->execute();
+
         return $stmt->fetchAll();
-    }
+    }   
 
         public function DataTableFetchInscriptionListe(array $likeParams, string $orderBy, string $orderDir, int $start = 0, int $limit = 10)
     {
@@ -326,29 +330,34 @@ class ClientModel extends Model
         return $data;
     }
 
-    public function getStatsInscriptionsForCommercial(string $etablissementCode, string $anneeCode, string $zoneCode, $userCode ): array
+    public function getStatsSouscriptionsForCommercial(string $etablissementCode, string $anneeCode, string $zoneCode, string $userCode, ?string $sessionCode = null ): array
     {
+        $data = [];
+        $params = ['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode, 'zone_code' => $zoneCode, 'user_code' => $userCode];
 
         try {
-            $sql = "SELECT 
-                        COUNT(*) as total,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN 1 ELSE 0 END), 0) as valide,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN 1 ELSE 0 END), 0) as solde,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN 1 ELSE 0 END), 0) as reconduite,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN 1 ELSE 0 END), 0) as annule,
-                        COALESCE(SUM(p.montant_pack), 0) as montant_total,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'valide' THEN p.montant_pack ELSE 0 END), 0) as montant_valide,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'solde' THEN p.montant_pack ELSE 0 END), 0) as montant_solde,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'reconduite' THEN p.montant_pack ELSE 0 END), 0) as montant_reconduite,
-                        COALESCE(SUM(CASE WHEN ins.statut_inscription = 'annule' THEN p.montant_pack ELSE 0 END), 0) as montant_annule
-                    FROM " . TABLES::INSCRIPTIONS . " ins
-                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
-                    LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
-                    WHERE ins.etablissement_code = :etablissement_code AND ins.annee_code = :annee_code AND ins.zone_code = :zone_code AND ins.user_code = :user_code GROUP BY ins.code_inscription";
+            $sql = "SELECT COUNT(*) AS total,
+            COALESCE(SUM(CASE WHEN statut_inscription = 'valide' THEN 1 ELSE 0 END), 0) AS valide,
+            COALESCE(SUM(CASE WHEN statut_inscription = 'solde' THEN 1 ELSE 0 END), 0) AS solde,
+            COALESCE(SUM(CASE WHEN statut_inscription = 'reconduite' THEN 1 ELSE 0 END), 0) AS reconduite,
+            COALESCE(SUM(CASE WHEN statut_inscription = 'annule' THEN 1 ELSE 0 END), 0) AS annule,
+            COALESCE(SUM(montant_inscription), 0) AS montant_total,
+            COALESCE(SUM(CASE WHEN statut_inscription = 'valide' THEN montant_inscription ELSE 0 END), 0) AS montant_valide,
+            COALESCE(SUM( CASE WHEN statut_inscription = 'solde' THEN montant_inscription ELSE 0 END), 0) AS montant_solde,
+            COALESCE(SUM( CASE WHEN statut_inscription = 'reconduite' THEN montant_inscription ELSE 0 END), 0) AS montant_reconduite,
+            COALESCE(SUM( CASE WHEN statut_inscription = 'annule' THEN montant_inscription ELSE 0 END), 0) AS montant_annule
+            FROM ".TABLES::VUE_TOTAL_INSCRIPTION_PACK." WHERE etablissement_code = :etablissement_code AND annee_code = :annee_code AND zone_code = :zone_code AND user_code = :user_code";
+
+             // Filtre session facultatif
+            if (!empty($sessionCode)) {
+                $sql .= " AND session_code = :session_code";
+                $params['session_code'] =$sessionCode;
+            }
+
 
             $stmt = $this->db->prepare($sql);
 
-            $stmt->execute(['etablissement_code' => $etablissementCode, 'annee_code' => $anneeCode, 'zone_code' => $zoneCode, 'user_code' => $userCode]);
+            $stmt->execute($params);
             if($stmt->rowCount() > 0){
                 $data = $stmt->fetch();
             }
@@ -359,7 +368,86 @@ class ClientModel extends Model
         return $data;
     }
 
-      public function getStatsInscriptions(string $etablissementCode, string $anneeCode, string $zoneCode, string $dateDebut, string $dateFin ): array
+    public function getInscriptionDetail(string $inscriptionCode, string $etablissementCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT ins.*, cl.*, se.libelle_session, an.libelle_annee, zo.libelle_zone, u.nom_user, u.prenom_user
+                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+                    JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
+                    JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
+                    LEFT JOIN " . TABLES::USERS . " u ON u.code_user = ins.user_code
+                    WHERE ins.code_inscription = :inscription_code
+                      AND ins.etablissement_code = :etablissement_code
+                    LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['inscription_code' => $inscriptionCode, 'etablissement_code' => $etablissementCode]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getPackArticlesByInscription(string $inscriptionCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT pi.*, p.libelle_pack, p.montant_pack, p.code_pack,
+                           pa.quantite_article, pa.article_code, a.libelle_article
+                    FROM " . TABLES::PACK_INSCRIPTIONS . " pi
+                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code
+                    JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
+                    LEFT JOIN " . TABLES::PACK_ARTICLES . " pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
+                    LEFT JOIN " . TABLES::ARTICLES . " a ON a.code_article = pa.article_code
+                    WHERE ins.code_inscription = :inscription_code
+                    ORDER BY pi.created_at_pack_inscription DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['inscription_code' => $inscriptionCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getCautionsByInscription(string $inscriptionCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    WHERE c.inscription_code = :inscription_code
+                    ORDER BY c.created_at_cautisation_client DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['inscription_code' => $inscriptionCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getDistributionsByInscription(string $inscriptionCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT d.*
+                    FROM " . TABLES::DISTRIBUTIONS . " d
+                    WHERE d.inscription_code = :inscription_code
+                    ORDER BY d.created_at_distribution DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['inscription_code' => $inscriptionCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getStatsInscriptions(string $etablissementCode, string $anneeCode, string $zoneCode, string $dateDebut, string $dateFin ): array
     {
 
         try {
