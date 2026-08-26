@@ -57,9 +57,8 @@
                     </div>
                     <div class="tab-pane fade " id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <div class="row pb-4">
-                           
+
                             <div class="col-md-12 mb-3 d-flex justify-content-end">
-                               
 
                                 <button type="button" id="btn_session_addModal"
                                     class="btn btn-primary  text-uppercase" title="Ajouter session"
