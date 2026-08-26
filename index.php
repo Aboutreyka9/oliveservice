@@ -209,6 +209,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
     /**
      * Page not found
      */
+    $router->get('test', [HomeController::class, 'test']);
     $router->get('page-not-found', [ControllerException::class, 'notFound']);
 
     /**

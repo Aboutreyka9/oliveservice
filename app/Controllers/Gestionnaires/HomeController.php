@@ -109,4 +109,8 @@ class HomeController extends MainController
 
         // return $this->view('welcome', ['title' => "Mon espace"]);
     }
+
+    public function test(){
+         return $this->view('test/show', []);
+    }
 }

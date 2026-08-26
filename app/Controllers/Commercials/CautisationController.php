@@ -168,12 +168,14 @@ class CautisationController extends MainController
         $_POST = sanitizePostData($_POST);
         $search = trim($_POST['search'] ?? '');
         $etablissementCode = Auth::user('etablissement_code');
+        $anneeCode = Auth::user('annee_code');
+        $userCode = Auth::user('id');
 
         if (empty($search)) {
             Response::error('Veuillez saisir un terme de recherche');
         }
 
-        $clients = $this->clientModel->searchClients($search, $etablissementCode);
+        $clients = $this->clientModel->searchClients($search, $etablissementCode,$anneeCode,$userCode);
         Response::success('', ['clients' => $clients]);
     }
 
@@ -198,14 +200,16 @@ class CautisationController extends MainController
 
         $v = new Validator();
         $v->required('inscription_code', $inscription_code, 'Souscription')
+          ->required('mode_paiement', $mode_paiement, 'Mode paiement')
           ->required('montant_cautisation', $montant_cautisation, 'Montant')
           ->digit('montant_cautisation', $montant_cautisation, 'Montant')
-          ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
+          ->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre jours cautisation')
+          ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre jours cautisation');
 
-        if ($mode_calcul === 'jours') {
-            $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
-              ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
-        }
+        // if ($mode_calcul === 'jours') {
+        //     $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
+        //       ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
+        // }
 
         if ($v->fails()) {
             Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);

@@ -485,13 +485,14 @@ class ClientModel extends Model
         return $data;
     }
 
-        public function searchClients(string $search, string $etablissementCode): array
+        public function searchClients(string $search, string $etablissementCode,$anneeCode,$userCode): array
     {
         $data = [];
         try {
             $sql = "SELECT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client, cl.lieu_residence_client
                     FROM " . TABLES::CLIENTS . " cl
-                    WHERE cl.etablissement_code = :etablissement_code
+                    JOIN ". TABLES::INSCRIPTIONS ." ins ON ins.client_code = cl.code_client AND ins.user_code = :user_code AND ins.annee_code = :annee_code
+                    WHERE cl.etablissement_code = :etablissement_code 
                       AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR cl.code_client LIKE :search)
                     ORDER BY cl.nom_client ASC
                     LIMIT 20";
@@ -505,6 +506,8 @@ class ClientModel extends Model
                     // ORDER BY cl.nom_client ASC
                     // LIMIT 20";
             $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":user_code", $userCode);
+            $stmt->bindValue(":annee_code", $anneeCode);
             $stmt->bindValue(":etablissement_code", $etablissementCode);
             $stmt->bindValue(":search", "%$search%", PDO::PARAM_STR);
             $stmt->execute();
