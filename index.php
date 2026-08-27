@@ -1,5 +1,7 @@
 <?php
 
+use App\Controllers\Commercials\CautisationController;
+
 // if (session_status() === PHP_SESSION_NONE) {
 session_name("APP545645465654_SESSION");
 session_start();
@@ -12,9 +14,6 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\Gestionnaires\ActiviteController;
-use App\Controllers\Gestionnaires\BoutiqueController;
-use App\Controllers\Gestionnaires\CautisationController;
-use App\Controllers\Gestionnaires\ClientController;
 use App\Controllers\Gestionnaires\CommercialController;
 use App\Controllers\Gestionnaires\ControllerException;
 use App\Controllers\Gestionnaires\DistributionController;
@@ -155,7 +154,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
         $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeInscription']);
         $router->get('clients/liste', [CommercialsClientController::class, 'liste']);
         $router->get('clients/profile/{code}', [CommercialsClientController::class, 'profile'], ['before' => 'auth']);
-        $router->get('souscriptions/detail/{code}', [CommercialsClientController::class, 'inscriptionDetail'], ['before' => 'auth']);
+        $router->get('souscription/detail/{code}', [CommercialsClientController::class, 'inscriptionDetail'], ['before' => 'auth']);
         $router->get('cautions', [CautisationController::class, 'liste']);
         $router->get('cautions/encaisser', [CautisationController::class, 'encaisser']);
     });
@@ -176,7 +175,8 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
         // <!-- parametrage -->
         $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);
-        $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
+        $router->get('annees', [SettingController::class, 'annee'], ['before' => 'admin|super']);
+        $router->get('sessions', [SettingController::class, 'session'], ['before' => 'admin|super']);
 
       
 
@@ -210,6 +210,7 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
     /**
      * Page not found
      */
+    $router->get('test', [HomeController::class, 'test']);
     $router->get('page-not-found', [ControllerException::class, 'notFound']);
 
     /**

@@ -18,6 +18,7 @@ const APP = {
     packSelected: [],
 
     montantPackSelected: 0,
+    selectedInscriptionForEncaissement : null,
 
     dataCheck: [],
 
@@ -1999,7 +2000,7 @@ function ajouterFonction() {
 
             }
 
-        })
+        });
 
     });
 
@@ -2612,10 +2613,7 @@ function changeStatutService(code, statut) {
 
 
 /** DEBUT SECTION ANNEE */
-
-loadDataTableMany('data-table-annee', '.session-annee', '#data-table-annee', 'charger_data_annees');
-
-
+loadDataTable('data-table-annee', '#data-table-annee', 'charger_data_annees');
 
 openModalAddAnnee();
 
@@ -2980,16 +2978,12 @@ function changeStatutAnnee(code, statut) {
 /** FIN SECTION ANNEE */
 
 
+/** DEBUT SECTION SESSION */
 
 
+loadDataTable('data-table-session', '#data-table-session', 'charger_data_sessions');
 
-
-
-/** DEBUT SECTION SEMESTRES */
-
-
-
-loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
+// loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
 
 
 
@@ -3652,13 +3646,13 @@ function updatedZone() {
 
 
 
-function changeStatutSemestre(code, statut) {
+function changeStatutZone(code, statut) {
 
     swal({
 
         title: "Notification",
 
-        text: "Voulez-vous vraiment modifier le statut de cette session?",
+        text: "Voulez-vous vraiment modifier le statut de cette zone?",
 
         icon: "warning",
 
@@ -3690,11 +3684,11 @@ function changeStatutSemestre(code, statut) {
 
                     data: {
 
-                        action: 'change_statut_sessions',
+                        action: 'change_statut_zones',
 
-                        code_session: code,
+                        code_zone: code,
 
-                        statut_session: statut
+                        statut_zone: statut
 
                     },
 
@@ -7039,7 +7033,465 @@ $(document).ready(function() {
 
 /** FIN SECTION RESOUSCRIPTION */
 
+// ENCAISSER COMMERCIAL
 
+encaisseCotisationClient();
+function encaisseCotisationClient() { 
+
+            // $('#div_nombre_jours').hide();
+
+        $(document).on('click','#btn_search_client',function() {
+            searchClient();
+        });
+        
+        $(document).on('keypress','#search_client',function(e) {
+            if (e.which == 13) {
+                searchClient();
+            }
+        });
+        
+        $(document).on("input", ".montant_cautisation:visible", function () {
+
+            const nombreJours = calculerNombreJours();
+
+            if (nombreJours > 0) {
+                calculerDateProchainPaiement();
+            }
+
+        });
+
+        $(document).on("input", ".nombre_jours_cautisation:visible", function () {
+
+            calculerMontantDepuisJours();
+            calculerDateProchainPaiement();
+
+        });
+
+        // $(document).on('change','#periode_debut',function() {
+        //     var debut = $(this).val();
+        //     if (debut && $('#nombre_jours_cautisation').val()) {
+        //         var jours = parseInt($('#nombre_jours_cautisation').val());
+        //         var dateFin = new Date(debut);
+        //         dateFin.setDate(dateFin.getDate() + jours - 1);
+        //         $('#periode_fin').val(dateFin.toISOString().split('T')[0]);
+        //     }
+        // });
+        
+        // $(document).on('change','#periode_fin',function() {
+        //     var fin = $(this).val();
+        //     if (fin && $('#periode_debut').val()) {
+        //         var debut = new Date($('#periode_debut').val());
+        //         var dateFin = new Date(fin);
+        //         var diffTime = Math.abs(dateFin - debut);
+        //         var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        //         $('#nombre_jours_cautisation').val(diffDays);
+        //         calculerMontant();
+        //     }
+        // });
+
+        $(document).on('submit','#frmEncaissement',function(e) {
+            e.preventDefault();
+            var formData = $(this).serializeArray();
+            formData.push(
+                {name: 'action', value: 'btn_save_encaissement'},
+                {name: 'nombre_jours_cautisation', value: $(".nombre_jours_cautisation:visible").val()},
+                {name: 'montant_cautisation', value: $(".montant_cautisation:visible").val()}
+            );
+
+            $.ajax({
+
+                method: "POST",
+                url: APP.ajax,
+                data: formData,
+                // dataType: "JSON",
+                beforeSend: function () {},
+                success: function (data) {
+                    console.log(data);
+                    return
+                    
+                if (data.success) {
+                    alert(data.message);
+                    $('#encaissement-modal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+                }
+            });
+            
+        
+        });
+
+    }
+
+    function toggleModeCalcul() {
+        var mode = $('#mode_calcul').val();
+        if (mode === 'jours') {
+            $('#div_nombre_jours').toggleClass('d-none');
+            $('#div_montant').toggleClass('d-none');
+        } else {
+            $('#div_nombre_jours').toggleClass('d-none');
+            $('#div_montant').toggleClass('d-none');
+        }
+    }
+
+    function calculerMontanttest() {
+        var jours = parseInt($('#nombre_jours_cautisation').val()) || 0;
+        var montant = jours * APP.selectedInscriptionForEncaissement.montant_journalier;
+        $('#montant_cautisation').val(montant);
+        $('#jours_calcules').text(jours);
+        html += '<strong>Total payé:</strong> ' + totalPaye.toLocaleString('fr-FR') + ' FCFA<br>';
+        $('#montant_calcule').text(montant.toLocaleString('fr-FR') + ' FCFA');
+        
+        if (jours > 0 && APP.selectedInscriptionForEncaissement.montant_journalier > 0) {
+            var debut = $('#periode_debut').val();
+            if (debut) {
+                var dateFin = new Date(debut);
+                dateFin.setDate(dateFin.getDate() + jours - 1);
+                $('#periode_fin').val(dateFin.toISOString().split('T')[0]);
+            }
+        }
+    }
+
+    function calculerJourstest() {
+        var html = '';
+        var montant = parseFloat($('#montant_cautisation').val()) || 0;
+        var jours = APP.selectedInscriptionForEncaissement.montant_journalier > 0 ? Math.ceil(montant / APP.selectedInscriptionForEncaissement.montant_journalier) : 0;
+        $('#nombre_jours_cautisation').val(jours);
+        $('#jours_calcules').text(jours);
+        html += '<strong>Total payé:</strong> ' + totalPaye.toLocaleString('fr-FR') + ' FCFA<br>';
+        $('#montant_calcule').text(montant.toLocaleString('fr-FR') + ' FCFA');
+        
+        if (jours > 0) {
+            var debut = $('#periode_debut').val();
+            if (debut) {
+                var dateFin = new Date(debut);
+                dateFin.setDate(dateFin.getDate() + jours - 1);
+                $('#periode_fin').val(dateFin.toISOString().split('T')[0]);
+            }
+        }
+    }
+
+    function loadInscriptions(clientCode) {
+
+        $.ajax({
+
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'get_souscriptions_client',
+                client_code: clientCode
+            },
+            dataType: "JSON",
+            beforeSend: function () {},
+            success: function (data) {
+                console.log(data);
+                
+            if (data.success && data.data.souscriptions.length > 0) {
+            var html = '<div class="card mt-3"><div class="card-header"><strong>Souscriptions actives</strong></div><div class="card-body">';
+                html += '<div class="table-responsive"><table class="table table-hover"><thead><tr><th>Session</th><th>Année</th><th>Zone</th><th>Montant pack</th><th>Total payé</th><th>Reste dû</th><th>Montant journalier</th><th>Action</th></tr></thead><tbody>';
+                
+                data.data.souscriptions.forEach(function(ins) {
+                    var montantPack = parseFloat(ins.montant_pack) || 0;
+                    var totalPaye = parseFloat(ins.total_paye_valide) || 0;
+                    var reste = Math.max(0, montantPack - totalPaye);
+                    var montantJournalier = ins.duree_jours_pack > 0 ? Math.ceil(montantPack / ins.duree_jours_pack) : 0;
+                    var joursRestants = montantJournalier > 0 ? Math.ceil(reste / montantJournalier) : 0;
+                    
+                    html += '<tr>';
+                    html += '<td>' + ins.libelle_session + '</td>';
+                    html += '<td>' + ins.libelle_annee + '</td>';
+                    html += '<td>' + ins.libelle_zone + '</td>';
+                    html += '<td>' + montantPack.toLocaleString('fr-FR') + ' FCFA</td>';
+                    html += '<td>' + totalPaye.toLocaleString('fr-FR') + ' FCFA</td>';
+                    html += '<td class="text-danger">' + reste.toLocaleString('fr-FR') + ' FCFA</td>';
+                    html += '<td>' + montantJournalier.toLocaleString('fr-FR') + ' FCFA/jour</td>';
+                    html += '<td><button class="btn btn-primary btn-sm" onclick="openEncaissementModal(\'' + ins.code_inscription + '\', \'' + ins.nom_client + '\', ' + montantPack + ', ' + totalPaye + ', ' + reste + ', ' + montantJournalier + ', ' + (ins.duree_jours_pack || 0) + ')"><i class="fas fa-money-bill-wave"></i> Encaisser</button></td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table></div></div></div>';
+                $('#search_results').append(html);
+            }else {
+                $('#search_results').append('<div class="alert alert-warning mt-3">Aucune souscription active pour ce client</div>');
+            }
+            },
+            error: function (data) {}
+
+        });
+
+    }
+
+    function searchClient() {
+        var search = $('#search_client').val();
+        if (search.length < 2) {
+            $('#search_results').html('<div class="alert alert-warning">Veuillez saisir au moins 2 caractères</div>');
+            return;
+        }
+
+        $.ajax({
+
+            method: "POST",
+            url: APP.ajax,
+            data: {
+                action: 'search_client_cautisation',
+                search: search
+            },
+            dataType: "JSON",
+            beforeSend: function () {},
+            success: function (data) {
+                // console.log(data);
+                // return;
+                
+
+                if (data.success && data.data.clients.length > 0) {
+                            var html = '<div class="list-group">';
+
+                    data.data.clients.forEach(function(client) {
+                        html += '<div class="list-group-item list-group-item-action" data-code="' + client.code_client + '" data-nom="' + client.nom_client + '" data-telephone="' + client.telephone_client + '">';
+                        html += '<strong>' + client.nom_client + '</strong> - ' + client.telephone_client;
+                        html += '<br><small class="text-muted">Code: ' + client.code_client + ' | ' + client.sexe_client + ' | ' + (client.lieu_residence_client || '-') + '</small>';
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+
+                    $('#search_results').html(html);
+
+                    $('.list-group-item').click(function() {
+                        var code = $(this).data('code');
+                        var nom = $(this).data('nom');
+                        $('#selected_client').val(code);
+                        $('#selected_client_nom').val(nom);
+                        $('#search_results').html('<div class="alert alert-success"><i class="fas fa-check"></i> Client sélectionné: <strong>' + nom + '</strong> (' + code + ')</div>');
+                        loadInscriptions(code);
+                    });
+
+                    // $.notify(data.message, "success");
+
+                    // $("#fonction-modal").modal("hide");
+
+                } else {
+                    $('#search_results').html('<div class="alert alert-info">Aucun client trouvé</div>');
+
+                    $.notify(data.message);
+
+                }
+
+            },error:function(){}
+
+            });
+    }
+
+    function openEncaissementModal(codeIns, nomClient, montantPack, totalPaye, reste, montantJournalier, dureeJours) {
+        APP.selectedInscriptionForEncaissement = {
+            code: codeIns,
+            nom_client: nomClient,
+            montant_pack: montantPack,
+            total_paye: totalPaye,
+            reste: reste,
+            montant_journalier: montantJournalier,
+            duree_jours: dureeJours
+        };
+
+        var html = `
+        <form id="frmEncaissement">
+        <input type="hidden" name="inscription_code" value="${codeIns}">
+        <div class="row mb-3">
+        <div class="col-md-12"><strong>Client: ${nomClient}</strong></div>
+        <div class="col-md-12 mt-2"><div class="alert alert-info">
+        <strong>Montant Total session:</strong> 10${montantPack.toLocaleString('fr-FR')} FCFA<br>
+        <strong>Total payé:</strong> ${totalPaye.toLocaleString('fr-FR')} FCFA<br>
+        <strong>Reste dû:</strong> <span class="text-danger"> 10${reste.toLocaleString('fr-FR')} FCFA</span><br>
+        <strong>Cautisation :</strong> 500${montantJournalier.toLocaleString('fr-FR')} FCFA<br>
+        <strong>Jours restants estimés:</strong> 0/178 jours
+        // <strong>Jours restants estimés:</strong> ' + (montantJournalier > 0 ? Math.ceil(reste / montantJournalier) : 0) + ' jours
+        </div></div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12 mb-3">
+            <label for="periode_fin" class="form-label">Montant cautisation</label>
+            <input type="number" readonly class="form-control" value="500" id="" name="">
+            </div>
+        
+        <div class="col-md-6 ">
+        <label class="form-label">Mode de calcul <strong class="text-danger">*</strong></label>
+        <select class="form-control" id="mode_calcul" name="mode_calcul" onchange="toggleModeCalcul()" required>
+        <option value="montant">Par montant</option>
+        <option value="jours">Par nombre de jours</option>
+        </select>
+        </div>
+         <div class="col-md-6 mb-3">
+        <label for="mode_paiement" class="form-label">Mode paiement  <strong class="text-danger">*</strong></label>
+         <select class="form-control" id="mode_paiement" name="mode_paiement"  required>
+        <option value="En especes">EN ESPECES</option>
+        <option value="Mobile money">MOBILE MONEY</option>
+        </select>
+        </div>
+        </div>
+        
+        <div class="row mb-3 d-none" id="div_nombre_jours">
+        <div class="col-md-12">
+        <label for="nombre_jours_cautisation" class="form-label">Nombre de jours <strong class="text-danger">*</strong></label>
+        <input type="number" class="form-control nombre_jours_cautisation id="nombre_jours_cautisation" name="nombre_jours_cautisation" min="1" max="' + (dureeJours || 178) + '" onchange="calculerMontant()">
+        <small class="text-muted text-danger">Max: ' + (dureeJours || 365) + ' jours</small>
+        </div>
+
+          <div class="col-md-6">
+        <label for="montant" class="form-label">Montant à encaissé (FCFA)</label>
+        <input readonly type="number" class="form-control montant_cautisation" id="" name="">
+        </div>
+
+         <div class="col-md-6">
+        <label for="periode_debut" class="form-label">Date RDV</label>
+        <input readonly type="date" class="form-control date_rdv" id="date_rdv" name="date_rdv">
+        </div>
+        </div>
+        
+        <div class="row mb-3" id="div_montant">
+        <div class="col-md-12">
+        <label for="montant_cautisation" class="form-label">Montant à encaissé (FCFA) <strong class="text-danger">*</strong></label>
+        <input type="number" class="form-control montant_cautisation" id="montant_cautisation" name="montant_cautisation" min="1" max="' + reste + '" onchange="calculerJours()">
+        <small class="text-muted text-danger">Max: 10${reste.toLocaleString('fr-FR')} FCFA</small>
+        </div>
+
+         <div class="col-md-6">
+        <label for="nombre_jours" class="form-label">Nombre jours</label>
+        <input readonly type="number" class="form-control nombre_jours_cautisation" id="nombre_jours" name="nombre_jours">
+        </div>
+
+         <div class="col-md-6">
+        <label for="date_rdv" class="form-label">Date RDV</label>
+        <input readonly type="date" class="form-control date_rdv" id="date_rdv" name="date_rdv">
+        </div>
+
+        </div>
+        
+       
+        <div class="row mt-4">
+        <div class="col-md-12 alert alert-warning" id="info_calcul">
+        <strong>Calcul:</strong> ${montantJournalier.toLocaleString('fr-FR')} FCFA/jour * <span id="jours_calcules">0</span> jours = <strong id="montant_calcule">0</strong> FCFA
+        </div>
+        </div>
+        
+        <div class="row mb-3">
+        <div class="col-md-12 modal_footer">
+        <input type="hidden" name="action" value="btn_save_encaissement">
+        <input type="hidden" name="csrf_token" value="">
+        <button type="submit" class="btn btn-primary" id="btnSubmitFormEncaissement">
+        <i class="fas fa-save"></i> &nbsp; Enregistrer
+        </button>
+        <button type="button" class="btn btn-light dismiss_modal">Fermer</button>
+        </div>
+        </div>
+        </form>`;
+        
+        $('.data-encaissement-modal').html(html);
+        $('#encaissement-modal').modal('show');
+    }
+
+    function calculerNombreJours() {
+
+        // APP.selectedInscriptionForEncaissement = {
+        //     code: codeIns,
+        //     nom_client: nomClient,
+        //     montant_pack: montantPack,
+        //     total_paye: totalPaye,
+        //     reste: reste,
+        //     montant_journalier: montantJournalier,
+        //     duree_jours: dureeJours
+        // };
+
+    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const montantPaye = Number($(".montant_cautisation:visible").val()) || 0;
+
+    $(".nombre_jours_cautisation:visible").val("");
+    $(".date_rdv:visible").val("");
+    $(".montant-error:visible").text("");
+
+    if (montantJournalier <= 0 || montantPaye <= 0) {
+        return 0;
+    }
+
+    if (montantPaye % montantJournalier !== 0) {
+
+        $(".montant_cautisation:visible").addClass("is-invalid");
+
+        $(".montant-error:visible").text(
+            `Le montant doit être un multiple de ${montantJournalier.toLocaleString("fr-FR")} FCFA.`
+        );
+
+        return 0;
+    }
+
+    $(".montant_cautisation:visible").removeClass("is-invalid");
+
+    const nombreJours = montantPaye / montantJournalier;
+
+    $(".nombre_jours_cautisation:visible").val(nombreJours);
+
+    return nombreJours;
+    }
+
+    function calculerDateProchainPaiement() {
+
+    const nombreJours = Number($(".nombre_jours_cautisation:visible").val()) || 0;
+
+    if (nombreJours <= 0) {
+        $(".date_rdv:visible").val("");
+        return "";
+    }
+
+    const dateProchainPaiement = moment()
+        .add(nombreJours, "days")
+        .format("YYYY-MM-DD");
+
+    $(".date_rdv:visible").val(dateProchainPaiement);
+
+    return dateProchainPaiement;
+    }
+
+    function calculerDepuisNombreJoursTest() {
+
+    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const nombreJours = Number($("#nombre_jours").val()) || 0;
+
+    if (montantJournalier <= 0 || nombreJours <= 0) {
+        $(".montant_cautisation:visible").val("");
+        $(".date_rdv:visible").val("");
+        return;
+    }
+
+    // Montant à encaisser
+    const montant = montantJournalier * nombreJours;
+
+    $(".montant_cautisation:visible").val(montant);
+
+    // Date du prochain RDV
+    const dateRdv = moment()
+        .add(nombreJours, "days")
+        .format("YYYY-MM-DD");
+
+    $(".date_rdv:visible").val(dateRdv);
+}
+
+function calculerMontantDepuisJours() {
+
+    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const nombreJours = Number($(".nombre_jours_cautisation:visible").val()) || 0;
+
+    if (montantJournalier <= 0 || nombreJours <= 0) {
+        $(".montant_cautisation:visible").val("");
+        return 0;
+    }
+
+    const montant = montantJournalier * nombreJours;
+
+    $(".montant_cautisation:visible").val(montant);
+
+    return montant;
+}
 
 
 // SEXION FILTER DATA
@@ -7161,6 +7613,167 @@ function initDateRangeFilterDepense(startDate, endDate) {
 
 
 
+
+
+$(function() {
+    const $selects = $('.chk-select-all');
+    const $checkboxes = $('.chk-caution');
+    const $montantDispo = $('#enc_montant_disponible');
+    let montantTotalDispo = 0;
+
+    // Calcul du montant disponible
+    function updateMontantDisponible() {
+        montantTotalDispo = 0;
+        $('.chk-caution:checked').each(function() {
+            montantTotalDispo += parseInt($(this).data('restant')) || 0;
+        });
+        $montantDispo.text(addSeparator(montantTotalDispo) + ' FCFA');
+        $('#enc_montant').attr('max', montantTotalDispo);
+        const codes = [];
+        $('.chk-caution:checked').each(function() {
+            codes.push($(this).data('code'));
+        });
+        $('#enc_selected_cautions').val(JSON.stringify(codes));
+    }
+
+    function addSeparator(nbr) {
+        nbr += '';
+        let sep = '';
+        let partie1 = '';
+        let partie2 = '';
+        if (nbr.length > 3) {
+            partie1 = nbr.slice(0, (nbr.length % 3));
+            if (partie1.length === 0 && nbr.length > 0) {
+                partie1 = nbr.slice(0, 3);
+            }
+            for (let i = 0; i < Math.floor(nbr.length / 3); i++) {
+                if (i === 0 && nbr.length % 3 === 0) {
+                    sep = '';
+                } else {
+                    sep += ' ';
+                }
+                partie2 = sep + nbr.slice(partie1.length + (i * 3) - (nbr.length % 3 || 3), partie1.length + (i + 1) * 3 - (nbr.length % 3 || 3));
+            }
+        }
+        return (partie1 + (partie2 || '')).trim();
+    }
+
+    $selects.on('change', function() {
+        const check = this.checked;
+        $checkboxes.prop('checked', check);
+        $('.btn-encaisser-row').prop('disabled', check);
+        updateMontantDisponible();
+    });
+
+    $checkboxes.on('change', function() {
+        $selects.prop('checked', $checkboxes.length === $('.chk-caution:checked').length);
+        updateMontantDisponible();
+    });
+
+    // Ouvrir le modal en sélectionnant une ligne directement
+    $('.btn-encaisser-row').on('click', function() {
+        const inscription = $(this).data('inscription');
+        const restant = parseInt($(this).data('restant')) || 0;
+        const code = $(this).data('code');
+
+        $checkboxes.prop('checked', false);
+        $selects.prop('checked', false);
+
+        const $cb = $('.chk-caution[data-code="' + code + '"]');
+        $cb.prop('checked', true);
+        $('.btn-encaisser-row').prop('disabled', false);
+
+        const items = '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+            '<span>' + inscription + '</span>' +
+            '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
+            '</li>';
+        $('#enc_caution_items').html(items);
+
+        $checkboxes.not($cb).prop('disabled', true);
+        updateMontantDisponible();
+        $('#enc_montant').val(restant);
+
+        $('#encaissement-modal').modal('show');
+    });
+
+    // Ouvrir le modal en sélectionnant les cautions cochées
+    $('#btn_encaisser_select').on('click', function() {
+        const checked = $('.chk-caution:checked');
+        if (checked.length === 0) {
+            swal("Attention", "Veuillez sélectionner au moins une caution à encaisser.", "warning");
+            return false;
+        }
+
+        let items = '';
+        let total = 0;
+        checked.each(function() {
+            const inscription = $(this).data('inscription');
+            const restant = parseInt($(this).data('restant')) || 0;
+            total += restant;
+            items += '<li class="list-group-item d-flex justify-content-between align-items-center">' +
+                '<span>' + inscription + '</span>' +
+                '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
+                '</li>';
+        });
+        $('#enc_caution_items').html(items);
+
+        updateMontantDisponible();
+        $('#enc_montant').val(total);
+        $checkboxes.prop('disabled', true);
+
+        $('#encaissement-modal').modal('show');
+    });
+
+    // Reset du modal à la fermeture
+    $('#encaissement-modal').on('hidden.bs.modal', function() {
+        $checkboxes.prop('disabled', false);
+        $checkboxes.prop('checked', false);
+        $selects.prop('checked', false);
+        montantTotalDispo = 0;
+        $montantDispo.text('0 FCFA');
+        $('#enc_caution_items').html('');
+        $('#enc_selected_cautions').val('');
+        $('#enc_montant').val('');
+        $('#enc_moyen').val('').trigger('change');
+        $('#enc_reference').val('');
+    });
+
+    // Soumission du formulaire (demo)
+    $('#form-encaissement').on('submit', function(e) {
+        e.preventDefault();
+        const montant = parseInt($('#enc_montant').val()) || 0;
+        if (montant <= 0) {
+            swal("Erreur", "Veuillez saisir un montant valide.", "error");
+            return false;
+        }
+        const moyen = $('#enc_moyen').val();
+        if (!moyen) {
+            swal("Erreur", "Veuillez sélectionner un moyen de paiement.", "error");
+            return false;
+        }
+
+        swal({
+            title: "Confirmation",
+            text: "Encaisser " + addSeparator(montant) + " FCFA ?",
+            icon: "info",
+            buttons: ["Annuler", "Confirmer"],
+            dangerMode: false
+        }).then((confirm) => {
+            if (confirm) {
+                $.post($(this).attr('action'), $(this).serialize(), function(resp) {
+                    if (resp && resp.success) {
+                        swal("Succès", resp.message || "Encaissement effectué.", "success").then(() => {
+                            $('#encaissement-modal').modal('hide');
+                            location.reload();
+                        });
+                    } else {
+                        swal("Erreur", (resp && resp.message) || "Une erreur est survenue.", "error");
+                    }
+                }, 'json');
+            }
+        });
+    });
+});
 
 
 

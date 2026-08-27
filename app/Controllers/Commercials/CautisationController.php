@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Gestionnaires;
+namespace App\Controllers\Commercials;
 
 use App\Core\Auth;
 use App\Core\MainController;
@@ -8,17 +8,20 @@ use App\Helpers\HttpStatusCode;
 use App\Helpers\Response;
 use App\Helpers\Validator;
 use App\Models\CautisationModel;
+use App\Models\ClientModel;
 use App\Services\CautisationService;
 use TABLES;
 
 class CautisationController extends MainController
 {
     private CautisationModel $cautisationModel;
+    private ClientModel $clientModel;
     private CautisationService $cautisationService;
 
     public function __construct()
     {
         parent::__construct();
+        $this->clientModel = new ClientModel();
         $this->cautisationModel = new CautisationModel();
         $this->cautisationService = new CautisationService();
     }
@@ -157,7 +160,7 @@ class CautisationController extends MainController
 
     public function encaisser()
     {
-        $this->view('gestionnaires/cautions/encaisser', ['title' => "Encaisser caution"]);
+        $this->view('commercials/cautions/encaisser', ['title' => "Encaisser caution"]);
     }
 
     public function searchClient()
@@ -165,12 +168,14 @@ class CautisationController extends MainController
         $_POST = sanitizePostData($_POST);
         $search = trim($_POST['search'] ?? '');
         $etablissementCode = Auth::user('etablissement_code');
+        $anneeCode = Auth::user('annee_code');
+        $userCode = Auth::user('id');
 
         if (empty($search)) {
             Response::error('Veuillez saisir un terme de recherche');
         }
 
-        $clients = $this->cautisationModel->searchClients($search, $etablissementCode);
+        $clients = $this->clientModel->searchClients($search, $etablissementCode,$anneeCode,$userCode);
         Response::success('', ['clients' => $clients]);
     }
 
@@ -195,14 +200,16 @@ class CautisationController extends MainController
 
         $v = new Validator();
         $v->required('inscription_code', $inscription_code, 'Souscription')
+          ->required('mode_paiement', $mode_paiement, 'Mode paiement')
           ->required('montant_cautisation', $montant_cautisation, 'Montant')
           ->digit('montant_cautisation', $montant_cautisation, 'Montant')
-          ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
+          ->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre jours cautisation')
+          ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre jours cautisation');
 
-        if ($mode_calcul === 'jours') {
-            $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
-              ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
-        }
+        // if ($mode_calcul === 'jours') {
+        //     $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
+        //       ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
+        // }
 
         if ($v->fails()) {
             Response::error($v->errors(), HttpStatusCode::UNAUTHORIZED);

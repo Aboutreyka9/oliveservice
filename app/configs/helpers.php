@@ -456,6 +456,12 @@ function checkModePaiement(string $mode)
 }
 
 
+function badge(string $status,string $type= 'info')
+{
+    return '<span class="badge badge-statut statut-'.$type.'">  '.$status .' </span>';
+    return '<span class="badge badge-statut statut-'.$type.'"> ' . $status . ' </span>';
+}
+
 function checkStatusCommande(string $etat, array $data = STATUT_COMMANDE)
 {
     $result = "";

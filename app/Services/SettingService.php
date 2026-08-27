@@ -1206,23 +1206,16 @@ class SettingService
 
     {
 
-
-
         $i = 0;
 
         $data = [];
-
-
 
         foreach ($annees as $annee) {
 
             $i++;
 
-
-
             $etat = checkEtatData($annee['statut_annee']);
-
-
+            $libelle= badge($annee['libelle_annee']);
 
             $actions = '
 
@@ -1233,8 +1226,6 @@ class SettingService
             </button>
 
             <div class="dropdown-menu">
-
-
 
         <button class="dropdown-item " id="Modifier" onclick="modalUpdatedAnnee(\'' . $annee['code_annee'] . '\')" 
 
@@ -1282,14 +1273,13 @@ class SettingService
 
                 $etat,
 
-                $annee['libelle_annee'],
+                $libelle,
 
                 date_formater($annee['date_debut_annee']),
 
                 date_formater($annee['date_fin_annee']),
 
-                date_formater($annee['created_at_annee']),
-
+                $annee['taux_reconduction'],
                 $actions
 
             ];

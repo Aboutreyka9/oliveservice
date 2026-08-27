@@ -44,7 +44,7 @@ class FinanceController extends MainController
 
     public function Depense()
     {
-        $this->view('finances/depense', ['title' => "Depenses"]);
+        $this->view('gestionnaires/finances/depense', ['title' => "Depenses"]);
     }
 
 

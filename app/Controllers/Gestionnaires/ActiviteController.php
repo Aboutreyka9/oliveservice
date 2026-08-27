@@ -98,7 +98,7 @@ class ActiviteController extends MainController
 
     {
 
-        $this->view('activites/zone', ['title' => "Zone"]);
+        $this->view('gestionnaires/activites/zone', ['title' => "Zone"]);
 
     }
 
@@ -110,7 +110,7 @@ class ActiviteController extends MainController
 
     {
 
-        $this->view('activites/pack', ['title' => "Pack"]);
+        $this->view('gestionnaires/activites/pack', ['title' => "Pack"]);
 
     }
 
@@ -121,7 +121,7 @@ class ActiviteController extends MainController
         $pack = $this->activiteModel->getSinglePAckByCode($code);
         $articles = $this->activiteModel->getAllPAckArticles($code);
 
-        $this->view('activites/detail_pack_article', [
+        $this->view('gestionnaires/activites/detail_pack_article', [
             'title' => "Détails pack",
             'pack' => $pack,
             'articles' => $articles
@@ -132,7 +132,7 @@ class ActiviteController extends MainController
 
     {
 
-        $this->view('activites/categorie', ['title' => "Categories packs"]);
+        $this->view('gestionnaires/activites/categorie', ['title' => "Categories packs"]);
 
     }
 
@@ -142,7 +142,7 @@ class ActiviteController extends MainController
 
     {
 
-        $this->view('activites/article', ['title' => "Articles"]);
+        $this->view('gestionnaires/activites/article', ['title' => "Articles"]);
 
     }
 

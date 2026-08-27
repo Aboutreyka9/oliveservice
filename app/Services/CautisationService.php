@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Core\Auth;
+use App\Helpers\Validator;
 use App\Models\CautisationModel;
 use TABLES;
 
@@ -165,41 +166,38 @@ class CautisationService
     {
         extract($post);
 
-        $v = new Validator();
-        $v->required('inscription_code', $inscription_code, 'Souscription')
-          ->required('montant_cautisation', $montant_cautisation, 'Montant')
-          ->digit('montant_cautisation', $montant_cautisation, 'Montant')
-          ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
+        // $v = new Validator();
+        // $v->required('inscription_code', $inscription_code, 'Souscription')
+        //   ->required('montant_cautisation', $montant_cautisation, 'Montant')
+        //   ->digit('montant_cautisation', $montant_cautisation, 'Montant')
+        //   ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
 
-        if ($mode_calcul === 'jours') {
-            $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
-              ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
-        }
+        // if ($mode_calcul === 'jours') {
+        //     $v->required('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours')
+        //       ->digit('nombre_jours_cautisation', $nombre_jours_cautisation, 'Nombre de jours');
+        // }
 
-        if ($v->fails()) {
-            return ['success' => false, 'message' => implode(', ', $v->errors())];
-        }
+        // if ($v->fails()) {
+        //     return ['success' => false, 'message' => implode(', ', $v->errors())];
+        // }
 
         $code = $this->cautisationModel->generatorCode(TABLES::CAUTISATION_CLIENTS, 'code_cautisation_client');
 
         $montant = (int) $montant_cautisation;
         $nombreJours = $mode_calcul === 'jours' ? (int) $nombre_jours_cautisation : null;
-        $montantJournalier = $nombreJours > 0 ? round($montant / $nombreJours) : null;
+        // $montantJournalier = $nombreJours > 0 ? round($montant / $nombreJours) : null;
+        $date = date('Y-m-d H:i:s');
 
         $data = [
             'code_cautisation_client' => $code,
             'montant_cautisation_client' => $montant,
             'inscription_code' => $inscription_code,
-            'statut_cautisation_client' => 'En attente',
+            'statut_cautisation_client' => 'valide',
+            'mode_paiement' => $mode_paiement,
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
-            'created_at_cautisation_client' => date('Y-m-d H:i:s'),
-            'updated_at_cautisation_client' => date('Y-m-d H:i:s'),
-            'nombre_jours_cautisation' => $nombreJours,
-            'montant_journalier_cautisation' => $montantJournalier,
-            'periode_debut_cautisation' => $periode_debut ?? null,
-            'periode_fin_cautisation' => $periode_fin ?? null,
-            'mode_calcul_cautisation' => $mode_calcul,
+            'created_at_cautisation_client' => $date,
+            'nombre_jour' => $nombre_jours_cautisation,
         ];
 
         if (!$this->cautisationModel->create(TABLES::CAUTISATION_CLIENTS, $data)) {
@@ -208,7 +206,7 @@ class CautisationService
 
         return [
             'success' => true,
-            'message' => 'Cautisation enregistrée avec succès. En attente de validation.',
+            'message' => 'Cautisation enregistrée avec succès.',
         ];
     }
 }

@@ -396,12 +396,17 @@ class ClientModel extends Model
         $data = [];
         try {
             $sql = "SELECT pi.*, p.libelle_pack, p.montant_pack, p.code_pack,
-                           pa.quantite_article, pa.article_code, a.libelle_article
+                           pa.quantite_article, pa.article_code, 
+                           a.libelle_article, a.description_article,
+                           cp.libelle_categorie_pack,
+                           se.libelle_session
                     FROM " . TABLES::PACK_INSCRIPTIONS . " pi
                     JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                     LEFT JOIN " . TABLES::PACK_ARTICLES . " pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
                     LEFT JOIN " . TABLES::ARTICLES . " a ON a.code_article = pa.article_code
+                    LEFT JOIN " . TABLES::CATEGORIES . " cp ON cp.code_categorie_pack = p.categorie_pack_code
+                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     WHERE ins.code_inscription = :inscription_code
                     ORDER BY pi.created_at_pack_inscription DESC";
             $stmt = $this->db->prepare($sql);
@@ -477,6 +482,39 @@ class ClientModel extends Model
             die($e->getMessage());
         }
 
+        return $data;
+    }
+
+        public function searchClients(string $search, string $etablissementCode,$anneeCode,$userCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client, cl.lieu_residence_client
+                    FROM " . TABLES::CLIENTS . " cl
+                    JOIN ". TABLES::INSCRIPTIONS ." ins ON ins.client_code = cl.code_client AND ins.user_code = :user_code AND ins.annee_code = :annee_code
+                    WHERE cl.etablissement_code = :etablissement_code 
+                      AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR cl.code_client LIKE :search)
+                    ORDER BY cl.nom_client ASC
+                    LIMIT 20";
+
+                    // $sql = "SELECT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client, cl.lieu_residence_client
+                    // FROM " . TABLES::CLIENTS . " cl
+                    // JOIN " . TABLES::INSCRIPTIONS . " ins
+                    // WHERE ins.client_code = cl.code_client AND cl.etablissement_code = :etablissement_code
+                    //   AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR cl.code_client LIKE :search OR ins.code_inscription LIKE :search)
+                    //   GROUP BY ins.code_inscription
+                    // ORDER BY cl.nom_client ASC
+                    // LIMIT 20";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":user_code", $userCode);
+            $stmt->bindValue(":annee_code", $anneeCode);
+            $stmt->bindValue(":etablissement_code", $etablissementCode);
+            $stmt->bindValue(":search", "%$search%", PDO::PARAM_STR);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
         return $data;
     }
 }

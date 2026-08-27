@@ -97,7 +97,7 @@ class ClientController extends MainController
             }
         }
 
-        $this->view('commercials/clients/inscription_detail', $data);
+        $this->view('commercials/clients/souscription_detail', $data);
     }
 
     public function listeInscription()

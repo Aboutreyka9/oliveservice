@@ -299,7 +299,7 @@ class ClientService
                 </button>
                 <div class="dropdown-menu">
         
-            <a href="'.url('commercial/inscription-detals',['code' => $data['code_inscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
+            <a href="'.url('commercial/souscription/detail',['code' => $data['code_inscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
                 <i class="fa fa-eye text-icon-primary"></i> Voir details </a>
                 </div>
             </td>

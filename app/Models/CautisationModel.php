@@ -189,12 +189,11 @@ class CautisationModel extends Model
     public function getInscriptionsActivesByClient(string $clientCode, string $etablissementCode): array
     {
         $data = [];
-        return [];
         try {
             $sql = "SELECT ins.*, cl.nom_client, cl.telephone_client,
-                           se.libelle_session, an.libelle_annee, zo.libelle_zone,
-                           p.montant_pack, p.duree_jours_pack,
-                           COALESCE(SUM(CASE WHEN cc.statut_cautisation_client = 'valide' THEN cc.montant_cautisation_client ELSE 0 END), 0) as total_paye_valide
+                    se.libelle_session, an.libelle_annee, zo.libelle_zone,
+                     p.montant_pack, se.nombre_jour_session,
+                    COALESCE(SUM(CASE WHEN cc.statut_cautisation_client = 'valide' THEN cc.montant_cautisation_client ELSE 0 END), 0) as total_paye_valide
                     FROM " . TABLES::INSCRIPTIONS . " ins
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
@@ -203,13 +202,17 @@ class CautisationModel extends Model
                     JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                     LEFT JOIN " . TABLES::CAUTISATION_CLIENTS . " cc ON cc.inscription_code = ins.code_inscription
-                    WHERE ins.client_code = :client_code
-                      AND ins.etablissement_code = :etablissement_code
-                      AND ins.statut_inscription = 'valide'
+                    WHERE ins.etablissement_code = :etablissement_code
+                    AND ins.client_code = :client_code
+                    AND ins.statut_inscription = :statut_inscription
                     GROUP BY ins.code_inscription
                     ORDER BY ins.created_at_inscription DESC";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['client_code' => $clientCode, 'etablissement_code' => $etablissementCode]);
+            $stmt->execute([
+                'client_code' => $clientCode, 
+                'etablissement_code' => $etablissementCode,
+                'statut_inscription' => STATUT_INSCRIPTION[0]
+                ]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
             die($e->getMessage());
@@ -254,26 +257,7 @@ class CautisationModel extends Model
 
   
 
-    public function searchClients(string $search, string $etablissementCode): array
-    {
-        $data = [];
-        try {
-            $sql = "SELECT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client, cl.lieu_residence_client
-                    FROM " . TABLES::CLIENTS . " cl
-                    WHERE cl.etablissement_code = :etablissement_code
-                      AND (cl.nom_client LIKE :search OR cl.telephone_client LIKE :search OR cl.code_client LIKE :search)
-                    ORDER BY cl.nom_client ASC
-                    LIMIT 20";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindValue(":etablissement_code", $etablissementCode);
-            $stmt->bindValue(":search", "%$search%", PDO::PARAM_STR);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
-        return $data;
-    }
+
 
     public function dataTableCountTotalCautionsRow(array $filters, $likeParams = []): int
     {
