@@ -90,7 +90,7 @@ class SettingController extends MainController
 
     {
 
-        $this->view('admins/fonction', ['title' => "fonctions et services"]);
+        $this->view('gestionnaires/admins/fonction', ['title' => "fonctions et services"]);
 
     }
 
@@ -100,7 +100,15 @@ class SettingController extends MainController
 
     {
 
-        $this->view('admins/annee', ['title' => "Années et sessions"]);
+        $this->view('gestionnaires/activites/annee', ['title' => "Liste des années"]);
+
+    }
+
+       public function session()
+
+    {
+
+        $this->view('gestionnaires/activites/session', ['title' => "Liste sessions"]);
 
     }
 

@@ -28,7 +28,7 @@ class ReportController extends MainController
         $depensesByType = $this->reportModel->getDepensesByType();
         $clientsByZone = $this->reportModel->getClientsByZone();
 
-        $this->view('reports/dashboard', [
+        $this->view('gestionnaires/reports/dashboard', [
             'title' => "Tableau de bord des rapports",
             'stats' => $stats,
             'souscriptionsByMonth' => $souscriptionsByMonth,
@@ -43,26 +43,26 @@ class ReportController extends MainController
 
     public function souscriptions()
     {
-        $this->view('reports/souscriptions', ['title' => "Rapport des souscriptions"]);
+        $this->view('gestionnaires/reports/souscriptions', ['title' => "Rapport des souscriptions"]);
     }
 
     public function cautions()
     {
-        $this->view('reports/cautions', ['title' => "Rapport des cautions"]);
+        $this->view('gestionnaires/reports/cautions', ['title' => "Rapport des cautions"]);
     }
 
     public function versements()
     {
-        $this->view('reports/versements', ['title' => "Rapport des versements"]);
+        $this->view('gestionnaires/reports/versements', ['title' => "Rapport des versements"]);
     }
 
     public function distributions()
     {
-        $this->view('reports/distributions', ['title' => "Rapport des distributions"]);
+        $this->view('gestionnaires/reports/distributions', ['title' => "Rapport des distributions"]);
     }
 
     public function finances()
     {
-        $this->view('reports/finances', ['title' => "Rapport financier"]);
+        $this->view('gestionnaires/reports/finances', ['title' => "Rapport financier"]);
     }
 }

@@ -21,7 +21,7 @@ class ValidationController extends MainController
 
     public function liste()
     {
-        $this->view('validations/liste', ['title' => "Validations"]);
+        $this->view('gestionnaires/validations/liste', ['title' => "Validations"]);
     }
 
     public function GetListeValidations()

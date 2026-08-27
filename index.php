@@ -175,7 +175,8 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
 
         // <!-- parametrage -->
         $router->get('services-fonctions', [SettingController::class, 'fonction'], ['before' => 'admin|super']);
-        $router->get('annees-sessions', [SettingController::class, 'annee'], ['before' => 'admin|super']);
+        $router->get('annees', [SettingController::class, 'annee'], ['before' => 'admin|super']);
+        $router->get('sessions', [SettingController::class, 'session'], ['before' => 'admin|super']);
 
       
 

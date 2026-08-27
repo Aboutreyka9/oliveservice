@@ -24,7 +24,7 @@ class DistributionController extends MainController
 
     public function liste()
     {
-        $this->view('distributions/liste', ['title' => "Distributions"]);
+        $this->view('gestionnaires/distributions/liste', ['title' => "Distributions"]);
     }
 
     public function getDistributionsByClient()

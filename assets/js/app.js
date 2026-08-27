@@ -2613,10 +2613,7 @@ function changeStatutService(code, statut) {
 
 
 /** DEBUT SECTION ANNEE */
-
-loadDataTableMany('data-table-annee', '.session-annee', '#data-table-annee', 'charger_data_annees');
-
-
+loadDataTable('data-table-annee', '#data-table-annee', 'charger_data_annees');
 
 openModalAddAnnee();
 
@@ -2981,16 +2978,12 @@ function changeStatutAnnee(code, statut) {
 /** FIN SECTION ANNEE */
 
 
+/** DEBUT SECTION SESSION */
 
 
+loadDataTable('data-table-session', '#data-table-session', 'charger_data_sessions');
 
-
-
-/** DEBUT SECTION SEMESTRES */
-
-
-
-loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
+// loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
 
 
 
@@ -3653,13 +3646,13 @@ function updatedZone() {
 
 
 
-function changeStatutSemestre(code, statut) {
+function changeStatutZone(code, statut) {
 
     swal({
 
         title: "Notification",
 
-        text: "Voulez-vous vraiment modifier le statut de cette session?",
+        text: "Voulez-vous vraiment modifier le statut de cette zone?",
 
         icon: "warning",
 
@@ -3691,11 +3684,11 @@ function changeStatutSemestre(code, statut) {
 
                     data: {
 
-                        action: 'change_statut_sessions',
+                        action: 'change_statut_zones',
 
-                        code_session: code,
+                        code_zone: code,
 
-                        statut_session: statut
+                        statut_zone: statut
 
                     },
 
