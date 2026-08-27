@@ -1,6 +1,7 @@
 <?php
 $souscription = $souscription ?? [];
 $packs = $packs ?? [];
+// var_dump($articles);
 $cautions = $cautions ?? [];
 $distributions = $distributions ?? [];
 ?>
@@ -13,11 +14,11 @@ $distributions = $distributions ?? [];
 
 <?= breakcrumb($title, 'fa-file-alt'); ?>
 
-<div class="row mb-4">
+<div class="row mb-2">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Détails de l'souscription - <?= htmlspecialchars($souscription['code_souscription']) ?></h4>
+                <h4 class="mb-0">Détails de l'souscription - <?= $souscription['code_souscription'] ?></h4>
                 <div>
                     <a href="<?= url('souscriptions/liste') ?>" class="btn btn-default btn-sm">
                         <i class="fas fa-arrow-left"></i> Retour
@@ -33,10 +34,10 @@ $distributions = $distributions ?? [];
                                     <i class="fas fa-user-circle" style="font-size: 32px;"></i>
                                 </div>
                                 <h6 class="montan-title">Client</h6>
-                                <h5 class="montan-value"><?= strtoupper(htmlspecialchars($souscription['nom_client'])) ?></h5>
-                                <p class="text-muted mb-1"><?= htmlspecialchars($souscription['code_client']) ?></p>
+                                <h5 class="montan-value"><?= strtoupper($souscription['nom_client']) ?></h5>
+                                <p class="text-muted mb-1"><?= $souscription['code_client'] ?></p>
                                 <p class="text-muted">
-                                    <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($souscription['telephone_client']) ?>
+                                    <i class="fas fa-phone mr-1"></i> <?= $souscription['telephone_client'] ?>
                                 </p>
                             </div>
                         </div>
@@ -59,21 +60,21 @@ $distributions = $distributions ?? [];
                         <tbody>
                             <tr>
                                 <th style="width: 200px;">Code souscription</th>
-                                <td><?= htmlspecialchars($souscription['code_souscription']) ?></td>
+                                <td><?= $souscription['code_souscription'] ?></td>
                                 <th style="width: 200px;">Session</th>
-                                <td><?= htmlspecialchars($souscription['libelle_session']) ?></td>
+                                <td><?= $souscription['libelle_session'] ?></td>
                             </tr>
                             <tr>
-                                <th>Année scolaire</th>
-                                <td><?= htmlspecialchars($souscription['libelle_annee']) ?></td>
+                                <th>Année d'activité</th>
+                                <td><?= $souscription['libelle_annee'] ?></td>
                                 <th>Zone</th>
-                                <td><?= htmlspecialchars($souscription['libelle_zone']) ?></td>
+                                <td><?= $souscription['libelle_zone'] ?></td>
                             </tr>
                             <tr>
                                 <th>Statut souscription</th>
                                 <td><?= checkStatusSouscription($souscription['statut_souscription']) ?></td>
                                 <th>Commercial</th>
-                                <td><?= htmlspecialchars(($souscription['nom_user'] ?? '') . ' ' . ($souscription['prenom_user'] ?? '')) ?: '-' ?></td>
+                                <td><?= $souscription['nom_user']. ' ' . $souscription['prenom_user']?></td>
                             </tr>
                             <tr>
                                 <th>Date création</th>
@@ -103,7 +104,7 @@ foreach ($cautions as $c) {
 $resteDu = max(0, $totalPacks - $montantPayeTotal);
 ?>
 
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-2">
     <div class="col-md-4">
         <div class="card custom-card-detail">
             <div class="card-body">
@@ -152,7 +153,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Packs souscrits</h4>
@@ -167,25 +168,28 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                 <tr>
                                     <th>#</th>
                                     <th>Pack</th>
+                                    <th>Categorie</th>
                                     <th>Montant</th>
                                     <th>Article</th>
                                     <th>Qté</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $test = [];  foreach ($test as $i => $pc): ?>
+                                <?php
+                                    $output = '';
+                                    $i = 0;
+                                 foreach ($packs as $i => $pc){ 
+                                    $output.= ' 
                                     <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td>
-                                            <span class="badge badge-info"><?= htmlspecialchars($pc['libelle_pack']) ?></span>
-                                            <small class="text-muted">(<?= htmlspecialchars($pc['code_pack']) ?>)</small>
-                                        </td>
-                                        <td class="text-nowrap"><?= number_format($pc['montant_pack'], 0, ',', ' ') ?> FCFA</td>
-                                        <td><?= htmlspecialchars($pc['libelle_article'] ?? '-') ?></td>
-                                        <td class="text-center"><?= $pc['quantite_article'] ?? '-' ?></td>
-                                        <td><?= checkStatusSouscription($pc['statut_pack_souscription'], ['En attente', 'valide', 'rejeté']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                        <td>'. $i + 1 .'</td>
+                                        <td> <span class="badge badge-info">'. $pc['libelle_pack'] .'</span> </td>
+                                        <td class="text-center">'. $pc['libelle_categorie_pack'] .'</td>
+                                        <td class="text-nowrap">'. money($pc['montant_pack']) .' </td>
+                                        <td class="text-center">'. $pc['nombre_article'] .'</td>
+                                        <td>'. $pc['quantite'] .'</td>
+                                    </tr>';
+                                 } 
+                                 echo $output ;?>
                             </tbody>
                         </table>
                     </div>
@@ -194,7 +198,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Cautions</h4>
@@ -208,7 +212,6 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                             <thead class="thead-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Code</th>
                                     <th>Montant</th>
                                     <th>Statut</th>
                                     <th>Date création</th>
@@ -218,8 +221,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                 <?php foreach ($cautions as $i => $c): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($c['code_cautisation_client']) ?></td>
-                                        <td class="text-nowrap"><?= number_format($c['montant_cautisation_client'], 0, ',', ' ') ?> FCFA</td>
+                                        <td class="text-nowrap"><?= money($c['montant_cautisation_client']) ?> </td>
                                         <td><?= checkStatusSouscription($c['statut_cautisation_client'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($c['created_at_cautisation_client'], true) ?></td>
                                     </tr>
@@ -230,8 +232,51 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                 <?php endif; ?>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- Articles -->
+<div class="row">
+    <div class="col-md-7">
         <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">Liste des articles de l'souscription</h4>
+            </div>
+            <div class="card-body">
+                <?php if (empty($articles)): ?>
+                    <p class="text-muted text-center py-4">Aucun article associé à cette souscription.</p>
+                <?php else: ?>
+               
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Libellé article</th>
+                                    <th>Description</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 0;
+                                foreach ($articles as $article): ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= $article['libelle_article']?></td>
+                                        <td><?= $article['description_article'] ?></td>
+                                        <td><?= $article['quantite_totale']?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Distributions</h4>
             </div>
@@ -256,64 +301,6 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                         <td><?= htmlspecialchars($d['code_distribution']) ?></td>
                                         <td><?= checkStatusSouscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($d['created_at_distribution'], true) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Articles -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="mb-0">Articles de l'souscription</h4>
-            </div>
-            <div class="card-body">
-                <?php if (empty($packs)): ?>
-                    <p class="text-muted text-center py-4">Aucun article associé à cette souscription.</p>
-                <?php else: ?>
-                    <?php
-                    $articles = [];
-                    foreach ($packs as $pc) {
-                        $articles[] = [
-                            'libelle_article' => $pc['libelle_article'] ?? '-',
-                            'description_article' => $pc['description_article'] ?? '',
-                            'libelle_categorie_pack' => $pc['libelle_categorie_pack'] ?? '-',
-                            'libelle_session' => $souscription['libelle_session'] ?? '-',
-                            'quantite_article' => $pc['quantite_article'] ?? 0,
-                        ];
-                    }
-                    $articlesUniques = [];
-                    foreach ($articles as $art) {
-                        $key = $art['libelle_article'] . '|' . $art['description_article'] . '|' . $art['libelle_categorie_pack'];
-                        $articlesUniques[$key] = $art;
-                    }
-                    ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Libellé article</th>
-                                    <th>Description</th>
-                                    <th>Catégorie</th>
-                                    <th>Session</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (array_values($articlesUniques) as $i => $article): ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_article']) ?></td>
-                                        <td><?= htmlspecialchars($article['description_article'] ?: '-') ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_categorie_pack']) ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_session']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

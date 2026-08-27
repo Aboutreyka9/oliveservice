@@ -373,7 +373,7 @@ class ClientModel extends Model
         $data = [];
         try {
             $sql = "SELECT ins.*, cl.*, se.libelle_session, an.libelle_annee, zo.libelle_zone, u.nom_user, u.prenom_user
-                    FROM " . TABLES::SOUSCRIPTIONS . " ins
+                    FROM " . TABLES::VUE_TOTAL_SOUSCRIPTION_PACK . " ins
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
@@ -391,28 +391,41 @@ class ClientModel extends Model
         return $data;
     }
 
-    public function getPackArticlesBySouscription(string $souscriptionCode): array
+    public function getPacksBySouscription(string $souscriptionCode): array
     {
         $data = [];
         try {
-            $sql = "SELECT pi.*, p.libelle_pack, p.montant_pack, p.code_pack,
-                           pa.quantite_article, pa.article_code, 
-                           a.libelle_article, a.description_article,
-                           cp.libelle_categorie_pack,
-                           se.libelle_session
-                    FROM " . TABLES::PACK_SOUSCRIPTIONS . " pi
-                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = pi.souscription_code
-                    JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
-                    LEFT JOIN " . TABLES::PACK_ARTICLES . " pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
-                    LEFT JOIN " . TABLES::ARTICLES . " a ON a.code_article = pa.article_code
-                    LEFT JOIN " . TABLES::CATEGORIES . " cp ON cp.code_categorie_pack = p.categorie_pack_code
-                    JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
+            $sql = "SELECT pi.*, ca.libelle_categorie_pack FROM " . TABLES::VUE_TOTAL_PARK_ARTICLES . " pi
+                   JOIN " . TABLES::PACK_SOUSCRIPTIONS . " ps ON ps.pack_code = pi.code_pack
+                   JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = ps.souscription_code 
+                   JOIN " . TABLES::CATEGORIES . " ca ON ca.code_categorie_pack = pi.categorie_pack_code
                     WHERE ins.code_souscription = :souscription_code
-                    ORDER BY pi.created_at_pack_souscription DESC";
+                    GROUP BY ca.code_categorie_pack, pi.code_pack
+
+                    ORDER BY ca.libelle_categorie_pack, pi.montant_pack DESC";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['souscription_code' => $souscriptionCode]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getListeArticleByInscriptionCode($souscriptionCode){
+        $data = [];
+        try{
+            $sql= 'SELECT a.code_article, a.libelle_article, a.description_article, a.statut_article, SUM(pa.quantite_article) AS quantite_totale FROM '.TABLES::PACK_SOUSCRIPTIONS.' pi 
+            INNER JOIN pack_articles pa ON pa.pack_code = pi.pack_code AND pa.annee_code = pi.annee_code
+            INNER JOIN articles a ON a.code_article = pa.article_code 
+            WHERE pi.souscription_code = :souscription_code 
+            GROUP BY a.code_article
+            ORDER BY a.libelle_article';
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['souscription_code' => $souscriptionCode]);
+            $data = $stmt->fetchAll();
+        }catch (Exception $e) {
             die($e->getMessage());
         }
         return $data;

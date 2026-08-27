@@ -46,7 +46,7 @@ class TABLES
     public const VERSEMENTS_COMMERCIAUX = 'versements_commerciaux';
     public const ZONES = 'zones';
     public const ZONE_COMMERCIALS = 'zone_commercials';
-    public const VUE_TOTAL_SOUSCRIPTION_PACK = 'vue_inscription_total_pack';
+    public const VUE_TOTAL_SOUSCRIPTION_PACK = 'vue_souscription_total_pack';
     public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
 

@@ -198,13 +198,15 @@ class ClientService
             return [];
         }
 
-        $packs = $this->clientModel->getPackArticlesBySouscription($souscriptionCode);
+        $packs = $this->clientModel->getPacksBySouscription($souscriptionCode);
+        $articles = $this->clientModel->getListeArticleByInscriptionCode($souscriptionCode);
         $cautions = $this->clientModel->getCautionsBySouscription($souscriptionCode);
         $distributions = $this->clientModel->getDistributionsBySouscription($souscriptionCode);
 
         return [
             'souscription' => $souscription,
             'packs' => $packs,
+            'articles' => $articles,
             'cautions' => $cautions,
             'distributions' => $distributions,
         ];
