@@ -18,7 +18,7 @@ const APP = {
     packSelected: [],
 
     montantPackSelected: 0,
-    selectedInscriptionForEncaissement : null,
+    selectedSouscriptionForEncaissement : null,
 
     dataCheck: [],
 
@@ -5670,7 +5670,7 @@ function updatedClient() {
 
 
 
-/** DEBUT SECTION INSCRIPTION */
+/** DEBUT SECTION SOUSCRIPTION */
 
 // liste souscription
     chargerListeSouscriptionComercial() ;
@@ -5717,17 +5717,17 @@ function updatedClient() {
 
 
 
-// Conditionnellement initialiser les étapes : souscription OU réinscription
+// Conditionnellement initialiser les étapes : souscription OU résouscription
 
 if (!$('#frmAddResouscription').length) {
 
-    allStepInscription()
+    allStepSouscription()
 
 }
 
 
 
-function allStepInscription () {
+function allStepSouscription () {
 
 
 
@@ -6289,7 +6289,7 @@ loadCategoriesBySession();
 
 function loadCategoriesBySession() {
 
-    $("body").on("change", "#session_inscription", function (e) {
+    $("body").on("change", "#session_souscription", function (e) {
 
 
 
@@ -6299,7 +6299,7 @@ function loadCategoriesBySession() {
 
             // $('#btn_selection_choix').prop('disabled',true);
 
-            // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
+            // $('#categorie_souscription').append('<option value="">--- CHOISIR ---</option>');
 
             return;
 
@@ -6347,9 +6347,9 @@ function chargerSessionData(sessionCode) {
 
                 // const categories = data.data.data;
 
-                // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
+                // $("#categorie_souscription").html('<option value="">--- CHOISIR ---</option>');
 
-                $("#categorie_inscription").html(data.categories);
+                $("#categorie_souscription").html(data.categories);
 
                 $("#packs-container").html(data.packs);
 
@@ -6371,13 +6371,13 @@ loadPacksByCategories();
 
 function loadPacksByCategories() {
 
-    $("body").on("change", "#categorie_inscription", function (e) {
+    $("body").on("change", "#categorie_souscription", function (e) {
 
 
 
         var categorieCode = $(this).val();
 
-        var sessionCode = $("#session_inscription").val();
+        var sessionCode = $("#session_souscription").val();
 
         if (!categorieCode) {
 
@@ -6391,7 +6391,7 @@ function loadPacksByCategories() {
 
             // $('#btn_selection_choix').prop('disabled',true);
 
-            // $('#categorie_inscription').append('<option value="">--- CHOISIR ---</option>');
+            // $('#categorie_souscription').append('<option value="">--- CHOISIR ---</option>');
 
             return;
 
@@ -6431,7 +6431,7 @@ function loadPacksByCategories() {
 
 
 
-                // $("#categorie_inscription").html('<option value="">--- CHOISIR ---</option>');
+                // $("#categorie_souscription").html('<option value="">--- CHOISIR ---</option>');
 
                 $("#packs-container").html(data.packs);
 
@@ -6443,7 +6443,7 @@ function loadPacksByCategories() {
 
             // error: function() {
 
-            //     // $("#categorie_inscription").html(categories);
+            //     // $("#categorie_souscription").html(categories);
 
             // }
 
@@ -6723,7 +6723,7 @@ function initPackSelection() {
 
 
 
-/** FIN SECTION INSCRIPTION */
+/** FIN SECTION SOUSCRIPTION */
 
 
 
@@ -6775,7 +6775,7 @@ function initResouscriptionSteps() {
 
 
 
-// Recherche client pour réinscription
+// Recherche client pour résouscription
 
 $('#btn_search_client').click(function() {
 
@@ -6845,7 +6845,7 @@ $('#btn_search_client').click(function() {
 
 
 
-// Soumission formulaire réinscription
+// Soumission formulaire résouscription
 
 $('#frmAddResouscription').submit(function(e) {
 
@@ -6933,7 +6933,7 @@ $('#frmAddResouscription').submit(function(e) {
 
 
 
-// Recap réinscription
+// Recap résouscription
 
 function updateRecapResouscription() {
 
@@ -7137,13 +7137,13 @@ function encaisseCotisationClient() {
 
     function calculerMontanttest() {
         var jours = parseInt($('#nombre_jours_cautisation').val()) || 0;
-        var montant = jours * APP.selectedInscriptionForEncaissement.montant_journalier;
+        var montant = jours * APP.selectedSouscriptionForEncaissement.montant_journalier;
         $('#montant_cautisation').val(montant);
         $('#jours_calcules').text(jours);
         html += '<strong>Total payé:</strong> ' + totalPaye.toLocaleString('fr-FR') + ' FCFA<br>';
         $('#montant_calcule').text(montant.toLocaleString('fr-FR') + ' FCFA');
         
-        if (jours > 0 && APP.selectedInscriptionForEncaissement.montant_journalier > 0) {
+        if (jours > 0 && APP.selectedSouscriptionForEncaissement.montant_journalier > 0) {
             var debut = $('#periode_debut').val();
             if (debut) {
                 var dateFin = new Date(debut);
@@ -7156,7 +7156,7 @@ function encaisseCotisationClient() {
     function calculerJourstest() {
         var html = '';
         var montant = parseFloat($('#montant_cautisation').val()) || 0;
-        var jours = APP.selectedInscriptionForEncaissement.montant_journalier > 0 ? Math.ceil(montant / APP.selectedInscriptionForEncaissement.montant_journalier) : 0;
+        var jours = APP.selectedSouscriptionForEncaissement.montant_journalier > 0 ? Math.ceil(montant / APP.selectedSouscriptionForEncaissement.montant_journalier) : 0;
         $('#nombre_jours_cautisation').val(jours);
         $('#jours_calcules').text(jours);
         html += '<strong>Total payé:</strong> ' + totalPaye.toLocaleString('fr-FR') + ' FCFA<br>';
@@ -7172,7 +7172,7 @@ function encaisseCotisationClient() {
         }
     }
 
-    function loadInscriptions(clientCode) {
+    function loadSouscriptions(clientCode) {
 
         $.ajax({
 
@@ -7206,7 +7206,7 @@ function encaisseCotisationClient() {
                     html += '<td>' + totalPaye.toLocaleString('fr-FR') + ' FCFA</td>';
                     html += '<td class="text-danger">' + reste.toLocaleString('fr-FR') + ' FCFA</td>';
                     html += '<td>' + montantJournalier.toLocaleString('fr-FR') + ' FCFA/jour</td>';
-                    html += '<td><button class="btn btn-primary btn-sm" onclick="openEncaissementModal(\'' + ins.code_inscription + '\', \'' + ins.nom_client + '\', ' + montantPack + ', ' + totalPaye + ', ' + reste + ', ' + montantJournalier + ', ' + (ins.duree_jours_pack || 0) + ')"><i class="fas fa-money-bill-wave"></i> Encaisser</button></td>';
+                    html += '<td><button class="btn btn-primary btn-sm" onclick="openEncaissementModal(\'' + ins.code_souscription + '\', \'' + ins.nom_client + '\', ' + montantPack + ', ' + totalPaye + ', ' + reste + ', ' + montantJournalier + ', ' + (ins.duree_jours_pack || 0) + ')"><i class="fas fa-money-bill-wave"></i> Encaisser</button></td>';
                     html += '</tr>';
                 });
                 
@@ -7264,7 +7264,7 @@ function encaisseCotisationClient() {
                         $('#selected_client').val(code);
                         $('#selected_client_nom').val(nom);
                         $('#search_results').html('<div class="alert alert-success"><i class="fas fa-check"></i> Client sélectionné: <strong>' + nom + '</strong> (' + code + ')</div>');
-                        loadInscriptions(code);
+                        loadSouscriptions(code);
                     });
 
                     // $.notify(data.message, "success");
@@ -7284,7 +7284,7 @@ function encaisseCotisationClient() {
     }
 
     function openEncaissementModal(codeIns, nomClient, montantPack, totalPaye, reste, montantJournalier, dureeJours) {
-        APP.selectedInscriptionForEncaissement = {
+        APP.selectedSouscriptionForEncaissement = {
             code: codeIns,
             nom_client: nomClient,
             montant_pack: montantPack,
@@ -7296,7 +7296,7 @@ function encaisseCotisationClient() {
 
         var html = `
         <form id="frmEncaissement">
-        <input type="hidden" name="inscription_code" value="${codeIns}">
+        <input type="hidden" name="souscription_code" value="${codeIns}">
         <div class="row mb-3">
         <div class="col-md-12"><strong>Client: ${nomClient}</strong></div>
         <div class="col-md-12 mt-2"><div class="alert alert-info">
@@ -7393,7 +7393,7 @@ function encaisseCotisationClient() {
 
     function calculerNombreJours() {
 
-        // APP.selectedInscriptionForEncaissement = {
+        // APP.selectedSouscriptionForEncaissement = {
         //     code: codeIns,
         //     nom_client: nomClient,
         //     montant_pack: montantPack,
@@ -7403,7 +7403,7 @@ function encaisseCotisationClient() {
         //     duree_jours: dureeJours
         // };
 
-    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const montantJournalier = Number(APP.selectedSouscriptionForEncaissement.montant_pack) || 0;
     const montantPaye = Number($(".montant_cautisation:visible").val()) || 0;
 
     $(".nombre_jours_cautisation:visible").val("");
@@ -7454,7 +7454,7 @@ function encaisseCotisationClient() {
 
     function calculerDepuisNombreJoursTest() {
 
-    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const montantJournalier = Number(APP.selectedSouscriptionForEncaissement.montant_pack) || 0;
     const nombreJours = Number($("#nombre_jours").val()) || 0;
 
     if (montantJournalier <= 0 || nombreJours <= 0) {
@@ -7478,7 +7478,7 @@ function encaisseCotisationClient() {
 
 function calculerMontantDepuisJours() {
 
-    const montantJournalier = Number(APP.selectedInscriptionForEncaissement.montant_pack) || 0;
+    const montantJournalier = Number(APP.selectedSouscriptionForEncaissement.montant_pack) || 0;
     const nombreJours = Number($(".nombre_jours_cautisation:visible").val()) || 0;
 
     if (montantJournalier <= 0 || nombreJours <= 0) {
@@ -7672,7 +7672,7 @@ $(function() {
 
     // Ouvrir le modal en sélectionnant une ligne directement
     $('.btn-encaisser-row').on('click', function() {
-        const inscription = $(this).data('inscription');
+        const souscription = $(this).data('souscription');
         const restant = parseInt($(this).data('restant')) || 0;
         const code = $(this).data('code');
 
@@ -7684,7 +7684,7 @@ $(function() {
         $('.btn-encaisser-row').prop('disabled', false);
 
         const items = '<li class="list-group-item d-flex justify-content-between align-items-center">' +
-            '<span>' + inscription + '</span>' +
+            '<span>' + souscription + '</span>' +
             '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
             '</li>';
         $('#enc_caution_items').html(items);
@@ -7707,11 +7707,11 @@ $(function() {
         let items = '';
         let total = 0;
         checked.each(function() {
-            const inscription = $(this).data('inscription');
+            const souscription = $(this).data('souscription');
             const restant = parseInt($(this).data('restant')) || 0;
             total += restant;
             items += '<li class="list-group-item d-flex justify-content-between align-items-center">' +
-                '<span>' + inscription + '</span>' +
+                '<span>' + souscription + '</span>' +
                 '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
                 '</li>';
         });

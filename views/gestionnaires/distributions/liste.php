@@ -76,7 +76,7 @@ $(function() {
             { data: null, render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } },
             { data: 'code_distribution' },
             { data: 'nom_client' },
-            { data: 'code_inscription' },
+            { data: 'code_souscription' },
             { data: 'libelle_zone' },
             { data: 'statut_distribution', render: function(data) {
                 if (data === 'valide') return '<span class="badge badge-success">Validé</span>';

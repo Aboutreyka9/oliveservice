@@ -1737,7 +1737,7 @@ function chargerListeSouscriptionForComercial()
 {
   $listeSoucriptions = (new ClientModel())->getListeSouscriptionForComercial( auth()->user('etablissement_code'), auth()->user('annee_code'), auth()->user('zone_code'),auth()->user('id'));
 
-  return (new ClientService())->inscriptionListeForCommercial($listeSoucriptions);
+  return (new ClientService())->souscriptionListeForCommercial($listeSoucriptions);
 }
 
 

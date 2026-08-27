@@ -135,7 +135,7 @@
                 <h5 class="card-title">Souscriptions par mois</h5>
             </div>
             <div class="card-body">
-                <canvas id="chartInscriptionsByMonth"></canvas>
+                <canvas id="chartSouscriptionsByMonth"></canvas>
             </div>
         </div>
     </div>
@@ -292,13 +292,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Chart souscriptions par mois
-    const ctxInscriptions = document.getElementById('chartInscriptionsByMonth');
-    if (ctxInscriptions) {
+    const ctxSouscriptions = document.getElementById('chartSouscriptionsByMonth');
+    if (ctxSouscriptions) {
         const souscriptionsData = <?= json_encode($souscriptionsByMonth) ?>;
         const labels = souscriptionsData.map(item => 'Mois ' + item.mois);
         const data = souscriptionsData.map(item => item.total);
 
-        new Chart(ctxInscriptions, {
+        new Chart(ctxSouscriptions, {
             type: 'bar',
             data: {
                 labels: labels,

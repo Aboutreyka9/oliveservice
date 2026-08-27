@@ -80,18 +80,14 @@ class ClientController extends MainController
         $this->view('commercials/clients/profile', $data);
     }
 
-    public function inscriptionDetail($code = null)
+    public function souscriptionDetail($code = null)
     {
         $data = [
-            'title' => "Détails de l'inscription",
-            'inscription' => [],
-            'packs' => [],
-            'cautions' => [],
-            'distributions' => [],
+            'title' => "Détails de l'souscription"
         ];
 
         if ($code) {
-            $detailData = $this->clientService->getInscriptionDetailData($code);
+            $detailData = $this->clientService->getSouscriptionDetailData($code);
             if (!empty($detailData)) {
                 $data = array_merge($data, $detailData);
             }
@@ -100,7 +96,7 @@ class ClientController extends MainController
         $this->view('commercials/clients/souscription_detail', $data);
     }
 
-    public function listeInscription()
+    public function listeSouscription()
     {
         $this->view('commercials/clients/liste_souscription', ['title' => "Liste des souscriptions"]);
     }
@@ -118,7 +114,7 @@ class ClientController extends MainController
 
     // SEXION Souscription
 
-    public function addInscription()
+    public function addSouscription()
     {
         $packs = json_decode($_POST['selected_packs'], true);
         $_POST = sanitizePostData($_POST);
@@ -142,7 +138,7 @@ class ClientController extends MainController
         //     $packs = json_decode($selected_packs, true);
         // }
 
-        $result = $this->clientService->saveInscriptionData($_POST, $packs);
+        $result = $this->clientService->saveSouscriptionData($_POST, $packs);
 
 
 
@@ -190,7 +186,7 @@ class ClientController extends MainController
         Response::success('Client trouvé', ['client' => $client]);
     }
 
-    public function GetListeInscription()
+    public function GetListeSouscription()
     {
         $_POST = sanitizePostData($_POST);
         extract($_POST);
@@ -212,7 +208,7 @@ class ClientController extends MainController
         $search = trim($_POST['search']['value'] ?? '');
 
         $columns = [
-            0 => 'ins.code_inscription',
+            0 => 'ins.code_souscription',
             1 => 'cl.nom_client',
             2 => 'cl.telephone_client',
             3 => 'se.libelle_session',
@@ -221,26 +217,26 @@ class ClientController extends MainController
             6 => 'p.montant_pack',
             7 => 'montant_paye',
             8 => 'reste_du',
-            9 => 'ins.statut_inscription',
-            10 => 'ins.created_at_inscription'
+            9 => 'ins.statut_souscription',
+            10 => 'ins.created_at_souscription'
         ];
 
-        $orderBy = $columns[$orderColumn] ?? 'ins.created_at_inscription';
+        $orderBy = $columns[$orderColumn] ?? 'ins.created_at_souscription';
         $orderDir = $orderDir === 'desc' ? 'DESC' : 'ASC';
 
         if (!empty($search)) {
             $likeParams = [
-                'ins.code_inscription' => $search,
+                'ins.code_souscription' => $search,
                 'cl.nom_client' => $search,
                 'cl.telephone_client' => $search,
                 'se.libelle_session' => $search
             ];
         }
 
-        $total = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams, $likeParams);
-        $totalFiltered = $this->clientModel->dataTableCountTotalInscriptionRow($whereParams, $likeParams);
-        $inscriptionList = $this->clientModel->DataTableFetchInscriptionListe($likeParams, $orderBy, $orderDir, $start, $limit);
-        $data = $this->clientService->inscriptionDataService($inscriptionList);
+        $total = $this->clientModel->dataTableCountTotalSouscriptionRow($whereParams, $likeParams);
+        $totalFiltered = $this->clientModel->dataTableCountTotalSouscriptionRow($whereParams, $likeParams);
+        $souscriptionList = $this->clientModel->DataTableFetchSouscriptionListe($likeParams, $orderBy, $orderDir, $start, $limit);
+        $data = $this->clientService->souscriptionDataService($souscriptionList);
 
         echo json_encode([
             "draw" => intval($_POST['draw']),
@@ -260,7 +256,7 @@ class ClientController extends MainController
         $stats = $this->clientModel->getStatsSouscriptionsForCommercial(Auth::user('etablissement_code'), Auth::user('annee_code'), Auth::user('zone_code'),Auth::user('id'),$session_code);
 
         $data_stats = $this->clientService->StatsSouscriptionCommercial($stats);
-        $output = $this->clientService->inscriptionListeForCommercial($listeSoucriptions);
+        $output = $this->clientService->souscriptionListeForCommercial($listeSoucriptions);
 
         echo json_encode(['success' => true,'data' => $output,"stats" => $data_stats]);
         return;

@@ -417,7 +417,7 @@ class UserModel extends Model
             $params = ['user_code' => $commercialUserCode, 'etablissement_code' => $etablissementCode];
 
             if (!empty($filters['date_debut']) && !empty($filters['date_fin'])) {
-                $where .= " AND DATE(ins.created_at_inscription) BETWEEN :date_debut AND :date_fin";
+                $where .= " AND DATE(ins.created_at_souscription) BETWEEN :date_debut AND :date_fin";
                 $params['date_debut'] = $filters['date_debut'];
                 $params['date_fin'] = $filters['date_fin'];
             }
@@ -432,10 +432,10 @@ class UserModel extends Model
 
             $sql = "SELECT DISTINCT cl.code_client, cl.nom_client, cl.telephone_client, cl.sexe_client,
                            cl.lieu_residence_client, cl.created_at_client,
-                           COUNT(DISTINCT ins.code_inscription) as nb_souscriptions,
-                           MIN(ins.created_at_inscription) as premiere_inscription
+                           COUNT(DISTINCT ins.code_souscription) as nb_souscriptions,
+                           MIN(ins.created_at_souscription) as premiere_souscription
                     FROM " . TABLES::CLIENTS . " cl
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.client_code = cl.code_client
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.client_code = cl.code_client
                     $where
                     GROUP BY cl.code_client
                     ORDER BY cl.created_at_client DESC";
@@ -508,19 +508,19 @@ class UserModel extends Model
             $params = ['user_code' => $commercialUserCode, 'etablissement_code' => $etablissementCode];
             $dateFilter = '';
             if ($dateDebut && $dateFin) {
-                $dateFilter = " AND DATE(ins.created_at_inscription) BETWEEN :date_debut AND :date_fin";
+                $dateFilter = " AND DATE(ins.created_at_souscription) BETWEEN :date_debut AND :date_fin";
                 $params['date_debut'] = $dateDebut;
                 $params['date_fin'] = $dateFin;
             }
 
             $sql = "SELECT 
                         COUNT(DISTINCT cl.code_client) as total_clients,
-                        COUNT(DISTINCT ins.code_inscription) as total_souscriptions,
-                        COUNT(DISTINCT pi.code_pack_inscription) as total_packs,
+                        COUNT(DISTINCT ins.code_souscription) as total_souscriptions,
+                        COUNT(DISTINCT pi.code_pack_souscription) as total_packs,
                         COALESCE(SUM(p.montant_pack), 0) as montant_total_packs
-                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    FROM " . TABLES::SOUSCRIPTIONS . " ins
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
-                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::PACK_SOUSCRIPTIONS . " pi ON pi.souscription_code = ins.code_souscription
                     LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                     WHERE ins.user_code = :user_code AND ins.etablissement_code = :etablissement_code $dateFilter";
 
@@ -563,7 +563,7 @@ class UserModel extends Model
                                 SUM(CASE WHEN c.statut_cautisation_client = 'valide' THEN c.montant_cautisation_client ELSE 0 END) as montant_valides,
                                 SUM(CASE WHEN c.statut_cautisation_client = 'En attente' THEN c.montant_cautisation_client ELSE 0 END) as montant_en_attente
                             FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                            JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                            JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                             WHERE ins.user_code = :user_code AND ins.etablissement_code = :etablissement_code $cautionsDateFilter";
 
             $stmtCautions = $this->db->prepare($sqlCautions);
@@ -614,7 +614,7 @@ class UserModel extends Model
                 $cautionsParams['date_fin'] = $dateFin;
             }
             $sqlCautions = "SELECT c.statut_cautisation_client FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                            JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                            JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                             WHERE ins.user_code = :user_code AND ins.etablissement_code = :etablissement_code";
             if ($dateDebut && $dateFin) {
                 $sqlCautions .= " AND DATE(c.created_at_cautisation_client) BETWEEN :date_debut AND :date_fin";

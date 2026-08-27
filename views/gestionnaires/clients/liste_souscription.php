@@ -52,10 +52,10 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="card-title">Liste des souscriptions</div>
             <div class="d-flex gap-2">
-                <button type="button" id="btn_inscription_addModal" class="btn btn-primary btn-sm" title="Ajouter souscription">
+                <button type="button" id="btn_souscription_addModal" class="btn btn-primary btn-sm" title="Ajouter souscription">
                     <i class="fa fa-plus"></i> &nbsp; Créer
                 </button>
-                <button type="button" class="btn btn-success btn-sm" title="Imprimer" onclick="imprimerListeInscription()">
+                <button type="button" class="btn btn-success btn-sm" title="Imprimer" onclick="imprimerListeSouscription()">
                     <i class="fa fa-print"></i> &nbsp; Imprimer
                 </button>
             </div>
@@ -88,11 +88,11 @@
 
 <!-- Modal souscription-->
 <div class="modal fade" data-backdrop="static" id="souscription-modal" data-bs-backdrop="static" tabindex="-1" role="dialog"
-    aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+    aria-labelledby="souscriptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-dark" id="inscriptionModalLabel">
+                <h5 class="modal-title text-dark" id="souscriptionModalLabel">
                     <i class="fa fa-user-circle"></i> &nbsp; 
                     <span class="text-uppercase">Formulaire d'enregistrement</span>
                 </h5>
@@ -125,7 +125,7 @@ $(function() {
         },
         columns: [
             { data: null, render: function(data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; } },
-            { data: 'code_inscription', render: function(data) { return '<span class="badge badge-info">' + data + '</span>'; } },
+            { data: 'code_souscription', render: function(data) { return '<span class="badge badge-info">' + data + '</span>'; } },
             { data: 'nom_client' },
             { data: 'telephone_client' },
             { data: 'libelle_session' },
@@ -139,15 +139,15 @@ $(function() {
                 }
                 return '<span class="text-success">SOLDÉ</span>';
             }},
-            { data: 'statut_inscription', render: function(data) { return checkStatusInscription(data); } },
-            { data: 'created_at_inscription', render: function(data) { return date_formater(data, true); } },
+            { data: 'statut_souscription', render: function(data) { return checkStatusSouscription(data); } },
+            { data: 'created_at_souscription', render: function(data) { return date_formater(data, true); } },
             { data: 'actions', orderable: false, searchable: false }
         ],
         order: [[11, 'desc']]
     });
 
-    $('#btn_inscription_addModal').click(function() {
-        $.post('<?= LINK ?>ajx.php', { action: 'btn_showmodal_inscription_add' }, function(html) {
+    $('#btn_souscription_addModal').click(function() {
+        $.post('<?= LINK ?>ajx.php', { action: 'btn_showmodal_souscription_add' }, function(html) {
             $('.data-souscription-modal').html(html.data);
             $('#souscription-modal').modal('show');
         }, 'json');
@@ -159,7 +159,7 @@ $(function() {
     });
 });
 
-function imprimerListeInscription() {
+function imprimerListeSouscription() {
     var dateDebut = $('input[name="date_debut"]').val();
     var dateFin = $('input[name="date_fin"]').val();
     var zoneCode = $('select[name="zone_code"]').val();

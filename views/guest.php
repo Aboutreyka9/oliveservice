@@ -11,7 +11,7 @@
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.101.0">
 
-  <title><?= strtoupper($data['title'] ?? "Mon espace")  ?> || G-ECOLE APPLICATION</title>
+  <title><?= strtoupper($data['title'] ?? "Mon espace")  ?> || OLIVE SERVICE</title>
   <link rel="icon" href="<?= ASSETS ?>img/icon.ico" type="image/x-icon" />
 
   <!-- CSS only -->

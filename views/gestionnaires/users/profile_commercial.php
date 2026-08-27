@@ -266,7 +266,7 @@ $versements = $versements ?? [];
                                         <td><?= htmlspecialchars($client['sexe_client']) ?></td>
                                         <td><?= htmlspecialchars($client['lieu_residence_client'] ?? '-') ?></td>
                                         <td><?= number_format($client['nb_souscriptions'] ?? 0) ?></td>
-                                        <td><?= !empty($client['premiere_inscription']) ? date_formater($client['premiere_inscription'], true) : '-' ?></td>
+                                        <td><?= !empty($client['premiere_souscription']) ? date_formater($client['premiere_souscription'], true) : '-' ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

@@ -25,7 +25,7 @@ class CautisationService
         $data = [
             'code_cautisation_client' => $code,
             'montant_cautisation_client' => $montant_cautisation,
-            'inscription_code' => $inscription_code,
+            'souscription_code' => $souscription_code,
             'statut_cautisation_client' => 'En attente',
             'etablissement_code' => Auth::user('etablissement_code'),
             'user_code' => Auth::user('id'),
@@ -78,7 +78,7 @@ class CautisationService
 
         foreach ($cautions as $c) {
             $i++;
-            $totalPaye = $this->cautisationModel->getTotalCautisationByInscription($c['code_inscription']);
+            $totalPaye = $this->cautisationModel->getTotalCautisationBySouscription($c['code_souscription']);
             $montantPack = (float) ($c['montant_total_pack'] ?? 0);
             $reste = max(0, $montantPack - $totalPaye);
 
@@ -131,14 +131,14 @@ class CautisationService
                 <div class="col-md-12 mb-3">
                     <input type="hidden" value="btn_add_cautisation" name="action">
                     <input type="hidden" value="' . csrfToken()::token() . '" name="csrf_token">
-                    <label for="inscription_code" class="form-label">Souscription <strong class="text-danger">*</strong></label>
-                    <select class="form-control select2" id="inscription_code" name="inscription_code" required>
+                    <label for="souscription_code" class="form-label">Souscription <strong class="text-danger">*</strong></label>
+                    <select class="form-control select2" id="souscription_code" name="souscription_code" required>
                         <option value="">--- CHOISIR ---</option>';
 
         if (!empty($souscriptions)) {
             foreach ($souscriptions as $ins) {
                 $label = $ins['nom_client'] . ' - ' . $ins['libelle_session'] . ' (' . $ins['libelle_annee'] . ')';
-                $output .= '<option value="' . $ins['code_inscription'] . '">' . $label . '</option>';
+                $output .= '<option value="' . $ins['code_souscription'] . '">' . $label . '</option>';
             }
         }
 
@@ -167,7 +167,7 @@ class CautisationService
         extract($post);
 
         // $v = new Validator();
-        // $v->required('inscription_code', $inscription_code, 'Souscription')
+        // $v->required('souscription_code', $souscription_code, 'Souscription')
         //   ->required('montant_cautisation', $montant_cautisation, 'Montant')
         //   ->digit('montant_cautisation', $montant_cautisation, 'Montant')
         //   ->required('mode_calcul', $mode_calcul, 'Mode de calcul');
@@ -191,7 +191,7 @@ class CautisationService
         $data = [
             'code_cautisation_client' => $code,
             'montant_cautisation_client' => $montant,
-            'inscription_code' => $inscription_code,
+            'souscription_code' => $souscription_code,
             'statut_cautisation_client' => 'valide',
             'mode_paiement' => $mode_paiement,
             'etablissement_code' => Auth::user('etablissement_code'),

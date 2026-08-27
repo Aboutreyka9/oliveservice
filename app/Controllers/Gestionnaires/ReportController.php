@@ -20,7 +20,7 @@ class ReportController extends MainController
     public function dashboard()
     {
         $stats = $this->reportModel->getDashboardStats();
-        $souscriptionsByMonth = $this->reportModel->getInscriptionsByMonth(Auth::user('annee_code'));
+        $souscriptionsByMonth = $this->reportModel->getSouscriptionsByMonth(Auth::user('annee_code'));
         $topPacks = $this->reportModel->getTopPacks(5);
         $cautionsByCommercial = $this->reportModel->getCautionsByCommercial();
         $versementsByCommercial = $this->reportModel->getVersementsByCommercial();

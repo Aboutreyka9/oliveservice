@@ -106,14 +106,14 @@
                 <div class="row mb-5">
                     <div class="col-md-6">
                         <label for="">SESSION</label>
-                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_inscription" class="form-control">
+                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_souscription" class="form-control">
                             <option >--CHOISIR--</option>
                             <?= chargerSessions(); ?>
                         </select>
                     </div>
                     <div class="col-md-6">
                          <label for="">CATEGORIE</label>
-                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_inscription" class="form-control">
+                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_souscription" class="form-control">
                             <option >Aucune donnée disponible</option>
                         </select>
                     </div>
@@ -196,7 +196,7 @@
                     <i class="fas fa-arrow-left mr-2"></i> Précédent
                 </button>
                 <button type="submit" class="btn btn-success" id="btnSubmitFormResouscription">
-                    <i class="fas fa-save"></i> &nbsp; Enregistrer la réinscription
+                    <i class="fas fa-save"></i> &nbsp; Enregistrer la résouscription
                 </button>
             </div>
         </div>

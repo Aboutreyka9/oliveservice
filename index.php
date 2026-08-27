@@ -151,10 +151,10 @@ $router->group(['before' => '', 'prefix' => 'oliveservice'], function ($router) 
   // <!-- Commercials / Client -->
         $router->get('souscriptions', [CommercialsClientController::class, 'souscription']);
         $router->get('resouscriptions', [CommercialsClientController::class, 'resouscription']);
-        $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeInscription']);
+        $router->get('souscriptions/liste', [CommercialsClientController::class, 'listeSouscription']);
         $router->get('clients/liste', [CommercialsClientController::class, 'liste']);
         $router->get('clients/profile/{code}', [CommercialsClientController::class, 'profile'], ['before' => 'auth']);
-        $router->get('souscription/detail/{code}', [CommercialsClientController::class, 'inscriptionDetail'], ['before' => 'auth']);
+        $router->get('souscription/detail/{code}', [CommercialsClientController::class, 'souscriptionDetail'], ['before' => 'auth']);
         $router->get('cautions', [CautisationController::class, 'liste']);
         $router->get('cautions/encaisser', [CautisationController::class, 'encaisser']);
     });

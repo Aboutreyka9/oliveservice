@@ -115,7 +115,7 @@ class CautisationController extends MainController
         extract($_POST);
 
         $v = new Validator();
-        $v->required('inscription_code', $inscription_code, 'Souscription')
+        $v->required('souscription_code', $souscription_code, 'Souscription')
           ->required('montant_cautisation', $montant_cautisation, 'Montant')
           ->digit('montant_cautisation', $montant_cautisation, 'Montant');
 
@@ -145,11 +145,11 @@ class CautisationController extends MainController
     public function modalAddCautisation()
     {
         $souscriptions = $this->cautisationModel->getFieldsForParams(
-            TABLES::INSCRIPTIONS,
+            TABLES::SOUSCRIPTIONS,
             ['etablissement_code' => Auth::user('etablissement_code')],
             [],
             true,
-            ['created_at_inscription' => 'DESC']
+            ['created_at_souscription' => 'DESC']
         );
 
         if (empty($souscriptions)) Response::error('Aucune souscription disponible.');
@@ -179,7 +179,7 @@ class CautisationController extends MainController
         Response::success('', ['clients' => $clients]);
     }
 
-    public function getInscriptionsClient()
+    public function getSouscriptionsClient()
     {
         $_POST = sanitizePostData($_POST);
         $clientCode = $_POST['client_code'] ?? '';
@@ -189,7 +189,7 @@ class CautisationController extends MainController
             Response::error('Code client requis');
         }
 
-        $souscriptions = $this->cautisationModel->getInscriptionsActivesByClient($clientCode, $etablissementCode);
+        $souscriptions = $this->cautisationModel->getSouscriptionsActivesByClient($clientCode, $etablissementCode);
         Response::success('', ['souscriptions' => $souscriptions]);
     }
 
@@ -199,7 +199,7 @@ class CautisationController extends MainController
         extract($_POST);
 
         $v = new Validator();
-        $v->required('inscription_code', $inscription_code, 'Souscription')
+        $v->required('souscription_code', $souscription_code, 'Souscription')
           ->required('mode_paiement', $mode_paiement, 'Mode paiement')
           ->required('montant_cautisation', $montant_cautisation, 'Montant')
           ->digit('montant_cautisation', $montant_cautisation, 'Montant')

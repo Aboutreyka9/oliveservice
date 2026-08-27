@@ -58,7 +58,7 @@
 </div>
 
 <script>
-var selectedInscription = null;
+var selectedSouscription = null;
 
 function searchClient() {
     var search = $('#search_client').val();
@@ -88,7 +88,7 @@ function searchClient() {
                 $('#selected_client').val(code);
                 $('#selected_client_nom').val(nom);
                 $('#search_results').html('<div class="alert alert-success"><i class="fas fa-check"></i> Client sélectionné: <strong>' + nom + '</strong> (' + code + ')</div>');
-                loadInscriptions(code);
+                loadSouscriptions(code);
             });
         } else {
             $('#search_results').html('<div class="alert alert-info">Aucun client trouvé</div>');
@@ -96,7 +96,7 @@ function searchClient() {
     }, 'json');
 }
 
-function loadInscriptions(clientCode) {
+function loadSouscriptions(clientCode) {
     $.post('<?= LINK ?>ajx.php', {
         action: 'get_souscriptions_client',
         client_code: clientCode
@@ -120,7 +120,7 @@ function loadInscriptions(clientCode) {
                 html += '<td>' + number_format(totalPaye, 0, ',', ' ') + ' FCFA</td>';
                 html += '<td class="text-danger">' + number_format(reste, 0, ',', ' ') + ' FCFA</td>';
                 html += '<td>' + number_format(montantJournalier, 0, ',', ' ') + ' FCFA/jour</td>';
-                html += '<td><button class="btn btn-primary btn-sm" onclick="openEncaissementModal(\'' + ins.code_inscription + '\', \'' + ins.nom_client + '\', ' + montantPack + ', ' + totalPaye + ', ' + reste + ', ' + montantJournalier + ', ' + (ins.duree_jours_pack || 0) + ')"><i class="fas fa-money-bill-wave"></i> Encaisser</button></td>';
+                html += '<td><button class="btn btn-primary btn-sm" onclick="openEncaissementModal(\'' + ins.code_souscription + '\', \'' + ins.nom_client + '\', ' + montantPack + ', ' + totalPaye + ', ' + reste + ', ' + montantJournalier + ', ' + (ins.duree_jours_pack || 0) + ')"><i class="fas fa-money-bill-wave"></i> Encaisser</button></td>';
                 html += '</tr>';
             });
             
@@ -133,7 +133,7 @@ function loadInscriptions(clientCode) {
 }
 
 function openEncaissementModal(codeIns, nomClient, montantPack, totalPaye, reste, montantJournalier, dureeJours) {
-    selectedInscription = {
+    selectedSouscription = {
         code: codeIns,
         nom_client: nomClient,
         montant_pack: montantPack,
@@ -144,7 +144,7 @@ function openEncaissementModal(codeIns, nomClient, montantPack, totalPaye, reste
     };
 
     var html = '<form id="frmEncaissement">';
-    html += '<input type="hidden" name="inscription_code" value="' + codeIns + '">';
+    html += '<input type="hidden" name="souscription_code" value="' + codeIns + '">';
     html += '<div class="row mb-3">';
     html += '<div class="col-md-12"><strong>Client: ' + nomClient + '</strong></div>';
     html += '<div class="col-md-12 mt-2"><div class="alert alert-info">';
@@ -250,12 +250,12 @@ function toggleModeCalcul() {
 
 function calculerMontant() {
     var jours = parseInt($('#nombre_jours_cautisation').val()) || 0;
-    var montant = jours * selectedInscription.montant_journalier;
+    var montant = jours * selectedSouscription.montant_journalier;
     $('#montant_cautisation').val(montant);
     $('#jours_calcules').text(jours);
     $('#montant_calcule').text(number_format(montant, 0, ',', ' ') + ' FCFA');
     
-    if (jours > 0 && selectedInscription.montant_journalier > 0) {
+    if (jours > 0 && selectedSouscription.montant_journalier > 0) {
         var debut = $('#periode_debut').val();
         if (debut) {
             var dateFin = new Date(debut);
@@ -267,7 +267,7 @@ function calculerMontant() {
 
 function calculerJours() {
     var montant = parseFloat($('#montant_cautisation').val()) || 0;
-    var jours = selectedInscription.montant_journalier > 0 ? Math.ceil(montant / selectedInscription.montant_journalier) : 0;
+    var jours = selectedSouscription.montant_journalier > 0 ? Math.ceil(montant / selectedSouscription.montant_journalier) : 0;
     $('#nombre_jours_cautisation').val(jours);
     $('#jours_calcules').text(jours);
     $('#montant_calcule').text(number_format(montant, 0, ',', ' ') + ' FCFA');

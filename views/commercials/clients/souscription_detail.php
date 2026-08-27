@@ -1,13 +1,16 @@
 <?php
-$inscription = $inscription ?? [];
+$souscription = $souscription ?? [];
 $packs = $packs ?? [];
-$cautions = $cautions ?? [];
+$statCautisation = $statCautisation ?? [];
+// var_dump($statCautisation);
+$cautisations = $cautisations ?? [];
 $distributions = $distributions ?? [];
+
 ?>
 
-<?php if (empty($inscription)): ?>
+<?php if (empty($souscription)): ?>
     <div class="alert alert-danger">
-        <i class="fas fa-exclamation-triangle"></i> Inscription non trouvée.
+        <i class="fas fa-exclamation-triangle"></i> Souscription non trouvée.
     </div>
 <?php else: ?>
 
@@ -17,69 +20,74 @@ $distributions = $distributions ?? [];
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Détails de l'inscription - <?= htmlspecialchars($inscription['code_inscription']) ?></h4>
-                <div>
-                    <a href="<?= url('souscriptions/liste') ?>" class="btn btn-default btn-sm">
-                        <i class="fas fa-arrow-left"></i> Retour
-                    </a>
-                </div>
+                <div class="card-title mb-0">Client concerné</div>
+                <a href="<?= url('clients/liste') ?>" class="btn btn-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
             </div>
             <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card custom-card-detail h-100">
-                            <div class="card-body text-center">
-                                <div class="icon bg-primary mb-2">
-                                    <i class="fas fa-user-circle" style="font-size: 32px;"></i>
-                                </div>
-                                <h6 class="montan-title">Client</h6>
-                                <h5 class="montan-value"><?= strtoupper(htmlspecialchars($inscription['nom_client'])) ?></h5>
-                                <p class="text-muted mb-1"><?= htmlspecialchars($inscription['code_client']) ?></p>
-                                <p class="text-muted">
-                                    <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($inscription['telephone_client']) ?>
-                                </p>
-                            </div>
+                <div class="d-flex align-items-center">
+                    <div class="avatar avatar-xl mr-4">
+                        <div class="avatar-title bg-primary text-white rounded-circle" style="width:80px;height:80px;font-size:32px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-user"></i>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card custom-card-detail h-100">
-                            <div class="card-body text-center">
-                                <div class="icon bg-info mb-2">
-                                    <i class="fas fa-calendar-check" style="font-size: 32px;"></i>
-                                </div>
-                                <h6 class="montan-title">Date inscription</h6>
-                                <h5 class="montan-value"><?= date_formater($inscription['created_at_inscription'], true) ?></h5>
-                            </div>
-                        </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1 text-uppercase"><?= htmlspecialchars($souscription['nom_client']) ?></h3>
+                        <p class="text-muted mb-1">
+                            <i class="fas fa-barcode mr-1"></i> <?= htmlspecialchars($souscription['code_client']) ?>
+                            &nbsp;|&nbsp; <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($souscription['telephone_client']) ?>
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-map-marker-alt mr-1"></i> <?= htmlspecialchars($souscription['lieu_residence_client']) ?>
+                            &nbsp;|&nbsp; <i class="fas fa-briefcase mr-1"></i> <?= htmlspecialchars($souscription['profession_client']) ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <span class="badge badge-success" style="padding: 8px 12px; font-size:13px;">Client actif</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row mb-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
                 <div class="table-responsive mt-4">
                     <table class="table table-bordered mb-0">
                         <tbody>
                             <tr>
-                                <th style="width: 200px;">Code inscription</th>
-                                <td><?= htmlspecialchars($inscription['code_inscription']) ?></td>
+                                <th style="width: 200px;">Code souscription</th>
+                                <td> 
+                                    <span class="font-weight-bold badge badge-danger"><?= $souscription['code_souscription'] ?></span>
+                                    
+                            </td>
                                 <th style="width: 200px;">Session</th>
-                                <td><?= htmlspecialchars($inscription['libelle_session']) ?></td>
+                                <td><?= $souscription['libelle_session'] ?></td>
                             </tr>
                             <tr>
-                                <th>Année scolaire</th>
-                                <td><?= htmlspecialchars($inscription['libelle_annee']) ?></td>
+                                <th>Année d'activité</th>
+                                <td><?= $souscription['libelle_annee'] ?></td>
                                 <th>Zone</th>
-                                <td><?= htmlspecialchars($inscription['libelle_zone']) ?></td>
+                                <td><?= $souscription['libelle_zone'] ?></td>
                             </tr>
                             <tr>
-                                <th>Statut inscription</th>
-                                <td><?= checkStatusInscription($inscription['statut_inscription']) ?></td>
+                                <th>Statut souscription</th>
+                                <td><?= checkStatusSouscription($souscription['statut_souscription'],['en cour','valide']) ?></td>
                                 <th>Commercial</th>
-                                <td><?= htmlspecialchars(($inscription['nom_user'] ?? '') . ' ' . ($inscription['prenom_user'] ?? '')) ?: '-' ?></td>
+                                <td><?= $souscription['nom_user']. ' ' . $souscription['prenom_user']?></td>
                             </tr>
                             <tr>
-                                <th>Date création</th>
-                                <td><?= date_formater($inscription['created_at_inscription'], true) ?></td>
-                                <th>Mise à jour</th>
-                                <td><?= $inscription['updated_at_inscription'] ? date_formater($inscription['updated_at_inscription'], true) : '-' ?></td>
+                                <th>Date souscription</th>
+                                <td><?= date_formater($souscription['created_at_souscription'], true) ?></td>
+                                <th>Nombre de jours</th>
+                                <td><?= $statCautisation['nombre_jour_paye'] ?> / <?= $statCautisation['nombre_jour_session'] ?>  <?= checkNiveauPaiement($statCautisation['nombre_jour_paye'], $statCautisation['nombre_jour_session']) ?></td>
+                            </tr>
+                            <tr>
+                                <?= checkAjourCautisation($souscription['code_souscription']) ?>
                             </tr>
                         </tbody>
                     </table>
@@ -87,23 +95,10 @@ $distributions = $distributions ?? [];
             </div>
         </div>
     </div>
+
 </div>
 
-<?php
-$totalPacks = 0;
-$montantPayeTotal = 0;
-foreach ($packs as $pc) {
-    $totalPacks += (float) ($pc['montant_pack'] ?? 0);
-}
-foreach ($cautions as $c) {
-    if (($c['statut_cautisation_client'] ?? '') === 'valide') {
-        $montantPayeTotal += (float) ($c['montant_cautisation_client'] ?? 0);
-    }
-}
-$resteDu = max(0, $totalPacks - $montantPayeTotal);
-?>
-
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-2">
     <div class="col-md-4">
         <div class="card custom-card-detail">
             <div class="card-body">
@@ -112,8 +107,8 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                         <i class="fas fa-calculator"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Montant total packs</h6>
-                        <h5 class="montan-value"><?= number_format($totalPacks, 0, ',', ' ') ?> FCFA</h5>
+                        <h6 class="montan-title">Montant total souscription</h6>
+                        <h5 class="montan-value"><?= money($statCautisation['montant_total']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -127,8 +122,8 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Total payé (cautions)</h6>
-                        <h5 class="montan-value"><?= number_format($montantPayeTotal, 0, ',', ' ') ?> FCFA</h5>
+                        <h6 class="montan-title">Total payé</h6>
+                        <h5 class="montan-value"><?= money($statCautisation['montant_paye']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -143,7 +138,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                     </div>
                     <div>
                         <h6 class="montan-title">Reste dû</h6>
-                        <h5 class="montan-value"><?= number_format($resteDu, 0, ',', ' ') ?> FCFA</h5>
+                        <h5 class="montan-value"><?= money($statCautisation['reste_a_payer']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -152,14 +147,14 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Packs souscrits</h4>
             </div>
             <div class="card-body">
                 <?php if (empty($packs)): ?>
-                    <p class="text-muted text-center py-4">Aucun pack associé à cette inscription.</p>
+                    <p class="text-muted text-center py-4">Aucun pack associé à cette souscription.</p>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
@@ -167,25 +162,28 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                 <tr>
                                     <th>#</th>
                                     <th>Pack</th>
+                                    <th>Categorie</th>
                                     <th>Montant</th>
                                     <th>Article</th>
                                     <th>Qté</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $test = [];  foreach ($test as $i => $pc): ?>
+                                <?php
+                                    $output = '';
+                                    $i = 0;
+                                 foreach ($packs as $i => $pc){ 
+                                    $output.= ' 
                                     <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td>
-                                            <span class="badge badge-info"><?= htmlspecialchars($pc['libelle_pack']) ?></span>
-                                            <small class="text-muted">(<?= htmlspecialchars($pc['code_pack']) ?>)</small>
-                                        </td>
-                                        <td class="text-nowrap"><?= number_format($pc['montant_pack'], 0, ',', ' ') ?> FCFA</td>
-                                        <td><?= htmlspecialchars($pc['libelle_article'] ?? '-') ?></td>
-                                        <td class="text-center"><?= $pc['quantite_article'] ?? '-' ?></td>
-                                        <td><?= checkStatusInscription($pc['statut_pack_inscription'], ['En attente', 'valide', 'rejeté']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                        <td>'. $i + 1 .'</td>
+                                        <td> <span class="badge badge-info">'. $pc['libelle_pack'] .'</span> </td>
+                                        <td class="text-center">'. $pc['libelle_categorie_pack'] .'</td>
+                                        <td class="text-nowrap">'. money($pc['montant_pack']) .' </td>
+                                        <td class="text-center">'. $pc['nombre_article'] .'</td>
+                                        <td>'. $pc['quantite'] .'</td>
+                                    </tr>';
+                                 } 
+                                 echo $output ;?>
                             </tbody>
                         </table>
                     </div>
@@ -194,13 +192,16 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="mb-0">Cautions</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Liste des versement</h4>
+                <button class="btn btn-info btn-sm"> 
+                     <i class="fas fa-hand-holding-usd"></i> &nbsp; Encaisser
+                </button>
             </div>
             <div class="card-body">
-                <?php if (empty($cautions)): ?>
+                <?php if (empty($cautisations)): ?>
                     <p class="text-muted text-center py-4">Aucune caution enregistrée.</p>
                 <?php else: ?>
                     <div class="table-responsive">
@@ -208,19 +209,17 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                             <thead class="thead-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Code</th>
                                     <th>Montant</th>
                                     <th>Statut</th>
                                     <th>Date création</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($cautions as $i => $c): ?>
+                                <?php foreach ($cautisations as $i => $c): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($c['code_cautisation_client']) ?></td>
-                                        <td class="text-nowrap"><?= number_format($c['montant_cautisation_client'], 0, ',', ' ') ?> FCFA</td>
-                                        <td><?= checkStatusInscription($c['statut_cautisation_client'], ['En attente', 'valide', 'annule']) ?></td>
+                                        <td class="text-nowrap"><?= money($c['montant_cautisation_client']) ?> </td>
+                                        <td><?= checkStatusSouscription($c['statut_cautisation_client'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($c['created_at_cautisation_client'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -230,8 +229,51 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                 <?php endif; ?>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- Articles -->
+<div class="row">
+    <div class="col-md-7">
         <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0">Liste des articles de l'souscription</h4>
+            </div>
+            <div class="card-body">
+                <?php if (empty($articles)): ?>
+                    <p class="text-muted text-center py-4">Aucun article associé à cette souscription.</p>
+                <?php else: ?>
+               
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Libellé article</th>
+                                    <th>Description</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 0;
+                                foreach ($articles as $article): ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= $article['libelle_article']?></td>
+                                        <td><?= $article['description_article'] ?></td>
+                                        <td><?= $article['quantite_totale']?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">Distributions</h4>
             </div>
@@ -254,66 +296,8 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($d['code_distribution']) ?></td>
-                                        <td><?= checkStatusInscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
+                                        <td><?= checkStatusSouscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($d['created_at_distribution'], true) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Articles -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="mb-0">Articles de l'inscription</h4>
-            </div>
-            <div class="card-body">
-                <?php if (empty($packs)): ?>
-                    <p class="text-muted text-center py-4">Aucun article associé à cette inscription.</p>
-                <?php else: ?>
-                    <?php
-                    $articles = [];
-                    foreach ($packs as $pc) {
-                        $articles[] = [
-                            'libelle_article' => $pc['libelle_article'] ?? '-',
-                            'description_article' => $pc['description_article'] ?? '',
-                            'libelle_categorie_pack' => $pc['libelle_categorie_pack'] ?? '-',
-                            'libelle_session' => $inscription['libelle_session'] ?? '-',
-                            'quantite_article' => $pc['quantite_article'] ?? 0,
-                        ];
-                    }
-                    $articlesUniques = [];
-                    foreach ($articles as $art) {
-                        $key = $art['libelle_article'] . '|' . $art['description_article'] . '|' . $art['libelle_categorie_pack'];
-                        $articlesUniques[$key] = $art;
-                    }
-                    ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Libellé article</th>
-                                    <th>Description</th>
-                                    <th>Catégorie</th>
-                                    <th>Session</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (array_values($articlesUniques) as $i => $article): ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_article']) ?></td>
-                                        <td><?= htmlspecialchars($article['description_article'] ?: '-') ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_categorie_pack']) ?></td>
-                                        <td><?= htmlspecialchars($article['libelle_session']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
