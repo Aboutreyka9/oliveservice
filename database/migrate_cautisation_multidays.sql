@@ -9,4 +9,4 @@ ALTER TABLE `cautisation_clients`
 -- Index pour améliorer les requêtes par période
 ALTER TABLE `cautisation_clients`
   ADD INDEX `idx_periode` (`periode_debut_cautisation`, `periode_fin_cautisation`),
-  ADD INDEX `idx_inscription` (`inscription_code`);
+  ADD INDEX `idx_souscription` (`souscription_code`);

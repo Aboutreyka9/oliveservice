@@ -33,7 +33,7 @@
 </div>
 
 <form method="post" id="frmAddClient">
-    <input type="hidden" name="action" value="btn_add_inscription">
+    <input type="hidden" name="action" value="btn_add_souscription">
     <input type="hidden" name="csrf_token" value="<?= csrfToken()::token() ?>">
     <input type="hidden" name="selected_packs" id="selected_packs" value="">
     <!-- <input type="hidden" name="session_code" id="session_code" value="">
@@ -100,14 +100,14 @@
                 <div class="row mb-5">
                     <div class="col-md-6">
                         <label for="">SESSION</label>
-                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_inscription" class="form-control">
+                        <select style="background: #c5c5c5; color:#000" name="session_code" id="session_souscription" class="form-control">
                             <option >--CHOISIR--</option>
                             <?= chargerSessions(); ?>
                         </select>
                     </div>
                     <div class="col-md-6">
                          <label for="">CATEGORIE</label>
-                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_inscription" class="form-control">
+                        <select style="background: #ccc; color:#000" name="categorie_code" id="categorie_souscription" class="form-control">
                             <option >Aucune donnée disponible</option>
                         </select>
                     </div>

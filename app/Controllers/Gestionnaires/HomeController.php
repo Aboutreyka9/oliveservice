@@ -58,13 +58,13 @@ class HomeController extends MainController
             'date_fin' => date('Y-m-d')
         ]);
 
-        $inscriptions = $this->cautisationModel->getInscriptionsActivesByClient(
+        $souscriptions = $this->cautisationModel->getSouscriptionsActivesByClient(
             $clients[0]['code_client'] ?? '',
             $etablissementCode
         );
 
         $totalClients = count($clients);
-        $totalInscriptions = $stats['total_insscriptions'] ?? 0;
+        $totalSouscriptions = $stats['total_insscriptions'] ?? 0;
         $totalPacks = $stats['total_packs'] ?? 0;
         $montantPacks = $stats['montant_total_packs'] ?? 0;
         $versementsValides = $stats['montant_versements_valides'] ?? 0;
@@ -75,9 +75,9 @@ class HomeController extends MainController
 
          return $this->view('commercials/dashboard/dashboard', compact(
             'versements',
-            'inscriptions',
+            'souscriptions',
             'totalClients',
-            'totalInscriptions',
+            'totalSouscriptions',
             'totalPacks',
             'montantPacks',
             'versementsValides',

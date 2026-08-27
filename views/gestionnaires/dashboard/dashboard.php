@@ -101,7 +101,7 @@ $alerts = $alerts ?? [];
                     <div class="icon bg-danger mr-2">
                         <i class="fas fa-clipboard-list"></i>
                     </div>
-                    <h6><span class="text-muted text-uppercase montan-title">INSCRIPTIONS</span></h6>
+                    <h6><span class="text-muted text-uppercase montan-title">SOUSCRIPTIONS</span></h6>
                 </div>
                 <h5 class="montan-value"><?= number_format($totals['total_souscriptions'] ?? 0) ?></h5>
             </div>

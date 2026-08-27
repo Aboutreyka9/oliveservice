@@ -13,23 +13,23 @@ class CautisationModel extends Model
     protected string $table = "cautisation_clients";
     public string $id = 'id_cautisation_client';
 
-    public function getCautisationsByInscription(string $inscriptionCode, string $etablissementCode): array
+    public function getCautisationsBySouscription(string $souscriptionCode, string $etablissementCode): array
     {
         $data = [];
         try {
-            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+            $sql = "SELECT c.*, ins.code_souscription, cl.nom_client, cl.telephone_client,
                            se.libelle_session, an.libelle_annee, zo.libelle_zone
                     FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
                     JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
-                    WHERE ins.code_inscription = :inscription_code
+                    WHERE ins.code_souscription = :souscription_code
                       AND ins.etablissement_code = :etablissement_code
                     ORDER BY c.created_at_cautisation_client DESC";
             $stmt = $this->db->prepare($sql);
-            $stmt->execute(['inscription_code' => $inscriptionCode, 'etablissement_code' => $etablissementCode]);
+            $stmt->execute(['souscription_code' => $souscriptionCode, 'etablissement_code' => $etablissementCode]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
             die($e->getMessage());
@@ -41,9 +41,9 @@ class CautisationModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, se.libelle_session, an.libelle_annee
+            $sql = "SELECT c.*, ins.code_souscription, cl.nom_client, se.libelle_session, an.libelle_annee
                     FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
@@ -59,14 +59,14 @@ class CautisationModel extends Model
         return $data;
     }
 
-    public function getTotalCautisationByInscription(string $inscriptionCode): float
+    public function getTotalCautisationBySouscription(string $souscriptionCode): float
     {
         $sql = "SELECT COALESCE(SUM(montant_cautisation_client), 0) 
                 FROM " . TABLES::CAUTISATION_CLIENTS . " 
-                WHERE inscription_code = :inscription_code 
+                WHERE souscription_code = :souscription_code 
                   AND statut_cautisation_client = 'valide'";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(['inscription_code' => $inscriptionCode]);
+        $stmt->execute(['souscription_code' => $souscriptionCode]);
         return (float) $stmt->fetchColumn();
     }
 
@@ -90,16 +90,16 @@ class CautisationModel extends Model
                 $params['search'] = '%' . $filters['search'] . '%';
             }
 
-            $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+            $sql = "SELECT c.*, ins.code_souscription, cl.nom_client, cl.telephone_client,
                            se.libelle_session, an.libelle_annee, zo.libelle_zone,
                            p.montant_pack as montant_total_pack
                     FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
                     JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
-                    LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::PACK_SOUSCRIPTIONS . " pi ON pi.souscription_code = ins.code_souscription
                     LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                     $where
                     ORDER BY c.created_at_cautisation_client DESC";
@@ -157,7 +157,7 @@ class CautisationModel extends Model
                         SUM(CASE WHEN c.statut_cautisation_client = 'valide' THEN c.montant_cautisation_client ELSE 0 END) as montant_valide,
                         SUM(CASE WHEN c.statut_cautisation_client = 'ennule' THEN c.montant_cautisation_client ELSE 0 END) as montant_annule
                     FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                     $where";
 
             $stmt = $this->db->prepare($sql);
@@ -186,7 +186,7 @@ class CautisationModel extends Model
         return $data;
     }
 
-    public function getInscriptionsActivesByClient(string $clientCode, string $etablissementCode): array
+    public function getSouscriptionsActivesByClient(string $clientCode, string $etablissementCode): array
     {
         $data = [];
         try {
@@ -194,24 +194,24 @@ class CautisationModel extends Model
                     se.libelle_session, an.libelle_annee, zo.libelle_zone,
                      p.montant_pack, se.nombre_jour_session,
                     COALESCE(SUM(CASE WHEN cc.statut_cautisation_client = 'valide' THEN cc.montant_cautisation_client ELSE 0 END), 0) as total_paye_valide
-                    FROM " . TABLES::INSCRIPTIONS . " ins
+                    FROM " . TABLES::SOUSCRIPTIONS . " ins
                     JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                     JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                     JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
                     JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
-                    JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                    JOIN " . TABLES::PACK_SOUSCRIPTIONS . " pi ON pi.souscription_code = ins.code_souscription
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
-                    LEFT JOIN " . TABLES::CAUTISATION_CLIENTS . " cc ON cc.inscription_code = ins.code_inscription
+                    LEFT JOIN " . TABLES::CAUTISATION_CLIENTS . " cc ON cc.souscription_code = ins.code_souscription
                     WHERE ins.etablissement_code = :etablissement_code
                     AND ins.client_code = :client_code
-                    AND ins.statut_inscription = :statut_inscription
-                    GROUP BY ins.code_inscription
-                    ORDER BY ins.created_at_inscription DESC";
+                    AND ins.statut_souscription = :statut_souscription
+                    GROUP BY ins.code_souscription
+                    ORDER BY ins.created_at_souscription DESC";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([
                 'client_code' => $clientCode, 
                 'etablissement_code' => $etablissementCode,
-                'statut_inscription' => STATUT_INSCRIPTION[0]
+                'statut_souscription' => STATUT_SOUSCRIPTION[0]
                 ]);
             $data = $stmt->fetchAll();
         } catch (Exception $e) {
@@ -220,12 +220,12 @@ class CautisationModel extends Model
         return $data;
     }
 
-    public function getCautisationsByInscriptionAndPeriode(string $inscriptionCode, ?string $dateDebut = null, ?string $dateFin = null): array
+    public function getCautisationsBySouscriptionAndPeriode(string $souscriptionCode, ?string $dateDebut = null, ?string $dateFin = null): array
     {
         $data = [];
         try {
-            $where = "WHERE inscription_code = :inscription_code";
-            $params = ['inscription_code' => $inscriptionCode];
+            $where = "WHERE souscription_code = :souscription_code";
+            $params = ['souscription_code' => $souscriptionCode];
 
             if ($dateDebut && $dateFin) {
                 $where .= " AND ((periode_debut_cautisation BETWEEN :date_debut AND :date_fin) 
@@ -245,9 +245,9 @@ class CautisationModel extends Model
         return $data;
     }
 
-    public function checkPeriodeCautisation(string $inscriptionCode, string $dateDebut, string $dateFin): bool
+    public function checkPeriodeCautisation(string $souscriptionCode, string $dateDebut, string $dateFin): bool
     {
-        $cautions = $this->getCautisationsByInscriptionAndPeriode($inscriptionCode, $dateDebut, $dateFin);
+        $cautions = $this->getCautisationsBySouscriptionAndPeriode($souscriptionCode, $dateDebut, $dateFin);
         $conflicts = array_filter($cautions, function($c) {
             return $c['statut_cautisation_client'] === 'valide' || $c['statut_cautisation_client'] === 'En attente';
         });
@@ -286,7 +286,7 @@ class CautisationModel extends Model
         }
 
         $sql = "SELECT COUNT(*) AS nb FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                 JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                 $where";
 
@@ -343,16 +343,16 @@ class CautisationModel extends Model
             $where .= " AND (" . implode(' OR ', $likes) . ")";
         }
 
-        $sql = "SELECT c.*, ins.code_inscription, cl.nom_client, cl.telephone_client,
+        $sql = "SELECT c.*, ins.code_souscription, cl.nom_client, cl.telephone_client,
                        se.libelle_session, an.libelle_annee, zo.libelle_zone,
                        p.montant_pack as montant_total_pack
                 FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code
+                JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code
                 JOIN " . TABLES::CLIENTS . " cl ON cl.code_client = ins.client_code
                 JOIN " . TABLES::SESSIONS . " se ON se.code_session = ins.session_code
                 JOIN " . TABLES::ANNEES . " an ON an.code_annee = ins.annee_code
                 JOIN " . TABLES::ZONES . " zo ON zo.code_zone = ins.zone_code
-                LEFT JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription
+                LEFT JOIN " . TABLES::PACK_SOUSCRIPTIONS . " pi ON pi.souscription_code = ins.code_souscription
                 LEFT JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code
                 $where ORDER BY $orderBy $orderDir LIMIT :start, :limit";
 

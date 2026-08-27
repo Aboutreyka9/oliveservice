@@ -25,9 +25,9 @@ class ClientService
      */
 
 
-    // SEXION INSCRIPTION
+    // SEXION SOUSCRIPTION
 
-        public function saveInscriptionData(array $post, array $packs = [])
+        public function saveSouscriptionData(array $post, array $packs = [])
     {
         extract($post);
 
@@ -37,7 +37,7 @@ class ClientService
 
         
         $code_client = $this->clientModel->generatorCodeClient(TABLES::CLIENTS, 'code_client',$nom_client,$telephone_client);
-        $code_inscription = $this->clientModel->generatorCodeSouscription(TABLES::INSCRIPTIONS, 'code_inscription');
+        $code_souscription = $this->clientModel->generatorCodeSouscription(TABLES::SOUSCRIPTIONS, 'code_souscription');
 
         $etablissement_code = Auth::user('etablissement_code');
         $user_code = Auth::user('id');
@@ -61,40 +61,40 @@ class ClientService
         ];
 
          
-        $data_inscription = [
-            'statut_inscription' => STATUT_INSCRIPTION[0],
+        $data_souscription = [
+            'statut_souscription' => STATUT_SOUSCRIPTION[0],
             'client_code' => $code_client,
             'session_code' => $session_code,
-            'code_inscription' => $code_inscription,
+            'code_souscription' => $code_souscription,
             'zone_code' => $zone_code,
             'annee_code' => $annee_code,
             'etablissement_code' => $etablissement_code,
             'user_code' => $user_code,
-            'created_at_inscription' => $date
+            'created_at_souscription' => $date
         ];
 
 
 
 
-        $packInscriptions = [];
+        $packSouscriptions = [];
         foreach ($packs as $packCode) {
-            $packInscriptions[] = [
-                'statut_pack_inscription' => STATUT_ACTIF,
-                'inscription_code' => $code_inscription,
+            $packSouscriptions[] = [
+                'statut_pack_souscription' => STATUT_ACTIF,
+                'souscription_code' => $code_souscription,
                 'pack_code' => $packCode,
                 'annee_code' => $annee_code,
                 'etablissement_code' => $etablissement_code,
                 'user_code' => $user_code,
-                'created_at_pack_inscription' => $date
+                'created_at_pack_souscription' => $date
             ];
         }
 
 
-        $result = $this->clientModel->transactionData(function () use ($data_client, $data_inscription,$packInscriptions) {
+        $result = $this->clientModel->transactionData(function () use ($data_client, $data_souscription,$packSouscriptions) {
 
             $this->clientModel->create(TABLES::CLIENTS, $data_client);
-            $this->clientModel->create(TABLES::INSCRIPTIONS, $data_inscription);
-            $this->clientModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
+            $this->clientModel->create(TABLES::SOUSCRIPTIONS, $data_souscription);
+            $this->clientModel->insertMultiple(TABLES::PACK_SOUSCRIPTIONS, $packSouscriptions);
 
         });
 
@@ -117,7 +117,7 @@ class ClientService
             return ['success' => false, 'message' => 'Désolé! Ce client n\'existe pas.'];
         }
 
-        $code_inscription = $this->clientModel->generatorCode(TABLES::INSCRIPTIONS, 'code_inscription');
+        $code_souscription = $this->clientModel->generatorCode(TABLES::SOUSCRIPTIONS, 'code_souscription');
 
         $etablissement_code = Auth::user('etablissement_code');
         $user_code = Auth::user('id');
@@ -125,34 +125,34 @@ class ClientService
         $zone_code = Auth::user('zone_code');
         $date = date('Y-m-d H:i:s');
 
-        $data_inscription = [
-            'statut_inscription' => STATUT_INSCRIPTION[0],
+        $data_souscription = [
+            'statut_souscription' => STATUT_SOUSCRIPTION[0],
             'client_code' => $client_code,
             'session_code' => $session_code,
-            'code_inscription' => $code_inscription,
+            'code_souscription' => $code_souscription,
             'zone_code' => $zone_code,
             'annee_code' => $annee_code,
             'etablissement_code' => $etablissement_code,
             'user_code' => $user_code,
-            'created_at_inscription' => $date
+            'created_at_souscription' => $date
         ];
 
-        $packInscriptions = [];
+        $packSouscriptions = [];
         foreach ($packs as $packCode) {
-            $packInscriptions[] = [
-                'statut_pack_inscription' => STATUT_ACTIF,
-                'inscription_code' => $code_inscription,
+            $packSouscriptions[] = [
+                'statut_pack_souscription' => STATUT_ACTIF,
+                'souscription_code' => $code_souscription,
                 'pack_code' => $packCode,
                 'annee_code' => $annee_code,
                 'etablissement_code' => $etablissement_code,
                 'user_code' => $user_code,
-                'created_at_pack_inscription' => $date
+                'created_at_pack_souscription' => $date
             ];
         }
 
-        $result = $this->clientModel->transactionData(function () use ($data_inscription, $packInscriptions) {
-            $this->clientModel->create(TABLES::INSCRIPTIONS, $data_inscription);
-            $this->clientModel->insertMultiple(TABLES::PACK_INSCRIPTIONS, $packInscriptions);
+        $result = $this->clientModel->transactionData(function () use ($data_souscription, $packSouscriptions) {
+            $this->clientModel->create(TABLES::SOUSCRIPTIONS, $data_souscription);
+            $this->clientModel->insertMultiple(TABLES::PACK_SOUSCRIPTIONS, $packSouscriptions);
         });
 
         if (!$result) {
@@ -174,43 +174,43 @@ class ClientService
             return [];
         }
 
-        $souscriptions = $this->clientModel->getInscriptionsByClientCode($clientCode, $etablissementCode);
-        $packInscriptions = $this->clientModel->getPackInscriptionsByClientCode($clientCode, $etablissementCode);
+        $souscriptions = $this->clientModel->getSouscriptionsByClientCode($clientCode, $etablissementCode);
+        $packSouscriptions = $this->clientModel->getPackSouscriptionsByClientCode($clientCode, $etablissementCode);
         $distributions = $this->clientModel->getDistributionsByClientCode($clientCode, $etablissementCode);
         $cautisations = $this->clientModel->getCautisationsByClientCode($clientCode, $etablissementCode);
 
         return [
             'client' => $client,
             'souscriptions' => $souscriptions,
-            'pack_souscriptions' => $packInscriptions,
+            'pack_souscriptions' => $packSouscriptions,
             'distributions' => $distributions,
             'cautisations' => $cautisations,
         ];
     }
 
-    public function getInscriptionDetailData(string $inscriptionCode): array
+    public function getSouscriptionDetailData(string $souscriptionCode): array
     {
         $etablissementCode = Auth::user('etablissement_code');
 
-        $inscription = $this->clientModel->getInscriptionDetail($inscriptionCode, $etablissementCode);
+        $souscription = $this->clientModel->getSouscriptionDetail($souscriptionCode, $etablissementCode);
 
-        if (empty($inscription)) {
+        if (empty($souscription)) {
             return [];
         }
 
-        $packs = $this->clientModel->getPackArticlesByInscription($inscriptionCode);
-        $cautions = $this->clientModel->getCautionsByInscription($inscriptionCode);
-        $distributions = $this->clientModel->getDistributionsByInscription($inscriptionCode);
+        $packs = $this->clientModel->getPackArticlesBySouscription($souscriptionCode);
+        $cautions = $this->clientModel->getCautionsBySouscription($souscriptionCode);
+        $distributions = $this->clientModel->getDistributionsBySouscription($souscriptionCode);
 
         return [
-            'inscription' => $inscription,
+            'souscription' => $souscription,
             'packs' => $packs,
             'cautions' => $cautions,
             'distributions' => $distributions,
         ];
     }
 
-    public function inscriptionDataService($souscriptions)
+    public function souscriptionDataService($souscriptions)
     {
         $i = 0;
         $data = [];
@@ -218,7 +218,7 @@ class ClientService
         foreach ($souscriptions as $souscription) {
             $i++;
 
-            $etat = checkStatusInscription($souscription['statut_inscription']);
+            $etat = checkStatusSouscription($souscription['statut_souscription']);
 
             $montantPack = (float) ($souscription['montant_pack'] ?? 0);
             $montantPaye = (float) ($souscription['montant_paye'] ?? 0);
@@ -230,43 +230,43 @@ class ClientService
             </button>
             <div class="dropdown-menu">
         ';
-            if ($souscription['statut_inscription'] == STATUT_INSCRIPTION[0]) {
+            if ($souscription['statut_souscription'] == STATUT_SOUSCRIPTION[0]) {
                 $actions .= '
-                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $souscription['code_inscription'] . '\')" 
+                  <button class="dropdown-item " id="Modifier" onclick="modalUpdatedDepense(\'' . $souscription['code_souscription'] . '\')" 
             data-toggle="tooltip" title="" data-original-title="Modifier souscription">
         <i class="fa fa-edit text-icon-primary"></i> &nbsp; &nbsp; Modifier souscription </button>
 
-                <button class="dropdown-item " id="" onclick="changeStatutInscription(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_ACTIF . '\')" 
+                <button class="dropdown-item " id="" onclick="changeStatutSouscription(\'' . $souscription['code_souscription'] . '\',\'' . STATUT_ACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Valider souscription ">
             <i class="fa fa-check text-icon-success"></i> &nbsp; &nbsp; Valider souscription </button>
 
-             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+             <button class="dropdown-item " id="" onclick="annulerDepense(\'' . $souscription['code_souscription'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Annuler souscription ">
             <i class="fa fa-trash text-icon-danger"></i> &nbsp; &nbsp; Annuler souscription </button>
         
         ';
             } else {
                 $actions .= '
-         <button class="dropdown-item " id="" onclick="imprimerInscription(\'' . $souscription['code_inscription'] . '\',\'' . STATUT_INACTIF . '\')" 
+         <button class="dropdown-item " id="" onclick="imprimerSouscription(\'' . $souscription['code_souscription'] . '\',\'' . STATUT_INACTIF . '\')" 
             data-toggle="tooltip" title="" data-original-title="Imprimer souscription ">
             <i class="fa fa-print text-icon-info"></i> &nbsp; &nbsp; Imprimer souscription </button>
         ';
             }
-            $actions .= '<a class="dropdown-item" href="' . url('souscriptions/detail/' . $souscription['code_inscription']) . '" data-toggle="tooltip" title="" data-original-title="Détails inscription">
-                <i class="fa fa-eye text-icon-info"></i> &nbsp; Détails inscription
+            $actions .= '<a class="dropdown-item" href="' . url('souscriptions/detail/' . $souscription['code_souscription']) . '" data-toggle="tooltip" title="" data-original-title="Détails souscription">
+                <i class="fa fa-eye text-icon-info"></i> &nbsp; Détails souscription
             </a>';
             $actions .= ' </div>
             ';
 
             $data[] = [
                 $i,
-                $souscription['code_inscription'],
+                $souscription['code_souscription'],
                 $souscription['nom_client'],
                 $souscription['telephone_client'],
                 $souscription['libelle_session'],
                 number_format($montantPack, 0, ',', ' ') . ' FCFA',
                 $etat,
-                date_formater($souscription['created_at_inscription']),
+                date_formater($souscription['created_at_souscription']),
                 $actions
             ];
         }
@@ -275,7 +275,7 @@ class ClientService
     }
 
 
-    public function inscriptionListeForCommercial(array $listeSoucriptions){
+    public function souscriptionListeForCommercial(array $listeSoucriptions){
         $output = '';
 
         if (!empty($listeSoucriptions)) {
@@ -286,20 +286,20 @@ class ClientService
             $output .= '
             <tr>
             <td>' . $i . '</td>
-            <td>' . $data['code_inscription'] . '</td>
+            <td>' . $data['code_souscription'] . '</td>
             <td>' . $data['nom_client'] . '</td>
             <td>' . $data['telephone_client'] . '</td>
             <td>' . $data['libelle_session'] . '</td>
-            <td>' . money($data['montant_inscription']) . '</td>
-            <td>' . checkStatusInscription($data['statut_inscription']) . '</td>
-            <td>' . date_formater($data['created_at_inscription']) . '</td>
+            <td>' . money($data['montant_souscription']) . '</td>
+            <td>' . checkStatusSouscription($data['statut_souscription']) . '</td>
+            <td>' . date_formater($data['created_at_souscription']) . '</td>
             <td>
             <button class="btn btn-light btn-link " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-h"></i>
                 </button>
                 <div class="dropdown-menu">
         
-            <a href="'.url('commercial/souscription/detail',['code' => $data['code_inscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
+            <a href="'.url('commercial/souscription/detail',['code' => $data['code_souscription'] ]).'" class="dropdown-item " data-toggle="tooltip" title="" data-original-title="Voir details souscription ">
                 <i class="fa fa-eye text-icon-primary"></i> Voir details </a>
                 </div>
             </td>

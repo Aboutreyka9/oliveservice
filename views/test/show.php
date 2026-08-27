@@ -12,7 +12,7 @@ $client = [
 
 $cautions = [
     [
-        'code_inscription' => 'INS_00042',
+        'code_souscription' => 'INS_00042',
         'code_cautisation_client' => 'CCT_00018',
         'montant_cautisation_client' => 150000,
         'montant_restant' => 50000,
@@ -21,7 +21,7 @@ $cautions = [
         'session' => 'SESSION A',
     ],
     [
-        'code_inscription' => 'INS_00041',
+        'code_souscription' => 'INS_00041',
         'code_cautisation_client' => 'CCT_00017',
         'montant_cautisation_client' => 120000,
         'montant_restant' => 120000,
@@ -203,7 +203,7 @@ $montantRestant = max(0, $montantTotalCautions - $montantTotalPaye);
                                     </th>
                                     <th>#</th>
                                     <th>Code caution</th>
-                                    <th>Inscription</th>
+                                    <th>Souscription</th>
                                     <th>Session</th>
                                     <th>Montant total</th>
                                     <th>Restant</th>
@@ -218,7 +218,7 @@ $montantRestant = max(0, $montantTotalCautions - $montantTotalPaye);
                                         <td>
                                             <div class="form-check">
                                                 <input class="form-check-input chk-caution" type="checkbox"
-                                                    data-inscription="<?= htmlspecialchars($c['code_inscription']) ?>"
+                                                    data-souscription="<?= htmlspecialchars($c['code_souscription']) ?>"
                                                     data-restant="<?= (int) $c['montant_restant'] ?>"
                                                     data-cotisation="<?= (int) $c['montant_cautisation_client'] ?>"
                                                     data-code="<?= htmlspecialchars($c['code_cautisation_client']) ?>"
@@ -227,17 +227,17 @@ $montantRestant = max(0, $montantTotalCautions - $montantTotalPaye);
                                         </td>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($c['code_cautisation_client']) ?></td>
-                                        <td><?= htmlspecialchars($c['code_inscription']) ?></td>
+                                        <td><?= htmlspecialchars($c['code_souscription']) ?></td>
                                         <td><?= htmlspecialchars($c['session']) ?></td>
                                         <td class="text-nowrap text-center"><?= number_format($c['montant_cautisation_client'], 0, ',', ' ') ?> FCFA</td>
                                         <td class="text-nowrap text-center"><?= number_format($c['montant_restant'], 0, ',', ' ') ?> FCFA</td>
                                         <td class="text-center">
-                                            <?= checkStatusInscription($c['statut_cautisation_client'], ['non_soldee','partiel','valide']) ?>
+                                            <?= checkStatusSouscription($c['statut_cautisation_client'], ['non_soldee','partiel','valide']) ?>
                                         </td>
                                         <td><?= date_formater($c['date_creation'], true) ?></td>
                                         <td class="text-nowrap text-center">
                                             <button type="button" class="btn btn-sm btn-primary btn-encaisser-row"
-                                                data-inscription="<?= htmlspecialchars($c['code_inscription']) ?>"
+                                                data-souscription="<?= htmlspecialchars($c['code_souscription']) ?>"
                                                 data-restant="<?= (int) $c['montant_restant'] ?>"
                                                 data-cotisation="<?= (int) $c['montant_cautisation_client'] ?>"
                                                 data-code="<?= htmlspecialchars($c['code_cautisation_client']) ?>">
@@ -442,7 +442,7 @@ $(function() {
 
     // Ouvrir le modal en sélectionnant une ligne directement
     $('.btn-encaisser-row').on('click', function() {
-        const inscription = $(this).data('inscription');
+        const souscription = $(this).data('souscription');
         const restant = parseInt($(this).data('restant')) || 0;
         const cotisation = parseInt($(this).data('cotisation')) || 0;
         const code = $(this).data('code');
@@ -455,7 +455,7 @@ $(function() {
         $('.btn-encaisser-row').prop('disabled', false);
 
         const items = '<li class="list-group-item d-flex justify-content-between align-items-center">' +
-            '<span>' + inscription + '</span>' +
+            '<span>' + souscription + '</span>' +
             '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
             '</li>';
         $('#enc_caution_items').html(items);
@@ -481,12 +481,12 @@ $(function() {
         let total = 0;
         let cotisation = 0;
         checked.each(function() {
-            const inscription = $(this).data('inscription');
+            const souscription = $(this).data('souscription');
             const restant = parseInt($(this).data('restant')) || 0;
             cotisation = parseInt($(this).data('cotisation')) || cotisation;
             total += restant;
             items += '<li class="list-group-item d-flex justify-content-between align-items-center">' +
-                '<span>' + inscription + '</span>' +
+                '<span>' + souscription + '</span>' +
                 '<span class="badge badge-info">' + addSeparator(restant) + ' FCFA</span>' +
                 '</li>';
         });

@@ -32,9 +32,9 @@ class TABLES
     public const DISTRIBUTIONS = 'distributions';
     public const ETABLISSEMENTS = 'etablissements';
     public const FONCTIONS = 'fonctions';
-    public const INSCRIPTIONS = 'inscriptions';
+    public const SOUSCRIPTIONS = 'souscriptions';
     public const PACKS = 'packs';
-    public const PACK_INSCRIPTIONS = 'pack_inscriptions';
+    public const PACK_SOUSCRIPTIONS = 'pack_souscriptions';
     public const RECONDUCTIONS = 'reconductions';
     public const ROLES = 'roles';
     public const SESSIONS = 'sessions';
@@ -46,7 +46,7 @@ class TABLES
     public const VERSEMENTS_COMMERCIAUX = 'versements_commerciaux';
     public const ZONES = 'zones';
     public const ZONE_COMMERCIALS = 'zone_commercials';
-    public const VUE_TOTAL_INSCRIPTION_PACK = 'vue_inscription_total_pack';
+    public const VUE_TOTAL_SOUSCRIPTION_PACK = 'vue_inscription_total_pack';
     public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
 }
 
@@ -96,7 +96,7 @@ class Groupesss
 //             ];
 
 const STATUT_DATA = ['actif', 'inactif', ''];
-const STATUT_INSCRIPTION = ['valide', 'solde', 'reconduite','annule'];
+const STATUT_SOUSCRIPTION = ['valide', 'solde', 'reconduite','annule'];
 const STATUT_DEPENSE = ['En attente', 'Confirmee', 'Annulee'];
 const PAIEMENT = ['Especes', 'Carte', 'Mobile money'];
 const SEXEP = ['Mr', 'Mlle', 'Mme'];

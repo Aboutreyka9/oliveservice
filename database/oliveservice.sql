@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `cautisation_clients` (
   `id_cautisation_client` int NOT NULL,
   `code_cautisation_client` varchar(50) NOT NULL,
   `montant_cautisation_client` int NOT NULL,
-  `inscription_code` varchar(50) NOT NULL,
+  `souscription_code` varchar(50) NOT NULL,
   `statut_cautisation_client` enum('En attente','valide','ennule') NOT NULL,
   `created_at_cautisation_client` datetime NOT NULL,
   `updated_at_cautisation_client` datetime NOT NULL,
@@ -264,14 +264,14 @@ DROP TABLE IF EXISTS `distributions`;
 CREATE TABLE IF NOT EXISTS `distributions` (
   `id_distribution` int NOT NULL AUTO_INCREMENT,
   `code_distribution` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `inscription_code` varchar(50) NOT NULL,
+  `souscription_code` varchar(50) NOT NULL,
   `zone_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `statut_distribution` enum('En attente','valide','ennule') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created_at_distribution` timestamp NOT NULL,
   `etablissement_code` varchar(50) DEFAULT NULL,
   `user_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_distribution`),
-  UNIQUE KEY `code_accessoire_inscription` (`code_distribution`)
+  UNIQUE KEY `code_accessoire_souscription` (`code_distribution`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -342,36 +342,36 @@ INSERT INTO `fonctions` (`id_fonction`, `libelle_fonction`, `code_fonction`, `st
 -- --------------------------------------------------------
 
 --
--- Structure de la table `inscriptions`
+-- Structure de la table `souscriptions`
 --
 
-DROP TABLE IF EXISTS `inscriptions`;
-CREATE TABLE IF NOT EXISTS `inscriptions` (
-  `id_inscription` int NOT NULL AUTO_INCREMENT,
-  `code_inscription` varchar(50) NOT NULL,
+DROP TABLE IF EXISTS `souscriptions`;
+CREATE TABLE IF NOT EXISTS `souscriptions` (
+  `id_souscription` int NOT NULL AUTO_INCREMENT,
+  `code_souscription` varchar(50) NOT NULL,
   `client_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `zone_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `etablissement_code` varchar(50) NOT NULL,
   `annee_code` varchar(50) NOT NULL,
   `session_code` varchar(50) NOT NULL,
   `user_code` varchar(50) NOT NULL,
-  `created_at_inscription` datetime NOT NULL,
-  `updated_at_inscription` datetime DEFAULT NULL,
-  `statut_inscription` enum('valide','solde','annule','reconduite') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id_inscription`),
-  UNIQUE KEY `uq_inscription` (`client_code`,`annee_code`),
+  `created_at_souscription` datetime NOT NULL,
+  `updated_at_souscription` datetime DEFAULT NULL,
+  `statut_souscription` enum('valide','solde','annule','reconduite') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id_souscription`),
+  UNIQUE KEY `uq_souscription` (`client_code`,`annee_code`),
   KEY `user_code` (`user_code`),
   KEY `session_code` (`session_code`),
   KEY `zone_code` (`zone_code`),
   KEY `etablissement_code` (`etablissement_code`),
-  KEY `code_inscription` (`code_inscription`)
+  KEY `code_souscription` (`code_souscription`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `inscriptions`
+-- Déchargement des données de la table `souscriptions`
 --
 
-INSERT INTO `inscriptions` (`id_inscription`, `code_inscription`, `client_code`, `zone_code`, `etablissement_code`, `annee_code`, `session_code`, `user_code`, `created_at_inscription`, `updated_at_inscription`, `statut_inscription`) VALUES
+INSERT INTO `souscriptions` (`id_souscription`, `code_souscription`, `client_code`, `zone_code`, `etablissement_code`, `annee_code`, `session_code`, `user_code`, `created_at_souscription`, `updated_at_souscription`, `statut_souscription`) VALUES
 (1, 'dMZ1CzuPfB', 'A0Y7ltuS7DIjEg', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 01:15:51', NULL, 'valide'),
 (2, '1jnSvF3AtBil9zRYgep3bpdxZay', 'xbz4LINGC8y3qe0xHtr8Eyk9b', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'l8rmIqVzNWaRYF6Nb7kuckHC', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 01:16:32', NULL, 'valide'),
 (3, 'SC-2608-15907', 'CL-836-70883-N', '6QIlVfXP0LiXE9tBzHownYLAAqDi2', '5454544456', '0GklBk07waYoLB6pHwY', 'Sgg1xRhXjmssV3z1FA19lxngAsR8I', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG', '2026-08-24 03:21:48', NULL, 'valide');
@@ -487,27 +487,27 @@ INSERT INTO `pack_articles` (`id_pack_article`, `quantite_article`, `pack_code`,
 -- --------------------------------------------------------
 
 --
--- Structure de la table `pack_inscriptions`
+-- Structure de la table `pack_souscriptions`
 --
 
-DROP TABLE IF EXISTS `pack_inscriptions`;
-CREATE TABLE IF NOT EXISTS `pack_inscriptions` (
-  `id_pack_inscription` int NOT NULL AUTO_INCREMENT,
-  `inscription_code` varchar(50) NOT NULL,
+DROP TABLE IF EXISTS `pack_souscriptions`;
+CREATE TABLE IF NOT EXISTS `pack_souscriptions` (
+  `id_pack_souscription` int NOT NULL AUTO_INCREMENT,
+  `souscription_code` varchar(50) NOT NULL,
   `pack_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `annee_code` varchar(50) NOT NULL,
-  `statut_pack_inscription` enum('actif','inactif') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'actif',
-  `created_at_pack_inscription` timestamp NOT NULL,
+  `statut_pack_souscription` enum('actif','inactif') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'actif',
+  `created_at_pack_souscription` timestamp NOT NULL,
   `etablissement_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `user_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`id_pack_inscription`)
+  PRIMARY KEY (`id_pack_souscription`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `pack_inscriptions`
+-- Déchargement des données de la table `pack_souscriptions`
 --
 
-INSERT INTO `pack_inscriptions` (`id_pack_inscription`, `inscription_code`, `pack_code`, `annee_code`, `statut_pack_inscription`, `created_at_pack_inscription`, `etablissement_code`, `user_code`) VALUES
+INSERT INTO `pack_souscriptions` (`id_pack_souscription`, `souscription_code`, `pack_code`, `annee_code`, `statut_pack_souscription`, `created_at_pack_souscription`, `etablissement_code`, `user_code`) VALUES
 (1, 'dMZ1CzuPfB', '5AZrZNCZvMEmitS2GEHx5qKvueCgK', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:15:51', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
 (2, 'dMZ1CzuPfB', '4Xghnzv8tQKcVu', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:15:51', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
 (3, '1jnSvF3AtBil9zRYgep3bpdxZay', 'l4ymf5', '0GklBk07waYoLB6pHwY', 'actif', '2026-08-24 01:16:32', '5454544456', 'NX6ZvNYGfdO5pjn5ZTeSH0d9hZBXAG'),
@@ -807,25 +807,25 @@ CREATE TABLE IF NOT EXISTS `versements_commerciaux` (
 -- --------------------------------------------------------
 
 --
--- Doublure de structure pour la vue `vue_inscription_total_pack`
+-- Doublure de structure pour la vue `vue_souscription_total_pack`
 -- (Voir ci-dessous la vue réelle)
 --
-DROP VIEW IF EXISTS `vue_inscription_total_pack`;
-CREATE TABLE IF NOT EXISTS `vue_inscription_total_pack` (
+DROP VIEW IF EXISTS `vue_souscription_total_pack`;
+CREATE TABLE IF NOT EXISTS `vue_souscription_total_pack` (
 `annee_code` varchar(50)
 ,`client_code` varchar(50)
 ,`code_client` varchar(50)
-,`code_inscription` varchar(50)
-,`created_at_inscription` datetime
+,`code_souscription` varchar(50)
+,`created_at_souscription` datetime
 ,`etablissement_code` varchar(50)
-,`id_inscription` int
-,`montant_inscription` decimal(32,0)
+,`id_souscription` int
+,`montant_souscription` decimal(32,0)
 ,`nom_client` varchar(100)
 ,`nombre_pack` bigint
 ,`session_code` varchar(50)
-,`statut_inscription` enum('valide','solde','annule','reconduite')
+,`statut_souscription` enum('valide','solde','annule','reconduite')
 ,`telephone_client` varchar(50)
-,`updated_at_inscription` datetime
+,`updated_at_souscription` datetime
 ,`user_code` varchar(50)
 ,`zone_code` varchar(50)
 );
@@ -905,12 +905,12 @@ CREATE TABLE IF NOT EXISTS `zone_commercials` (
 -- --------------------------------------------------------
 
 --
--- Structure de la vue `vue_inscription_total_pack`
+-- Structure de la vue `vue_souscription_total_pack`
 --
-DROP TABLE IF EXISTS `vue_inscription_total_pack`;
+DROP TABLE IF EXISTS `vue_souscription_total_pack`;
 
-DROP VIEW IF EXISTS `vue_inscription_total_pack`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_inscription_total_pack`  AS SELECT `ins`.`id_inscription` AS `id_inscription`, `ins`.`code_inscription` AS `code_inscription`, `ins`.`client_code` AS `client_code`, `ins`.`zone_code` AS `zone_code`, `ins`.`etablissement_code` AS `etablissement_code`, `ins`.`annee_code` AS `annee_code`, `ins`.`session_code` AS `session_code`, `ins`.`user_code` AS `user_code`, `ins`.`created_at_inscription` AS `created_at_inscription`, `ins`.`updated_at_inscription` AS `updated_at_inscription`, `ins`.`statut_inscription` AS `statut_inscription`, `cl`.`nom_client` AS `nom_client`, `cl`.`telephone_client` AS `telephone_client`, `cl`.`code_client` AS `code_client`, count(`pi`.`id_pack_inscription`) AS `nombre_pack`, sum(`pa`.`montant_pack`) AS `montant_inscription` FROM (((`inscriptions` `ins` join `pack_inscriptions` `pi` on((`pi`.`inscription_code` = `ins`.`code_inscription`))) join `packs` `pa` on((`pa`.`code_pack` = `pi`.`pack_code`))) join `clients` `cl` on((`cl`.`code_client` = `ins`.`client_code`))) GROUP BY `ins`.`code_inscription` ;
+DROP VIEW IF EXISTS `vue_souscription_total_pack`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vue_souscription_total_pack`  AS SELECT `ins`.`id_souscription` AS `id_souscription`, `ins`.`code_souscription` AS `code_souscription`, `ins`.`client_code` AS `client_code`, `ins`.`zone_code` AS `zone_code`, `ins`.`etablissement_code` AS `etablissement_code`, `ins`.`annee_code` AS `annee_code`, `ins`.`session_code` AS `session_code`, `ins`.`user_code` AS `user_code`, `ins`.`created_at_souscription` AS `created_at_souscription`, `ins`.`updated_at_souscription` AS `updated_at_souscription`, `ins`.`statut_souscription` AS `statut_souscription`, `cl`.`nom_client` AS `nom_client`, `cl`.`telephone_client` AS `telephone_client`, `cl`.`code_client` AS `code_client`, count(`pi`.`id_pack_souscription`) AS `nombre_pack`, sum(`pa`.`montant_pack`) AS `montant_souscription` FROM (((`souscriptions` `ins` join `pack_souscriptions` `pi` on((`pi`.`souscription_code` = `ins`.`code_souscription`))) join `packs` `pa` on((`pa`.`code_pack` = `pi`.`pack_code`))) join `clients` `cl` on((`cl`.`code_client` = `ins`.`client_code`))) GROUP BY `ins`.`code_souscription` ;
 
 -- --------------------------------------------------------
 

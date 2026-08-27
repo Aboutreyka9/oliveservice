@@ -1,7 +1,7 @@
 <?php
 $client = $client ?? [];
 $souscriptions = $souscriptions ?? [];
-$packInscriptions = $pack_souscriptions ?? [];
+$packSouscriptions = $pack_souscriptions ?? [];
 $distributions = $distributions ?? [];
 $cautisations = $cautisations ?? [];
 ?>
@@ -72,7 +72,7 @@ $cautisations = $cautisations ?? [];
                     </div>
                     <div>
                         <h6 class="montan-title">Packs</h6>
-                        <h5 class="montan-value"><?= count($packInscriptions) ?></h5>
+                        <h5 class="montan-value"><?= count($packSouscriptions) ?></h5>
                     </div>
                 </div>
             </div>
@@ -114,8 +114,8 @@ $cautisations = $cautisations ?? [];
 $totalPacks = 0;
 $totalPaye = 0;
 foreach ($souscriptions as $ins) {
-    foreach ($packInscriptions as $pi) {
-        if ($pi['inscription_code'] === $ins['code_inscription']) {
+    foreach ($packSouscriptions as $pi) {
+        if ($pi['souscription_code'] === $ins['code_souscription']) {
             $totalPacks += $pi['montant_pack'] ?? 0;
         }
     }
@@ -250,12 +250,12 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                                 <?php foreach ($souscriptions as $i => $ins): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($ins['code_inscription']) ?></td>
+                                        <td><?= htmlspecialchars($ins['code_souscription']) ?></td>
                                         <td><?= htmlspecialchars($ins['libelle_session']) ?></td>
                                         <td><?= htmlspecialchars($ins['libelle_annee']) ?></td>
                                         <td><?= htmlspecialchars($ins['libelle_zone']) ?></td>
-                                        <td><?= checkStatusInscription($ins['statut_inscription']) ?></td>
-                                        <td><?= date_formater($ins['created_at_inscription'], true) ?></td>
+                                        <td><?= checkStatusSouscription($ins['statut_souscription']) ?></td>
+                                        <td><?= date_formater($ins['created_at_souscription'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -270,7 +270,7 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                 <h4>Packs souscrits</h4>
             </div>
             <div class="card-body">
-                <?php if (empty($packInscriptions)): ?>
+                <?php if (empty($packSouscriptions)): ?>
                     <p class="text-muted text-center py-4">Aucun pack souscrit.</p>
                 <?php else: ?>
                     <div class="table-responsive">
@@ -286,14 +286,14 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($packInscriptions as $i => $pi): ?>
+                                <?php foreach ($packSouscriptions as $i => $pi): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($pi['libelle_pack']) ?></td>
                                         <td><?= number_format($pi['montant_pack'], 0, ',', ' ') ?> FCFA</td>
                                         <td><?= htmlspecialchars($pi['libelle_article'] ?? '-') ?></td>
                                         <td><?= $pi['quantite_article'] ?? '-' ?></td>
-                                        <td><span class="badge badge-success"><?= htmlspecialchars($pi['statut_pack_inscription']) ?></span></td>
+                                        <td><span class="badge badge-success"><?= htmlspecialchars($pi['statut_pack_souscription']) ?></span></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -328,7 +328,7 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($d['code_distribution']) ?></td>
                                         <td><?= htmlspecialchars($d['zone_code']) ?></td>
-                                        <td><?= checkStatusInscription($d['statut_distribution'], ['En attente', 'valide', 'ennule']) ?></td>
+                                        <td><?= checkStatusSouscription($d['statut_distribution'], ['En attente', 'valide', 'ennule']) ?></td>
                                         <td><?= date_formater($d['created_at_distribution'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -364,7 +364,7 @@ $resteDu = max(0, $totalPacks - $totalPaye);
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($c['code_cautisation_client']) ?></td>
                                         <td><?= number_format($c['montant_cautisation_client'], 0, ',', ' ') ?> FCFA</td>
-                                        <td><?= checkStatusInscription($c['statut_cautisation_client'], ['En attente', 'valide', 'ennule']) ?></td>
+                                        <td><?= checkStatusSouscription($c['statut_cautisation_client'], ['En attente', 'valide', 'ennule']) ?></td>
                                         <td><?= date_formater($c['created_at_cautisation_client'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>

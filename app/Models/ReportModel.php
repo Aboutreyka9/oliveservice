@@ -23,27 +23,27 @@ class ReportModel extends Model
             $data['total_clients'] = $stmt->fetch()['nb'] ?? 0;
 
             // Total souscriptions
-            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::INSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::SOUSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['total_souscriptions'] = $stmt->fetch()['nb'] ?? 0;
 
             // Total souscriptions valides
-            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::INSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee AND statut_inscription = 'valide'");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::SOUSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee AND statut_souscription = 'valide'");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['souscriptions_validees'] = $stmt->fetch()['nb'] ?? 0;
 
             // Total souscriptions en attente
-            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::INSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee AND statut_inscription = 'solde'");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::SOUSCRIPTIONS . " WHERE etablissement_code = :etablissement AND annee_code = :annee AND statut_souscription = 'solde'");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['souscriptions_en_attente'] = $stmt->fetch()['nb'] ?? 0;
 
             // Total packs vendus
-            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::PACK_INSCRIPTIONS . " pi JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::PACK_SOUSCRIPTIONS . " pi JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = pi.souscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['total_packs_vendus'] = $stmt->fetch()['nb'] ?? 0;
 
             // Total cautions
-            $stmt = $this->db->prepare("SELECT SUM(montant_cautisation_client) as total FROM " . TABLES::CAUTISATION_CLIENTS . " c JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee AND c.statut_cautisation_client = 'valide'");
+            $stmt = $this->db->prepare("SELECT SUM(montant_cautisation_client) as total FROM " . TABLES::CAUTISATION_CLIENTS . " c JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee AND c.statut_cautisation_client = 'valide'");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['total_cautions'] = $stmt->fetch()['total'] ?? 0;
 
@@ -58,7 +58,7 @@ class ReportModel extends Model
             $data['total_depenses'] = $stmt->fetch()['total'] ?? 0;
 
             // Total distributions
-            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::DISTRIBUTIONS . " d JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = d.inscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee AND d.statut_distribution = 'valide'");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as nb FROM " . TABLES::DISTRIBUTIONS . " d JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = d.souscription_code WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee AND d.statut_distribution = 'valide'");
             $stmt->execute(['etablissement' => $etablissement, 'annee' => $annee]);
             $data['total_distributions'] = $stmt->fetch()['nb'] ?? 0;
 
@@ -68,14 +68,14 @@ class ReportModel extends Model
         return $data;
     }
 
-    public function getInscriptionsByMonth(string $anneeCode): array
+    public function getSouscriptionsByMonth(string $anneeCode): array
     {
         $data = [];
         try {
-            $sql = "SELECT MONTH(created_at_inscription) as mois, COUNT(*) as total 
-                    FROM " . TABLES::INSCRIPTIONS . " 
+            $sql = "SELECT MONTH(created_at_souscription) as mois, COUNT(*) as total 
+                    FROM " . TABLES::SOUSCRIPTIONS . " 
                     WHERE annee_code = :annee AND etablissement_code = :etablissement 
-                    GROUP BY MONTH(created_at_inscription) 
+                    GROUP BY MONTH(created_at_souscription) 
                     ORDER BY mois";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['annee' => $anneeCode, 'etablissement' => Auth::user('etablissement_code')]);
@@ -90,10 +90,10 @@ class ReportModel extends Model
     {
         $data = [];
         try {
-            $sql = "SELECT p.libelle_pack, p.montant_pack, COUNT(pi.id_pack_inscription) as nb_ventes, SUM(p.montant_pack) as total_ventes 
-                    FROM " . TABLES::PACK_INSCRIPTIONS . " pi 
+            $sql = "SELECT p.libelle_pack, p.montant_pack, COUNT(pi.id_pack_souscription) as nb_ventes, SUM(p.montant_pack) as total_ventes 
+                    FROM " . TABLES::PACK_SOUSCRIPTIONS . " pi 
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code 
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = pi.inscription_code 
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = pi.souscription_code 
                     WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee 
                     GROUP BY pi.pack_code 
                     ORDER BY nb_ventes DESC 
@@ -116,7 +116,7 @@ class ReportModel extends Model
         try {
             $sql = "SELECT u.nom_user, u.prenom_user, SUM(c.montant_cautisation_client) as total_cautions, COUNT(c.id_cautisation_client) as nb_cautions 
                     FROM " . TABLES::CAUTISATION_CLIENTS . " c 
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = c.inscription_code 
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = c.souscription_code 
                     JOIN " . TABLES::USERS . " u ON u.code_user = ins.user_code 
                     WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee 
                     GROUP BY ins.user_code 
@@ -155,8 +155,8 @@ class ReportModel extends Model
         try {
             $sql = "SELECT p.libelle_pack, COUNT(d.id_distribution) as nb_distributions 
                     FROM " . TABLES::DISTRIBUTIONS . " d 
-                    JOIN " . TABLES::INSCRIPTIONS . " ins ON ins.code_inscription = d.inscription_code 
-                    JOIN " . TABLES::PACK_INSCRIPTIONS . " pi ON pi.inscription_code = ins.code_inscription 
+                    JOIN " . TABLES::SOUSCRIPTIONS . " ins ON ins.code_souscription = d.souscription_code 
+                    JOIN " . TABLES::PACK_SOUSCRIPTIONS . " pi ON pi.souscription_code = ins.code_souscription 
                     JOIN " . TABLES::PACKS . " p ON p.code_pack = pi.pack_code 
                     WHERE ins.etablissement_code = :etablissement AND ins.annee_code = :annee AND d.statut_distribution = 'valide' 
                     GROUP BY pi.pack_code 

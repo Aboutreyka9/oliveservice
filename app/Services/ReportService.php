@@ -17,7 +17,7 @@ class ReportService
     {
         return [
             'stats' => $this->reportModel->getDashboardStats(),
-            'souscriptionsByMonth' => $this->reportModel->getInscriptionsByMonth(),
+            'souscriptionsByMonth' => $this->reportModel->getSouscriptionsByMonth(),
             'topPacks' => $this->reportModel->getTopPacks(5),
             'cautionsByCommercial' => $this->reportModel->getCautionsByCommercial(),
             'versementsByCommercial' => $this->reportModel->getVersementsByCommercial(),

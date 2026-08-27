@@ -37,8 +37,8 @@
                         <i class="fas fa-clipboard-list"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Inscriptions</h6>
-                        <h5 class="montan-value"><?= number_format($totalInscriptions) ?></h5>
+                        <h6 class="montan-title">Souscriptions</h6>
+                        <h5 class="montan-value"><?= number_format($totalSouscriptions) ?></h5>
                     </div>
                 </div>
             </div>
@@ -187,8 +187,8 @@
                                     <th>Contact</th>
                                     <th>Sexe</th>
                                     <th>Lieu résidence</th>
-                                    <th>Nb inscriptions</th>
-                                    <th>Première inscription</th>
+                                    <th>Nb souscriptions</th>
+                                    <th>Première souscription</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -200,8 +200,8 @@
                                         <td><?= htmlspecialchars($client['telephone_client']) ?></td>
                                         <td><?= htmlspecialchars($client['sexe_client']) ?></td>
                                         <td><?= htmlspecialchars($client['lieu_residence_client'] ?? '-') ?></td>
-                                        <td><?= number_format($client['nb_inscriptions'] ?? 0) ?></td>
-                                        <td><?= !empty($client['premiere_inscription']) ? date_formater($client['premiere_inscription'], true) : '-' ?></td>
+                                        <td><?= number_format($client['nb_souscriptions'] ?? 0) ?></td>
+                                        <td><?= !empty($client['premiere_souscription']) ? date_formater($client['premiere_souscription'], true) : '-' ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

@@ -617,7 +617,7 @@ function checkStatusDepense(string $etat, array $data = STATUT_DEPENSE)
     return $result;
 }
 
-function checkStatusInscription(string $etat, array $data = STATUT_INSCRIPTION)
+function checkStatusSouscription(string $etat, array $data = STATUT_SOUSCRIPTION)
 {
     $result = "";
     switch ($etat) {

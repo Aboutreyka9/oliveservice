@@ -1,13 +1,13 @@
 <?php
-$inscription = $inscription ?? [];
+$souscription = $souscription ?? [];
 $packs = $packs ?? [];
 $cautions = $cautions ?? [];
 $distributions = $distributions ?? [];
 ?>
 
-<?php if (empty($inscription)): ?>
+<?php if (empty($souscription)): ?>
     <div class="alert alert-danger">
-        <i class="fas fa-exclamation-triangle"></i> Inscription non trouvée.
+        <i class="fas fa-exclamation-triangle"></i> Souscription non trouvée.
     </div>
 <?php else: ?>
 
@@ -17,7 +17,7 @@ $distributions = $distributions ?? [];
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Détails de l'inscription - <?= htmlspecialchars($inscription['code_inscription']) ?></h4>
+                <h4 class="mb-0">Détails de l'souscription - <?= htmlspecialchars($souscription['code_souscription']) ?></h4>
                 <div>
                     <a href="<?= url('souscriptions/liste') ?>" class="btn btn-default btn-sm">
                         <i class="fas fa-arrow-left"></i> Retour
@@ -33,10 +33,10 @@ $distributions = $distributions ?? [];
                                     <i class="fas fa-user-circle" style="font-size: 32px;"></i>
                                 </div>
                                 <h6 class="montan-title">Client</h6>
-                                <h5 class="montan-value"><?= strtoupper(htmlspecialchars($inscription['nom_client'])) ?></h5>
-                                <p class="text-muted mb-1"><?= htmlspecialchars($inscription['code_client']) ?></p>
+                                <h5 class="montan-value"><?= strtoupper(htmlspecialchars($souscription['nom_client'])) ?></h5>
+                                <p class="text-muted mb-1"><?= htmlspecialchars($souscription['code_client']) ?></p>
                                 <p class="text-muted">
-                                    <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($inscription['telephone_client']) ?>
+                                    <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($souscription['telephone_client']) ?>
                                 </p>
                             </div>
                         </div>
@@ -47,8 +47,8 @@ $distributions = $distributions ?? [];
                                 <div class="icon bg-info mb-2">
                                     <i class="fas fa-calendar-check" style="font-size: 32px;"></i>
                                 </div>
-                                <h6 class="montan-title">Date inscription</h6>
-                                <h5 class="montan-value"><?= date_formater($inscription['created_at_inscription'], true) ?></h5>
+                                <h6 class="montan-title">Date souscription</h6>
+                                <h5 class="montan-value"><?= date_formater($souscription['created_at_souscription'], true) ?></h5>
                             </div>
                         </div>
                     </div>
@@ -58,28 +58,28 @@ $distributions = $distributions ?? [];
                     <table class="table table-bordered mb-0">
                         <tbody>
                             <tr>
-                                <th style="width: 200px;">Code inscription</th>
-                                <td><?= htmlspecialchars($inscription['code_inscription']) ?></td>
+                                <th style="width: 200px;">Code souscription</th>
+                                <td><?= htmlspecialchars($souscription['code_souscription']) ?></td>
                                 <th style="width: 200px;">Session</th>
-                                <td><?= htmlspecialchars($inscription['libelle_session']) ?></td>
+                                <td><?= htmlspecialchars($souscription['libelle_session']) ?></td>
                             </tr>
                             <tr>
                                 <th>Année scolaire</th>
-                                <td><?= htmlspecialchars($inscription['libelle_annee']) ?></td>
+                                <td><?= htmlspecialchars($souscription['libelle_annee']) ?></td>
                                 <th>Zone</th>
-                                <td><?= htmlspecialchars($inscription['libelle_zone']) ?></td>
+                                <td><?= htmlspecialchars($souscription['libelle_zone']) ?></td>
                             </tr>
                             <tr>
-                                <th>Statut inscription</th>
-                                <td><?= checkStatusInscription($inscription['statut_inscription']) ?></td>
+                                <th>Statut souscription</th>
+                                <td><?= checkStatusSouscription($souscription['statut_souscription']) ?></td>
                                 <th>Commercial</th>
-                                <td><?= htmlspecialchars(($inscription['nom_user'] ?? '') . ' ' . ($inscription['prenom_user'] ?? '')) ?: '-' ?></td>
+                                <td><?= htmlspecialchars(($souscription['nom_user'] ?? '') . ' ' . ($souscription['prenom_user'] ?? '')) ?: '-' ?></td>
                             </tr>
                             <tr>
                                 <th>Date création</th>
-                                <td><?= date_formater($inscription['created_at_inscription'], true) ?></td>
+                                <td><?= date_formater($souscription['created_at_souscription'], true) ?></td>
                                 <th>Mise à jour</th>
-                                <td><?= $inscription['updated_at_inscription'] ? date_formater($inscription['updated_at_inscription'], true) : '-' ?></td>
+                                <td><?= $souscription['updated_at_souscription'] ? date_formater($souscription['updated_at_souscription'], true) : '-' ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -159,7 +159,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
             </div>
             <div class="card-body">
                 <?php if (empty($packs)): ?>
-                    <p class="text-muted text-center py-4">Aucun pack associé à cette inscription.</p>
+                    <p class="text-muted text-center py-4">Aucun pack associé à cette souscription.</p>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered">
@@ -183,7 +183,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                         <td class="text-nowrap"><?= number_format($pc['montant_pack'], 0, ',', ' ') ?> FCFA</td>
                                         <td><?= htmlspecialchars($pc['libelle_article'] ?? '-') ?></td>
                                         <td class="text-center"><?= $pc['quantite_article'] ?? '-' ?></td>
-                                        <td><?= checkStatusInscription($pc['statut_pack_inscription'], ['En attente', 'valide', 'rejeté']) ?></td>
+                                        <td><?= checkStatusSouscription($pc['statut_pack_souscription'], ['En attente', 'valide', 'rejeté']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -220,7 +220,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($c['code_cautisation_client']) ?></td>
                                         <td class="text-nowrap"><?= number_format($c['montant_cautisation_client'], 0, ',', ' ') ?> FCFA</td>
-                                        <td><?= checkStatusInscription($c['statut_cautisation_client'], ['En attente', 'valide', 'annule']) ?></td>
+                                        <td><?= checkStatusSouscription($c['statut_cautisation_client'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($c['created_at_cautisation_client'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -254,7 +254,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($d['code_distribution']) ?></td>
-                                        <td><?= checkStatusInscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
+                                        <td><?= checkStatusSouscription($d['statut_distribution'], ['En attente', 'valide', 'annule']) ?></td>
                                         <td><?= date_formater($d['created_at_distribution'], true) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -272,11 +272,11 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
     <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-header">
-                <h4 class="mb-0">Articles de l'inscription</h4>
+                <h4 class="mb-0">Articles de l'souscription</h4>
             </div>
             <div class="card-body">
                 <?php if (empty($packs)): ?>
-                    <p class="text-muted text-center py-4">Aucun article associé à cette inscription.</p>
+                    <p class="text-muted text-center py-4">Aucun article associé à cette souscription.</p>
                 <?php else: ?>
                     <?php
                     $articles = [];
@@ -285,7 +285,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                             'libelle_article' => $pc['libelle_article'] ?? '-',
                             'description_article' => $pc['description_article'] ?? '',
                             'libelle_categorie_pack' => $pc['libelle_categorie_pack'] ?? '-',
-                            'libelle_session' => $inscription['libelle_session'] ?? '-',
+                            'libelle_session' => $souscription['libelle_session'] ?? '-',
                             'quantite_article' => $pc['quantite_article'] ?? 0,
                         ];
                     }

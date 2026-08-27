@@ -714,7 +714,7 @@ switch ($action) {
 
         $ajx = new ClientController();
 
-        $ajx->GetListeInscription();
+        $ajx->GetListeSouscription();
 
         break;
     case 'charger_souscription_commercial_for_session':
@@ -725,11 +725,11 @@ switch ($action) {
 
         break;
 
-    case 'btn_add_inscription':
+    case 'btn_add_souscription':
 
         $ajx = new ClientController();
 
-        $ajx->addInscription();
+        $ajx->addSouscription();
 
         break;
 
@@ -835,7 +835,7 @@ switch ($action) {
 
         $ajx = new CautisationController();
 
-        $ajx->getInscriptionsClient();
+        $ajx->getSouscriptionsClient();
 
         break;
 
