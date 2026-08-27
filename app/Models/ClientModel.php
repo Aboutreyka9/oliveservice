@@ -430,23 +430,21 @@ class ClientModel extends Model
         }
         return $data;
     }
-
-    public function getCautionsBySouscription(string $souscriptionCode): array
+  public function checkStateCautisationSouscription(string $souscriptionCode): array
     {
         $data = [];
         try {
-            $sql = "SELECT c.*
-                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
-                    WHERE c.souscription_code = :souscription_code
-                    ORDER BY c.created_at_cautisation_client DESC";
+            $sql = "SELECT vsc.* FROM " . TABLES::VUE_STATE_CAUTISATION_SOUSCRIPTION_SESSION . " vsc
+                    WHERE vsc.souscription_code = :souscription_code";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['souscription_code' => $souscriptionCode]);
-            $data = $stmt->fetchAll();
+            $data = $stmt->fetch();
         } catch (Exception $e) {
             die($e->getMessage());
         }
         return $data;
     }
+
 
     public function getDistributionsBySouscription(string $souscriptionCode): array
     {

@@ -4,16 +4,19 @@ namespace App\Services;
 
 use App\Core\Auth;
 use App\Models\ClientModel;
+use App\Models\CautisationModel;
 use TABLES;
 
 class ClientService
 {
 
     public ClientModel $clientModel;
+    public CautisationModel $cautisationModel;
 
     public function __construct()
     {
         $this->clientModel = new ClientModel();
+        $this->cautisationModel = new CautisationModel();
     }
 
     /**
@@ -191,6 +194,7 @@ class ClientService
     public function getSouscriptionDetailData(string $souscriptionCode): array
     {
         $etablissementCode = Auth::user('etablissement_code');
+        $anneeCode = Auth::user('annee_code');
 
         $souscription = $this->clientModel->getSouscriptionDetail($souscriptionCode, $etablissementCode);
 
@@ -200,16 +204,11 @@ class ClientService
 
         $packs = $this->clientModel->getPacksBySouscription($souscriptionCode);
         $articles = $this->clientModel->getListeArticleByInscriptionCode($souscriptionCode);
-        $cautions = $this->clientModel->getCautionsBySouscription($souscriptionCode);
+        $cautisations = $this->cautisationModel->getCautisationsBySouscription($souscriptionCode);
+        $statCautisation = $this->cautisationModel->getStatsCautisationsBySouscriptionTest($souscriptionCode,$anneeCode);
         $distributions = $this->clientModel->getDistributionsBySouscription($souscriptionCode);
 
-        return [
-            'souscription' => $souscription,
-            'packs' => $packs,
-            'articles' => $articles,
-            'cautions' => $cautions,
-            'distributions' => $distributions,
-        ];
+        return compact('souscription','packs','articles','cautisations','statCautisation','distributions');
     }
 
     public function souscriptionDataService($souscriptions)

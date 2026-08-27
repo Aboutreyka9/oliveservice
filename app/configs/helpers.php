@@ -3,6 +3,7 @@
 use App\Core\Auth;
 use App\Core\Gqr;
 use App\Middlewares\CsrfMiddleware;
+use App\Models\ClientModel;
 use App\Services\PersonneService;
 use App\Services\Service;
 
@@ -558,6 +559,47 @@ function checkEtatStock(string $stock, $stockAlerte)
 
     return $result;
 }
+function checkNiveauPaiement(string $jour_payer, $toal_jour)
+{
+    $result = "";
+
+    if ($jour_payer == $toal_jour) {
+        $result = ' <i class="fas fa-arrow-up text-icon-success"></i> ';
+    } elseif ($jour_payer > 0) {
+        $result = ' <i class="fas fa-arrow-up text-icon-warning"></i> ';
+    } else {
+        $result = ' <i class="fas fa-arrow-down text-icon-danger"></i> ';
+    }
+
+
+
+    return $result;
+}
+
+function checkAjourCautisation($souscriptionCode){
+    // recuperer la date du dernier versement de la souscription
+    $state = (new ClientModel())->checkStateCautisationSouscription($souscriptionCode);
+    if($state['nombre_jour_avance'] <1){
+
+    $output = ' 
+    <th>Statut de la cautisation </th>
+    <td> <span class="badge statut-warning">'.$state['statut_cautisation'].'</span> </td>
+    <th>En retard de </th>
+    <td>'.$state['nombre_jour_retard'].' Jour(s)</td>
+    ';
+    }else{
+         $output = ' 
+    <th>Statut de la cautisation </th>
+    <td> <span class="badge statut-succes">'.$state['statut_cautisation'].'</span> /td>
+
+     <th>En avance de </th>
+    <td>'.$state['nombre_jour_avance'].' Jour(s)</td>
+    ';
+    }
+
+    return $output;
+}
+
 function checkEtatEcart($ecart)
 {
     $result = "";

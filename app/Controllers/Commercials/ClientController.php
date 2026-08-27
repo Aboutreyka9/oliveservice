@@ -83,11 +83,7 @@ class ClientController extends MainController
     public function souscriptionDetail($code = null)
     {
         $data = [
-            'title' => "Détails de l'souscription",
-            'souscription' => [],
-            'packs' => [],
-            'cautions' => [],
-            'distributions' => [],
+            'title' => "Détails de l'souscription"
         ];
 
         if ($code) {

@@ -1,9 +1,11 @@
 <?php
 $souscription = $souscription ?? [];
 $packs = $packs ?? [];
-// var_dump($articles);
-$cautions = $cautions ?? [];
+$statCautisation = $statCautisation ?? [];
+// var_dump($statCautisation);
+$cautisations = $cautisations ?? [];
 $distributions = $distributions ?? [];
+
 ?>
 
 <?php if (empty($souscription)): ?>
@@ -14,53 +16,55 @@ $distributions = $distributions ?? [];
 
 <?= breakcrumb($title, 'fa-file-alt'); ?>
 
-<div class="row mb-2">
+<div class="row mb-4">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Détails de l'souscription - <?= $souscription['code_souscription'] ?></h4>
-                <div>
-                    <a href="<?= url('souscriptions/liste') ?>" class="btn btn-default btn-sm">
-                        <i class="fas fa-arrow-left"></i> Retour
-                    </a>
-                </div>
+                <div class="card-title mb-0">Client concerné</div>
+                <a href="<?= url('clients/liste') ?>" class="btn btn-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
             </div>
             <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="card custom-card-detail h-100">
-                            <div class="card-body text-center">
-                                <div class="icon bg-primary mb-2">
-                                    <i class="fas fa-user-circle" style="font-size: 32px;"></i>
-                                </div>
-                                <h6 class="montan-title">Client</h6>
-                                <h5 class="montan-value"><?= strtoupper($souscription['nom_client']) ?></h5>
-                                <p class="text-muted mb-1"><?= $souscription['code_client'] ?></p>
-                                <p class="text-muted">
-                                    <i class="fas fa-phone mr-1"></i> <?= $souscription['telephone_client'] ?>
-                                </p>
-                            </div>
+                <div class="d-flex align-items-center">
+                    <div class="avatar avatar-xl mr-4">
+                        <div class="avatar-title bg-primary text-white rounded-circle" style="width:80px;height:80px;font-size:32px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-user"></i>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card custom-card-detail h-100">
-                            <div class="card-body text-center">
-                                <div class="icon bg-info mb-2">
-                                    <i class="fas fa-calendar-check" style="font-size: 32px;"></i>
-                                </div>
-                                <h6 class="montan-title">Date souscription</h6>
-                                <h5 class="montan-value"><?= date_formater($souscription['created_at_souscription'], true) ?></h5>
-                            </div>
-                        </div>
+                    <div class="flex-grow-1">
+                        <h3 class="mb-1 text-uppercase"><?= htmlspecialchars($souscription['nom_client']) ?></h3>
+                        <p class="text-muted mb-1">
+                            <i class="fas fa-barcode mr-1"></i> <?= htmlspecialchars($souscription['code_client']) ?>
+                            &nbsp;|&nbsp; <i class="fas fa-phone mr-1"></i> <?= htmlspecialchars($souscription['telephone_client']) ?>
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-map-marker-alt mr-1"></i> <?= htmlspecialchars($souscription['lieu_residence_client']) ?>
+                            &nbsp;|&nbsp; <i class="fas fa-briefcase mr-1"></i> <?= htmlspecialchars($souscription['profession_client']) ?>
+                        </p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <span class="badge badge-success" style="padding: 8px 12px; font-size:13px;">Client actif</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row mb-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
                 <div class="table-responsive mt-4">
                     <table class="table table-bordered mb-0">
                         <tbody>
                             <tr>
                                 <th style="width: 200px;">Code souscription</th>
-                                <td><?= $souscription['code_souscription'] ?></td>
+                                <td> 
+                                    <span class="font-weight-bold badge badge-danger"><?= $souscription['code_souscription'] ?></span>
+                                    
+                            </td>
                                 <th style="width: 200px;">Session</th>
                                 <td><?= $souscription['libelle_session'] ?></td>
                             </tr>
@@ -72,15 +76,18 @@ $distributions = $distributions ?? [];
                             </tr>
                             <tr>
                                 <th>Statut souscription</th>
-                                <td><?= checkStatusSouscription($souscription['statut_souscription']) ?></td>
+                                <td><?= checkStatusSouscription($souscription['statut_souscription'],['en cour','valide']) ?></td>
                                 <th>Commercial</th>
                                 <td><?= $souscription['nom_user']. ' ' . $souscription['prenom_user']?></td>
                             </tr>
                             <tr>
-                                <th>Date création</th>
+                                <th>Date souscription</th>
                                 <td><?= date_formater($souscription['created_at_souscription'], true) ?></td>
-                                <th>Mise à jour</th>
-                                <td><?= $souscription['updated_at_souscription'] ? date_formater($souscription['updated_at_souscription'], true) : '-' ?></td>
+                                <th>Nombre de jours</th>
+                                <td><?= $statCautisation['nombre_jour_paye'] ?> / <?= $statCautisation['nombre_jour_session'] ?>  <?= checkNiveauPaiement($statCautisation['nombre_jour_paye'], $statCautisation['nombre_jour_session']) ?></td>
+                            </tr>
+                            <tr>
+                                <?= checkAjourCautisation($souscription['code_souscription']) ?>
                             </tr>
                         </tbody>
                     </table>
@@ -88,21 +95,8 @@ $distributions = $distributions ?? [];
             </div>
         </div>
     </div>
-</div>
 
-<?php
-$totalPacks = 0;
-$montantPayeTotal = 0;
-foreach ($packs as $pc) {
-    $totalPacks += (float) ($pc['montant_pack'] ?? 0);
-}
-foreach ($cautions as $c) {
-    if (($c['statut_cautisation_client'] ?? '') === 'valide') {
-        $montantPayeTotal += (float) ($c['montant_cautisation_client'] ?? 0);
-    }
-}
-$resteDu = max(0, $totalPacks - $montantPayeTotal);
-?>
+</div>
 
 <div class="row g-3 mb-2">
     <div class="col-md-4">
@@ -113,8 +107,8 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                         <i class="fas fa-calculator"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Montant total packs</h6>
-                        <h5 class="montan-value"><?= number_format($totalPacks, 0, ',', ' ') ?> FCFA</h5>
+                        <h6 class="montan-title">Montant total souscription</h6>
+                        <h5 class="montan-value"><?= money($statCautisation['montant_total']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -128,8 +122,8 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div>
-                        <h6 class="montan-title">Total payé (cautions)</h6>
-                        <h5 class="montan-value"><?= number_format($montantPayeTotal, 0, ',', ' ') ?> FCFA</h5>
+                        <h6 class="montan-title">Total payé</h6>
+                        <h5 class="montan-value"><?= money($statCautisation['montant_paye']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -144,7 +138,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                     </div>
                     <div>
                         <h6 class="montan-title">Reste dû</h6>
-                        <h5 class="montan-value"><?= number_format($resteDu, 0, ',', ' ') ?> FCFA</h5>
+                        <h5 class="montan-value"><?= money($statCautisation['reste_a_payer']) ?></h5>
                     </div>
                 </div>
             </div>
@@ -200,11 +194,14 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
 
     <div class="col-md-5">
         <div class="card mb-4">
-            <div class="card-header">
-                <h4 class="mb-0">Cautions</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Liste des versement</h4>
+                <button class="btn btn-info btn-sm"> 
+                     <i class="fas fa-hand-holding-usd"></i> &nbsp; Encaisser
+                </button>
             </div>
             <div class="card-body">
-                <?php if (empty($cautions)): ?>
+                <?php if (empty($cautisations)): ?>
                     <p class="text-muted text-center py-4">Aucune caution enregistrée.</p>
                 <?php else: ?>
                     <div class="table-responsive">
@@ -218,7 +215,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($cautions as $i => $c): ?>
+                                <?php foreach ($cautisations as $i => $c): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td class="text-nowrap"><?= money($c['montant_cautisation_client']) ?> </td>
@@ -254,7 +251,7 @@ $resteDu = max(0, $totalPacks - $montantPayeTotal);
                                     <th>#</th>
                                     <th>Libellé article</th>
                                     <th>Description</th>
-                                    <th>Session</th>
+                                    <th>Nombre</th>
                                 </tr>
                             </thead>
                             <tbody>

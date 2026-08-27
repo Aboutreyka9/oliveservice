@@ -47,7 +47,9 @@ class TABLES
     public const ZONES = 'zones';
     public const ZONE_COMMERCIALS = 'zone_commercials';
     public const VUE_TOTAL_SOUSCRIPTION_PACK = 'vue_souscription_total_pack';
+    public const VUE_PAIEMENT_SOUSCRIPTION = 'vue_souscription_paiement ';
     public const VUE_TOTAL_PARK_ARTICLES = 'vue_pack_total_articles';
+    public const VUE_STATE_CAUTISATION_SOUSCRIPTION_SESSION = 'vue_state_cautisation_souscription_session';
 }
 
 class Permissionsss

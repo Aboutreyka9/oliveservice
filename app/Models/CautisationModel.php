@@ -13,7 +13,43 @@ class CautisationModel extends Model
     protected string $table = "cautisation_clients";
     public string $id = 'id_cautisation_client';
 
-    public function getCautisationsBySouscription(string $souscriptionCode, string $etablissementCode): array
+     public function getCautisationsBySouscription(string $souscriptionCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*
+                    FROM " . TABLES::CAUTISATION_CLIENTS . " c
+                    WHERE c.souscription_code = :souscription_code
+                    ORDER BY c.created_at_cautisation_client DESC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['souscription_code' => $souscriptionCode]);
+            $data = $stmt->fetchAll();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+        public function getStatsCautisationsBySouscriptionTest(string $souscriptionCode,$anneeCode): array
+    {
+        $data = [];
+        try {
+            $sql = "SELECT c.*
+                    FROM " . TABLES::VUE_PAIEMENT_SOUSCRIPTION . " c
+                    WHERE c.souscription_code = :souscription_code AND c.annee_code = :annee_code LIMIT 1";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                'souscription_code' => $souscriptionCode,
+                'annee_code' => $anneeCode
+                ]);
+            $data = $stmt->fetch();
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+        return $data;
+    }
+
+    public function getCautionsBySouscription(string $souscriptionCode, string $etablissementCode): array
     {
         $data = [];
         try {
