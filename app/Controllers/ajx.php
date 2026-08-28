@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée']);
 
     exit;
-
 }
 
 // var_dump($_POST);
@@ -503,7 +502,7 @@ switch ($action) {
 
 
 
-      // Debut Actions pour les Articles 
+    // Debut Actions pour les Articles 
 
     case 'charger_data_articles':
 
@@ -678,7 +677,7 @@ switch ($action) {
 
 
 
-    
+
 
     //end Actions pour les souscription
 
@@ -694,7 +693,7 @@ switch ($action) {
 
         break;
 
-          // Debut Actions pour les packs par categorie
+    // Debut Actions pour les packs par categorie
 
     case 'get_packs_by_categorie':
 
@@ -773,7 +772,7 @@ switch ($action) {
 
         break;
 
-  
+
 
 
 
@@ -932,6 +931,4 @@ switch ($action) {
         echo json_encode(['status' => 'error', 'message' => 'Action inconnue']);
 
         break;
-
 }
-

@@ -600,8 +600,6 @@ function formatPhoneNumber() {
 
 function activeMenuLink() {
 
-
-
     // Récupérer l’URL actuelle
 
     const currentPage = window.location.pathname.split("/").pop();
@@ -622,9 +620,9 @@ function activeMenuLink() {
 
         const menuLinkUrl = link.getAttribute("href").split("/").pop();
 
-
-
+       
         // Si l’URL du lien de menu correspond au URL actuelle
+        if(menuLinkUrl=='') return;
 
         if (menuLinkUrl === currentPage) {
 
@@ -635,9 +633,6 @@ function activeMenuLink() {
             const parent = link.closest(".nav-item");
 
             const parentMenu = link.closest(".collapse");
-
-
-
 
 
             parent.classList.add("active")
@@ -801,10 +796,7 @@ deconnecter();
 
 
 function deconnecter() {
-
     $('.btn_deconnect').click(function (e) {
-
-        e.preventDefault();
 
         $.ajax({
 
@@ -828,13 +820,7 @@ function deconnecter() {
 
             success: function (data) {
 
-                console.log(data);
-
-
-
                 $(".loader_backdrop2").css('display', "none");
-
-
 
                 if (data.success) {
 
