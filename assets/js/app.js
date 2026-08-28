@@ -2972,6 +2972,38 @@ loadDataTable('data-table-session', '#data-table-session', 'charger_data_session
 // loadDataTableMany('data-table-session', '.session-annee', '#data-table-session', 'charger_data_sessions');
 
 
+    function calculerIntervalJoursSession() {
+        var debut = $('#debut_session').val();
+        var fin = $('#fin_session').val();
+        var inputNombreJours = $('#nombre_jour');
+
+        if (debut && fin) {
+            var dateDebut = new Date(debut);
+            var dateFin = new Date(fin);
+
+            if (dateDebut >= dateFin) {
+                inputNombreJours.val('');
+                inputNombreJours.addClass('is-invalid');
+                $.notify('La date de début doit être inférieure à la date de fin.')
+                return;
+            }
+
+            var diffTime = Math.abs(dateFin - dateDebut);
+            var diffJours = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            inputNombreJours.val(diffJours);
+            inputNombreJours.removeClass('is-invalid');
+        } else {
+            inputNombreJours.val('');
+        }
+    }
+
+    $(document).on('change','#debut_session, #fin_session', function() {
+        calculerIntervalJoursSession();
+    });
+
+    $(document).on('shown.bs.modal', '#session-modal', function() {
+        calculerIntervalJoursSession();
+    });
 
 openModalAddSession();
 
