@@ -43,6 +43,7 @@ class HomeController extends MainController
 
         $userCode = Auth::user('id');
         $etablissementCode = Auth::user('etablissement_code');
+        $annee_code = Auth::user('annee_code');
 
 
         $stats = $this->userModel->getStatsCommercial($userCode, $etablissementCode);
@@ -87,6 +88,8 @@ class HomeController extends MainController
             'tauxValidationCautions',
         ));
         }
+
+
 
         $etablissementCode = Auth::user('etablissement_code');
         $totals = $this->dashboardModel->getTotals($etablissementCode);

@@ -16,6 +16,7 @@ $distributions = $distributions ?? [];
 
 <?= breakcrumb($title, 'fa-file-alt'); ?>
 
+
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="card">
@@ -52,38 +53,40 @@ $distributions = $distributions ?? [];
     </div>
 </div>
 
-<div class="row mb-2">
+
+<div class="row mb-4">
     <div class="col-md-12">
         <div class="card">
+            <div class="card-header">
+                <div class="card-title mb-0">Détails de la souscription</div>
+               
+            </div>
             <div class="card-body">
-                <div class="table-responsive mt-4">
+                <div class="table-responsive">
                     <table class="table table-bordered mb-0">
                         <tbody>
                             <tr>
-                                <th style="width: 200px;">Code souscription</th>
-                                <td> 
-                                    <span class="font-weight-bold badge badge-danger"><?= $souscription['code_souscription'] ?></span>
-                                    
-                            </td>
-                                <th style="width: 200px;">Session</th>
+                                <th style="width: 200px;"><i class="fas fa-file-alt mr-2"></i>Code souscription</th>
+                                <td><span class="font-weight-bold badge badge-danger"><?= $souscription['code_souscription'] ?></span></td>
+                                <th style="width: 200px;"><i class="fas fa-calendar-alt mr-2"></i>Session</th>
                                 <td><?= $souscription['libelle_session'] ?></td>
                             </tr>
                             <tr>
-                                <th>Année d'activité</th>
+                                <th><i class="fas fa-graduation-cap mr-2"></i>Année d'activité</th>
                                 <td><?= $souscription['libelle_annee'] ?></td>
-                                <th>Zone</th>
+                                <th><i class="fas fa-map-marker-alt mr-2"></i>Zone</th>
                                 <td><?= $souscription['libelle_zone'] ?></td>
                             </tr>
                             <tr>
-                                <th>Statut souscription</th>
+                                <th><i class="fas fa-info-circle mr-2"></i>Statut souscription</th>
                                 <td><?= checkStatusSouscription($souscription['statut_souscription'],['en cour','valide']) ?></td>
-                                <th>Commercial</th>
+                                <th><i class="fas fa-user-tie mr-2"></i>Commercial</th>
                                 <td><?= $souscription['nom_user']. ' ' . $souscription['prenom_user']?></td>
                             </tr>
                             <tr>
-                                <th>Date souscription</th>
+                                <th><i class="fas fa-clock mr-2"></i>Date souscription</th>
                                 <td><?= date_formater($souscription['created_at_souscription'], true) ?></td>
-                                <th>Nombre de jours</th>
+                                <th><i class="fas fa-calendar-check mr-2"></i>Nombre de jours</th>
                                 <td><?= $statCautisation['nombre_jour_paye'] ?> / <?= $statCautisation['nombre_jour_session'] ?>  <?= checkNiveauPaiement($statCautisation['nombre_jour_paye'], $statCautisation['nombre_jour_session']) ?></td>
                             </tr>
                             <tr>
@@ -95,7 +98,6 @@ $distributions = $distributions ?? [];
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="row g-3 mb-2">

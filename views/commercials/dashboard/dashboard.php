@@ -1,7 +1,8 @@
 
+
 <?= breakcrumb($title ?? "Tableau de bord commercial", 'fa-chart-line'); ?>
 
-<header class="page-title-bar">
+<!-- <header class="page-title-bar">
     <div class="header-dashboard d-flex align-items-center mb-4">
         <i class="fas fa-chart-line mr-3 me-3" style="font-size:20px;"></i>
         <div>
@@ -9,7 +10,7 @@
             <small>Vue d'ensemble de votre activité</small>
         </div>
     </div>
-</header>
+</header> -->
 
 <!-- STATS CARDS -->
 <div class="row g-3 mb-4">
