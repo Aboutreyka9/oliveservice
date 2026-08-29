@@ -1024,7 +1024,9 @@ class ActiviteModel extends Model
 
         try {
 
-            $sql = "SELECT * FROM " . TABLES::PACKS . " AS p WHERE p.code_pack = :code LIMIT 1";
+            $sql = "SELECT p.*, se.nombre_jour_session FROM " . TABLES::PACKS . " AS p
+            JOIN ".TABLES::SESSIONS." se ON se.code_session = p.session_code
+             WHERE p.code_pack = :code LIMIT 1";
 
             $stmt = $this->db->prepare($sql);
 
