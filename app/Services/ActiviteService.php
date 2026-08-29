@@ -1813,7 +1813,7 @@ function chargerDataPacks($packs)
 
                         <label for="" class="form-label">Nombre de jour  </label>
 
-                        <input type="text" disabled class="form-control" id="nombre_jour">
+                        <input value="' . $pack['nombre_jour_session'] . '" type="text" disabled class="form-control" id="nombre_jour">
 
                     </div>
 
@@ -1821,7 +1821,7 @@ function chargerDataPacks($packs)
 
                         <label for="montant_total" class="form-label">Montant total  </label>
 
-                        <input  style="color: red; font-weight: bold;" type="text" disabled class="form-control" id="montant_total">
+                        <input value="' .money($pack['montant_pack'] * $pack['nombre_jour_session']). '" style="color: red; font-weight: bold;" type="text" disabled class="form-control" id="montant_total">
 
                     </div>
 
